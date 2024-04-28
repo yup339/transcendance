@@ -1,0 +1,29 @@
+# Use the Debian Buster base image
+FROM debian:buster
+
+# Update package lists and install Nginx and OpenSSL
+RUN apt-get update && apt-get install -y nginx openssl
+
+# Create a directory to store SSL certificates
+RUN mkdir -p /etc/nginx/ssl
+
+# Generate a self-signed SSL certificate
+RUN openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout /etc/nginx/ssl/nginx.key -out /etc/nginx/ssl/nginx.crt -subj "/C=CA/ST=QC/L=QC/O=42/CN=pbergero.42.fr/CN=localhost"  -sha256
+
+
+# Copy the Nginx configuration file with HTTPS settings
+COPY index.html /var/www/html
+COPY pong.js    /var/www/html
+COPY index.css    /var/www/html
+COPY conf/nginx.conf /etc/nginx/nginx.conf
+RUN chmod 777 /var/www/html
+
+
+
+RUN chown -R www-data:www-data /var/www/html
+
+# Expose port 443 to allow outside access to your web server over HTTPS
+EXPOSE 443
+
+# Start Nginx in the foreground when the container starts
+CMD ["nginx", "-g", "daemon off;"]
