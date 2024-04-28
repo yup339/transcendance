@@ -12,11 +12,10 @@ RUN openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout /etc/nginx/ssl/n
 
 
 # Copy the Nginx configuration file with HTTPS settings
-COPY index.html /var/www/html
-COPY pong.js    /var/www/html
-COPY index.css    /var/www/html
+COPY index.html /
+COPY pong.js    /
+COPY index.css    /
 COPY conf/nginx.conf /etc/nginx/nginx.conf
-RUN chmod 777 /var/www/html
 
 
 
