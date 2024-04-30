@@ -1,0 +1,21 @@
+
+auth de base
+tournois
+
+majeur 3d :pascal 1
+majeur: autre jeu : aurelia 2
+majeur: online play 3
+majeur: ia du jeu :pascal 4
+majeur: backend 5
+mineur: database
+mineur:firefox (devrais ce faire tout seul)6
+
+potentiel:
+majeur: stats 5 : will ou alex 
+majeur: foursome 😉
+majeur: gestion utilisateur et vrai auth
+mineur: stats
+mineur: framework en frontend
+mineur: 3 langue, 3 languages, 3ngôn ngữ : will
+
+

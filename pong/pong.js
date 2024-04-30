@@ -1,129 +1,31 @@
 const canvas = document.getElementById("pongCanvas");
-const context = canvas.getContext("2d");
-
-class HitBox{
-	constructor(x,y, width, length) {
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.length = length;
-	}
-
-	doesCollide(hitBox) {
-        if (this.x < hitBox.x + hitBox.width &&
-            this.x + this.width > hitBox.x &&
-            this.y < hitBox.y + hitBox.length &&
-            this.y + this.length > hitBox.y) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-	setPosition(x,y){
-		this.x = x;
-		this.y = y;
-	}
-
-	draw(){
-		context.strokeStyle = 'yellow'; 
-        context.lineWidth = 1; 
-        context.strokeRect(this.x, this.y, this.width, this.length); 
-	}
-}
-
-class Ball {
-	constructor(color) {
-		this.x = canvas.width / 2;
-		this.y = canvas.height / 2;
-		this.radius = canvas.width * 0.01;
-		this.color = color;
-		this.velocityX = 2;
-		this.velocityY = 2;
-		this.HitBox = new HitBox(this.x, this.y ,this.radius * 2,this.radius * 2);
-	}
-
-	draw() {
-		context.beginPath();
-		context.arc(this.x + this.radius, this.y + this.radius, this.radius, 0, Math.PI * 2);
-		context.fillStyle = this.color;
-		context.fill();
-		context.closePath();
-		//this.HitBox.draw()
-	}
-
-	reset(side){
-		this.x = canvas.width / 2;
-		this.y = canvas.height / 2;
-		this.velocityX = 2 * side;
-		this.velocityY = 2;
-		this.HitBox.setPosition(this.x, this.y)
-	}
-
-	update(){
-		if (this.HitBox.doesCollide(leftPaddle.HitBox) || this.HitBox.doesCollide(rightPaddle.HitBox))
-			this.velocityX *= -1;
-		if (this.HitBox.doesCollide(roof) || this.HitBox.doesCollide(floor))
-			this.velocityY *= -1
-		if (this.HitBox.doesCollide(leftGoal)){
-			score("right");
-			this.reset(1);
-			return;
-		} else if (this.HitBox.doesCollide(rightGoal)){
-			score("left");
-			this.reset(-1);
-			return;
-		}
-			
-
-		this.x += this.velocityX;
-		this.y += this.velocityY;
-		this.HitBox.setPosition(this.x, this.y)
-	}
-}
-
-class Paddle {
-	constructor(x, y, color) {
-		this.x = x;
-		this.y = y;
-		this.down = false;
-		this.up = false;
-		this.speed = canvas.height * 0.02;
-		this.width = canvas.width * 0.01;
-		this.height = canvas.height * 0.25;
-		this.color = color;
-		this.HitBox = new HitBox(this.x,this.y,this.width,this.height);
-	}
-
-	draw() {
-		context.fillStyle = this.color;
-		context.fillRect(this.x, this.y, this.width, this.height);
-	}
-
-	update(){
-		if(this.up && !this.down){
-			if (this.y - this.speed > 0)
-				this.y -= this.speed;
-		}
-		if(this.down && !this.up){
-			if (this.y + this.height + this.speed < canvas.height)
-				this.y += this.speed;
-		}
-		this.HitBox.setPosition(this.x,this.y)
-	}
-}
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera( 90, canvas.width / canvas.height, 0.1, 1000 );
+scene.background = new THREE.Color(0x000000);
+const renderer = new THREE.WebGLRenderer({ canvas: canvas });
 
 
-const roof = new HitBox(0, 0, canvas.width, 1);
-const floor = new HitBox(0, canvas.height, canvas.width, 1);
-const leftGoal = new HitBox(0, 0, 1, canvas.height);
-const rightGoal = new HitBox(canvas.width, 0, 1, canvas.height); 
-const leftPaddle = new Paddle(canvas.width * 0.05 , canvas.height / 2 - (canvas.height / 8), 'green');
-const rightPaddle = new Paddle(canvas.width - (canvas.width * 0.05), canvas.height / 2 - (canvas.height / 8), 'blue');
+const GAME_WIDTH = 100;
+const GAME_HEIGHT = 50;
+const PADDLE_DISTANCE_FROM_GOAL = 10;
+const BOUND_DEPTH = 25;
+const floor = new HitBox(0, -GAME_HEIGHT , GAME_WIDTH * 2, 1, BOUND_DEPTH);
+const roof = new HitBox(0, GAME_HEIGHT, GAME_WIDTH * 2, 1, BOUND_DEPTH);
+const leftGoal = new HitBox(-GAME_WIDTH , 0, 1, GAME_HEIGHT * 2, BOUND_DEPTH);
+const rightGoal = new HitBox(GAME_WIDTH, 0, 1, GAME_HEIGHT * 2, BOUND_DEPTH); 
+const leftPaddle = new Paddle(-GAME_WIDTH + PADDLE_DISTANCE_FROM_GOAL , 0, 'green');
+const rightPaddle = new Paddle(GAME_WIDTH - PADDLE_DISTANCE_FROM_GOAL, 0, 'blue');
 const ball = new Ball('red');
 var   leftPlayerScore = 0;
 var   rightPlayerScore = 0;
 
+leftGoal.draw();
+rightGoal.draw();
+roof.draw();
+floor.draw();
+//leftPaddle.HitBox.draw();
+//rightPaddle.HitBox.draw();
+setUpCamera();
 
 function score(side){
 	if (side === "left")
@@ -135,44 +37,39 @@ function score(side){
 	document.getElementById('rightPlayerScore').textContent = 'Right Player: ' + rightPlayerScore;	
 }
 
-function draw(){
-	context.fillStyle = "black";
-	context.fillRect(0, 0, canvas.width, canvas.height);
-	ball.draw();
-	rightPaddle.draw();
-	leftPaddle.draw();
-	roof.draw();
-	floor.draw();
-}
+function setCamera(){
 
+}
 function update(){
-	context.clearRect(0, 0, canvas.width, canvas.height);
 	ball.update();
 	leftPaddle.update();
 	rightPaddle.update();
-	draw();
+	renderer.render(scene, camera)
 	requestAnimationFrame(update);
 }
 
+
+
 document.addEventListener('keydown', function(event) {
-    if (event.key === 'w') {
-        leftPaddle.up = true;
-    }
-	if (event.key === 's') {
+	console.log("EWEAWE");
+    if (event.key === 'w' || event.key === 'W' ) {
         leftPaddle.down = true;
+		console.log("y = ", leftPaddle.y);
+    }
+	if (event.key === 's' || event.key === 'S') {
+        leftPaddle.up = true;
+		console.log("y = ", leftPaddle.y);
     }
 });
 
 document.addEventListener('keyup', function(event) {
-	if (event.key === 'w') {
-        leftPaddle.up = false;
-    }
-	if (event.key === 's') {
+	if (event.key === 'w' || event.key === 'W' ) {
         leftPaddle.down = false;
     }
+	if (event.key === 's' || event.key === 'S') {
+        leftPaddle.up = false;
+    }
 });
-
-
 
 
 update();
