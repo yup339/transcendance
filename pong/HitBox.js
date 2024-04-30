@@ -5,8 +5,9 @@ class HitBox{
         this.depth = depth;
 		this.width = width;
 		this.length = length;
-        const geometry = new THREE.BoxGeometry(this.width,this.length ,this.depth);
-        const material = new THREE.MeshBasicMaterial( { color: 0xecfc03 , wireframe: true} );
+        const geometry = new THREE.BoxGeometry(this.width,this.length ,this.depth , 1, 1, 1);
+        const material = new THREE.MeshStandardMaterial( { color: 0xecfc03} );
+        material.wireframeLinewidth = 5;
         this.model = new THREE.Mesh( geometry, material );
         this.model.position.set(this.x,this.y, 1)
 	}
