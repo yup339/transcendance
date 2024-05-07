@@ -17,12 +17,21 @@
         <span id="rightPlayerScore">Right Player: 0</span>
     </div>
 
+    <input type="color" id="colorPicker">
+    <div class="color-box" id="colorBox"></div>
+
+    <div class="slider-container">
+        <input type="range" min="1" max="5" value="1" class="slider" id="mySlider">
+        <p>Value: <span id="sliderValue">50</span></p>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="HitBox.js"></script>
     <script src="Ball.js"></script>
     <script src="Paddle.js"></script>
     <script src="pongScene.js"></script>
     <script src="pong.js"></script>
+    <script src="PongAi.js"></script>
 
 </body>
 </html>

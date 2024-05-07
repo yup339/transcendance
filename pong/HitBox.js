@@ -6,14 +6,18 @@ class HitBox{
 		this.width = width;
 		this.length = length;
         const geometry = new THREE.BoxGeometry(this.width,this.length ,this.depth , 1, 1, 1);
-        const material = new THREE.MeshStandardMaterial( { color: 0xecfc03} );
+        const material = new THREE.MeshStandardMaterial( { color: randomColor()} );
         material.wireframeLinewidth = 5;
         this.model = new THREE.Mesh( geometry, material );
         this.model.position.set(this.x,this.y, 1)
+        this.isAble = true;
 	}
 
     doesCollide(hitBox) {
         // Calculate boundaries of each hitbox
+        if (!this.isAble && !hitBox.isAble)
+            return ;
+
         const thisLeft = this.x - this.width / 2;
         const thisRight = this.x + this.width / 2;
         const thisTop = this.y + this.length / 2;
@@ -43,5 +47,12 @@ class HitBox{
 
     remove(){
         scene.remove(this.model)
+    }
+
+    disable(){
+        this.isAble = false;
+        setTimeout(() => {
+            this.isAble = true;
+        }, 1000);
     }
 }
