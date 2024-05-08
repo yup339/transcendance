@@ -12,8 +12,8 @@ RUN openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout /etc/nginx/ssl/n
 
 
 # Copy the Nginx configuration file with HTTPS settings
-COPY bozo.png /
-RUN chmod 777 /bozo.png
+
+
 COPY index.html /
 COPY pong.js    /
 COPY HitBox.js    /

@@ -1,6 +1,29 @@
-run: ## Build and run Nginx Docker container
-	docker-compose up --build
-	
+all : up
 
-stop:
-	docker-compose down
+up : 
+	@ docker-compose up --build
+
+down: 
+	@docker-compose down
+
+start: 
+	@docker-compose start
+
+stop: 
+	@docker-compose  stop
+
+ps:
+	@docker ps 
+
+psa:
+	@docker ps -a
+
+restart: down up
+
+clean: down
+	@docker-compose down --rmi all -v
+	@docker volume prune -f
+	@docker system prune -f
+	@docker volume ls -q | xargs docker volume rm
+
+.PHONY: up down start stop ps psa restart clean

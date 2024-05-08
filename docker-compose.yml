@@ -17,7 +17,3 @@ services:
 
 volumes:
   nginx_vol:
-    driver_opts:
-      o: bind
-      device: ./Users/pbergero/Desktop/transcendance
-      type: none
