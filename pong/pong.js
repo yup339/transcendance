@@ -2,6 +2,7 @@ const GAME_WIDTH = 100;
 const GAME_HEIGHT = 50;
 const PADDLE_DISTANCE_FROM_GOAL = 10;
 const BOUND_DEPTH = 50;
+const wallcolorforbillythekid = randomColor();
 
 const canvas = document.getElementById("pongCanvas");
 const scene = new THREE.Scene();
@@ -23,7 +24,7 @@ const rightGoal = new HitBox(GAME_WIDTH, 0, 1, GAME_HEIGHT * 2, BOUND_DEPTH);
 const leftPaddle = new Paddle(-GAME_WIDTH + PADDLE_DISTANCE_FROM_GOAL , 0, randomColor());
 const rightPaddle = new Paddle(GAME_WIDTH - PADDLE_DISTANCE_FROM_GOAL, 0, randomColor());
 const balls = [];
-balls.push(new Ball(0,0,2, 0, randomColor()))
+balls.push(new Ball(0,0,1, randomValue(), randomColor()))
 var   leftPlayerScore = 0;
 var   rightPlayerScore = 0;
 
@@ -46,10 +47,6 @@ function score(side){
 	document.getElementById('rightPlayerScore').textContent = 'Right Player: ' + rightPlayerScore;	
 }
 
-function setCamera(){
-
-}
-
 function setBall(n){
 	if (n > balls.length){
 		const numberOfNewBall = n - balls.length;
@@ -58,11 +55,9 @@ function setBall(n){
 		}
 	}
 	else if (n < balls.length){
-		const numberOfBallsToRemove = balls.length - n;
-		for (let i = balls.length ; i > n; i++) {
-			balls[i].cleanup();
+		for (let i = balls.length - 1; i >= n; i--) {
+			balls.pop().cleanup();
 		}
-		balls.splice(0, numberOfBallsToRemove);
 	}
 }
 
@@ -79,7 +74,6 @@ function update(){
 
 
 document.addEventListener('keydown', function(event) {
-	console.log(event.key);
     if (event.key === 'w' || event.key === 'W' ) {
         leftPaddle.down = true;
     }
@@ -125,13 +119,42 @@ function randomColor() {
     return hex;
 }
 
-var slider = document.getElementById("mySlider");
-var output = document.getElementById("sliderValue");
-output.innerHTML = slider.value;
+var ballSlider = document.getElementById("ballSlider");
+var ballSliderOutput = document.getElementById("ballSliderValue");
+ballSliderOutput.innerHTML = ballSlider.value;
 
-slider.oninput = function() {
-	output.innerHTML = this.value;
+ballSlider.oninput = function() {
+	ballSliderOutput.innerHTML = this.value;
 	setBall(this.value);
 }
+
+
+var speedSlider = document.getElementById("speedSlider");
+var speedOutput = document.getElementById("speedSliderValue");
+speedOutput.innerHTML = speedSlider.value;
+
+speedSlider.oninput = function() {
+	speedOutput.innerHTML = this.value;
+	BALL_SPEED = this.value;
+	for (let i = 0; i < balls.length; i++) {
+		balls[i].updateSpeed();
+	}
+}
+
+function setUpScene(){
+    camera.position.z = 75;
+
+}
+
+//bullshit object is place from center not top left so this just adjust it so its placed top left 
+function adjustGeometryCenter(geometry, width, height, depth) {
+    geometry.vertices.forEach(vertex => {
+        vertex.x -= width / 2;
+        vertex.y -= height / 2;
+        vertex.z -= depth / 2;
+    });
+}
+
+
 
 update();

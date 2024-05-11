@@ -1,3 +1,5 @@
+
+
 class HitBox{
 	constructor(x,y, width, length, depth) {
 		this.x = x;
@@ -6,7 +8,7 @@ class HitBox{
 		this.width = width;
 		this.length = length;
         const geometry = new THREE.BoxGeometry(this.width,this.length ,this.depth , 1, 1, 1);
-        const material = new THREE.MeshStandardMaterial( { color: randomColor()} );
+        const material = new THREE.MeshStandardMaterial( { color: wallcolorforbillythekid} );
         material.wireframeLinewidth = 5;
         this.model = new THREE.Mesh( geometry, material );
         this.model.position.set(this.x,this.y, 1)
@@ -27,8 +29,7 @@ class HitBox{
         const hitBoxRight = hitBox.x + hitBox.width / 2;
         const hitBoxTop = hitBox.y + hitBox.length / 2;
         const hitBoxBottom = hitBox.y - hitBox.length / 2;
-    
-        // Check for collision
+
         return thisLeft < hitBoxRight &&
             thisRight > hitBoxLeft &&
             thisBottom < hitBoxTop &&
