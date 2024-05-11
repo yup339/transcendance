@@ -1,0 +1,36 @@
+body{
+    background: linear-gradient(to right, hsl(199, 100%, 54%), #7ad5ff);
+}
+
+.hover-scale
+{
+    transition: transform 0.3s ease;
+}
+
+.hover-scale:hover {
+    transform: scale(1.02); 
+}
+
+.extra-top-padding{
+    padding-top: 90px;
+}
+
+.fullscreen{
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    align-content: center;
+    justify-content: center;
+}
+
+.btn-color{
+    background-color: rgb(85, 187, 255);
+}
+
+.btn-color:hover{
+    background-color: rgb(204, 204, 255);
+}
+
+.dark-color-bg{
+    background-color: rgb(35, 41, 71);
+}
