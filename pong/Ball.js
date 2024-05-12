@@ -116,7 +116,7 @@ function handleColorPicked(event) {
 	}
 }
 
-colorPicker.addEventListener('input', handleColorPicked);
+colorPicker.addEventListener('input', handleColorPicked); //<------------event
 
 
 	// Function to invert a color passed in hexadecimal format

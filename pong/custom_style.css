@@ -34,3 +34,10 @@ body{
 .dark-color-bg{
     background-color: rgb(35, 41, 71);
 }
+
+#pongCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    margin: 0 auto;
+}
