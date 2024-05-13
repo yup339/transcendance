@@ -5,10 +5,10 @@ const pages = {
     <div class="row justify-content-center mt-md-4 mt-2 mb-5 mx-md-0 mx-5 gy-4 mt-md-5 mt-3">
         <h1 class="display-5 text-center fw-bold text-white ">Choose Your Game</h1>
         <div class="col-lg-5 col-md-6 ">
-            <img src="https://via.placeholder.com/1000" class=" shadow img-fluid image-button w-100 rounded-5 hover-scale" alt="Image 1" onclick="navigateTo('pong_choices')">
+            <img src="https://via.placeholder.com/1000" class=" clickable shadow img-fluid image-button w-100 rounded-5 hover-scale" alt="Image 1" onclick="navigateTo('pong_choices')">
         </div>
         <div class="col-lg-5 col-md-6 ">
-            <img src="https://via.placeholder.com/1000" class="shadow img-fluid image-button w-100 rounded-5 hover-scale" alt="Image 1" onclick="location.href='#';">
+            <img src="https://via.placeholder.com/1000" class="clickable shadow img-fluid image-button w-100 rounded-5 hover-scale" alt="Image 1" onclick="location.href='#';">
         </div>
         </div>
     </div>
@@ -22,7 +22,7 @@ const pages = {
             <button  type="button" class="btn btn-color btn-lg w-75 p-3 text-white" onclick="navigateTo('pong')">Dual Player</button>
         </div>
         <div class="col-12  text-center px-5">
-            <button type="button" class="btn btn-color btn-lg w-75 p-3 text-white">AI Duel</button>
+            <button type="button" class="btn btn-color btn-lg w-75 p-3 text-white" onclick="navigateTo('game_choice')">AI Duel</button>
         </div>
         <div class="col-12  text-center px-5 mb-3">
             <button type="button" class="btn btn-color btn-lg  w-75 p-3 text-white">Tournament</button>
@@ -57,7 +57,12 @@ const pages = {
 }
 window.addEventListener('popstate', function (event) {
     const pageName = event.state;
-    displayPage(pageName);
+    if(event.state)
+        displayPage(pageName);
+    else
+        displayPage('game_choice');
+  
+
 });
 
 function displayPage(pageName) 
@@ -75,6 +80,25 @@ function displayPage(pageName)
 
 function navigateTo(pageName)
 {
-    history.pushState(pageName, null, pageName);
+ 
+    if (history.state !== pageName) 
+        history.pushState(pageName, null, pageName);
+    
     displayPage(pageName);
+}
+
+function initializePage() 
+{
+    
+    let currentUrl = window.location.href;
+    let substring = currentUrl.substring(currentUrl.lastIndexOf("/") + 1);
+    if(substring)
+        displayPage(substring);
+    else
+    {
+        
+        history.pushState(null, null, null);
+        displayPage('game_choice');
+    }
+
 }

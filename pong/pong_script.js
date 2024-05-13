@@ -547,4 +547,3 @@ function stopGame()
 	game_stop = true;
 }
 
-

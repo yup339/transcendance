@@ -41,3 +41,6 @@ body{
     display: block;
     margin: 0 auto;
 }
+.clickable {
+    cursor: pointer !important;
+  }
