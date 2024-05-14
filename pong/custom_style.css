@@ -44,3 +44,15 @@ body{
 .clickable {
     cursor: pointer !important;
   }
+
+.img-button-width
+{
+	width: 90%;
+}
+
+@media (min-width: 1200px) 
+{
+	.img-button-width{
+		width: 70%;
+	}
+}
