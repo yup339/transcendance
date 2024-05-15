@@ -71,6 +71,7 @@ class Ball {
 			return;
 		} else if (this.HitBox.doesCollide(rightGoal)){
 			score("left");
+			console.log("score at: ", balls[0].y);
 			//this.velocityX *= -1;
 			this.vec.x *= -1;
 			this.reset(-1);
@@ -87,6 +88,7 @@ class Ball {
 		this.HitBox.setPosition(this.x, this.y);
 		this.light.position.set( this.x, this.y, 0);
 		this.sphereMesh.position.set(this.x,this.y, 0);
+		//console.log(this.x, " , ", this.y);
 	}
 
 	
@@ -165,37 +167,69 @@ class HitBox{
 
 
 class PongAi {
-    constructor(paddle, goal){
+    constructor(paddle, goal, ball,){
+		this.ball = ball;
         this.paddle = paddle;
         this.goal = goal;
         this.expectedCollision = 0;
+		this.resetPos = goal.x;
     }
 
     getBallPosition(){
-        previousX = newX;
-        previousY = newY;
-        newX = ball[0].x;
-        newY = ball[0].y;
-        this.expectedCollision = this.calcCollision();
+		this.ball = getClosestBall(this.paddle.x);
+		this.posX = this.ball.x;
+		this.posY = this.ball.y;
+        this.vec = new THREE.Vector2(this.ball.vec.x, this.ball.vec.y);
+		this.expectedCollision = this.calcCollision();
     }
 	
 	calcCollision(){
-			const slope = (newY - previousY) / (newX - previousX);
-			const y = slope * (this.paddle.x - previousX) + previousY;
-			return (GAME_HEIGHT % y) - GAME_HEIGHT/2;
+		this.vec.normalize();
+		this.calcFirstRebound();
+		var slope = this.vec.y/ this.vec.x;
+		return slope * (this.paddle.x - this.posX) + this.posY;
+	}
+
+	doesImpactY(impactLine, limit) {
+		if (this.vec.x >= impactLine.x - limit && this.vec.x <= impactLine.x + limit) {
+			return true;
+		} else {
+			return false; 
 		}
+	}
 
+	calcFirstRebound(){
+		if (this.vec.y < 0){
+			if (this.doesImpactY(floor.y)){
 
+				this.posX = this.posX + (this.vec.x / this.vec.y) * (floor.y - this.posY)
+				this.posY = floor.y;
+				this.vec.y *= -1;
+			}
+		} else{
+			if (this.doesImpactY(roof.y)){
+				this.posX = this.posX + (this.vec.x / this.vec.y) * (roof.y - this.posY)
+				this.posY = roof.y;
+				this.vec.y *= -1;
+			}
+		}
+	}
 
     update(){
-        if (this.expectedCollision > this.paddle.y){
+		if (this.expectedCollision < this.paddle.y){
 			this.paddle.down = false;
             this.paddle.up = true;
         }
-        if (this.expectedCollision < this.paddle.y){
+        if (this.expectedCollision > this.paddle.y){
 			this.paddle.up = false;
             this.paddle.down = true;
         }
+		if (Math.abs(this.expectedCollision - this.paddle.y) <= 5)
+		{
+			this.paddle.up = false;
+			this.paddle.down = false;
+		}
+		
     }
 }
 
@@ -246,19 +280,19 @@ class Paddle {
 	getImpactVector(y) {
 		var hitPosition = (y - this.y) / (this.height * 2);
 	
-		var maxAngle = Math.PI / 1; 
-		var minAngle = -Math.PI / 1; 
+		var maxAngle = Math.PI / 2; 
+		var minAngle = -Math.PI / 2; 
 	
 		var impactAngle = minAngle + (hitPosition * (maxAngle - minAngle));
 	
 		var dy = Math.sin(impactAngle);	
-		dy = dy * -2;
+		dy = dy * -1;
 		return dy;
 	}
 
-	activateAI(goal){
+	activateAI(goal, ball){
 		this.aiActive = true;
-		this.ai = new PongAi(this, goal);
+		this.ai = new PongAi(this, goal, ball);
 		setInterval(() => this.ai.getBallPosition(), 1000);
 	}
 
@@ -273,10 +307,6 @@ class Paddle {
 let game_stop = true;
 
 var BALL_SPEED = 1;
-var previousX = 0;
-var newX = 0;
-var previousY = 0;
-var newY = 0;
 const GAME_WIDTH = 100;
 const GAME_HEIGHT = 50;
 const PADDLE_DISTANCE_FROM_GOAL = 10;
@@ -309,7 +339,7 @@ let leftGoal;
 let rightGoal; 
 let leftPaddle;
 let rightPaddle;
-let balls = [];
+var balls = [];
 var   leftPlayerScore = 0;
 var   rightPlayerScore = 0;
 
@@ -371,11 +401,18 @@ function update(){
 	requestAnimationFrame(update);
 }
 
-
-function randomValue() {
-    return Math.random() * 2 - 1;
+function getClosestBall(x){
+	var ball = balls[0];
+	for(let i = 1; i < balls.length; i++) {
+		if (x - balls[i].x < x - ball)
+		ball = balls[i];
+	}
+	return ball
 }
 
+function randomValue() {
+    return Math.random() * 1.5 - 0.75;
+}
 function randomColor() {
     // Generate random values for red, green, and blue components
     var r = Math.floor(Math.random() * 256);
@@ -385,6 +422,8 @@ function randomColor() {
     var hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
     return hex;
 }
+
+
 
 function score(side){
 	if (side === "left")
@@ -400,7 +439,7 @@ function setBall(n){
 	if (n > balls.length){
 		const numberOfNewBall = n - balls.length;
 		for (let i = 0; i < numberOfNewBall; i++) {
-			balls.push(new Ball(0,0,randomValue(), randomValue(), randomColor()));
+			balls.push(new Ball(0,0,randomSpeed(), randomValue(), randomColor()));
 		}
 	}
 	else if (n < balls.length){
@@ -410,7 +449,9 @@ function setBall(n){
 	}
 }
 
-
+function randomSpeed(){
+	return Math.random() < 0.5 ? -1 : 1;
+}
 
 function setUpScene(){
     camera.position.z = 75;
@@ -471,36 +512,35 @@ function executeGame()
 	game_stop = false;
 	BALL_SPEED = 1;
 	const colorPicker = document.getElementById('colorPicker'); // assuming you have an input element with id 'colorPicker'
-   colorBox = document.getElementById('colorBox'); // assuming you have a div element with id 'colorBox'
-   canvas = document.getElementById("pongCanvas");
-   ballSlider = document.getElementById("ballSlider");
-   ballSliderOutput = document.getElementById("ballSliderValue");
-   speedSlider = document.getElementById("speedSlider");
-   speedOutput = document.getElementById("speedSliderValue");
+    colorBox = document.getElementById('colorBox'); // assuming you have a div element with id 'colorBox'
+    canvas = document.getElementById("pongCanvas");
+    ballSlider = document.getElementById("ballSlider");
+    ballSliderOutput = document.getElementById("ballSliderValue");
+    speedSlider = document.getElementById("speedSlider");
+    speedOutput = document.getElementById("speedSliderValue");
 	scene = new THREE.Scene();
 	
-		 backgroundGeometry = new THREE.BoxGeometry(GAME_WIDTH * 2, GAME_HEIGHT * 2 ,1)
-	 backgroud_materail = new THREE.MeshStandardMaterial({color: 0x444444});
-	 background = new THREE.Mesh( backgroundGeometry, backgroud_materail);
-	 background.position.z = -BOUND_DEPTH / 2;
-	 renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true, alpha: true, pixelRatio: window.devicePixelRatio });
-	 camera = new THREE.PerspectiveCamera( 90, canvas.width / canvas.height, 0.1, 1000 );
+		backgroundGeometry = new THREE.BoxGeometry(GAME_WIDTH * 2, GAME_HEIGHT * 2 ,1)
+	backgroud_materail = new THREE.MeshStandardMaterial({color: 0x444444});
+	background = new THREE.Mesh( backgroundGeometry, backgroud_materail);
+	background.position.z = -BOUND_DEPTH / 2;
+	renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true, alpha: true, pixelRatio: window.devicePixelRatio });
+	camera = new THREE.PerspectiveCamera( 90, canvas.width / canvas.height, 0.1, 1000 );
 	light = new THREE.AmbientLight( 0x404040 ); // soft white light
 	scene.add(light);
 	scene.background = new THREE.Color(0x000000);
 	scene.add(light);
 	scene.background = new THREE.Color(0x000000);
 	scene.add(background);
- floor = new HitBox(0, -GAME_HEIGHT , GAME_WIDTH * 2, 1, BOUND_DEPTH);
- roof = new HitBox(0, GAME_HEIGHT, GAME_WIDTH * 2, 1, BOUND_DEPTH);
- leftGoal = new HitBox(-GAME_WIDTH , 0, 1, GAME_HEIGHT * 2, BOUND_DEPTH);
- rightGoal = new HitBox(GAME_WIDTH, 0, 1, GAME_HEIGHT * 2, BOUND_DEPTH); 
- leftPaddle = new Paddle(-GAME_WIDTH + PADDLE_DISTANCE_FROM_GOAL , 0, randomColor());
- rightPaddle = new Paddle(GAME_WIDTH - PADDLE_DISTANCE_FROM_GOAL, 0, randomColor());
- speedOutput.innerHTML = speedSlider.value;
- ballSliderOutput.innerHTML = ballSlider.value;
-    balls.push(new Ball(0,0,1, randomValue(), randomColor()))
-	
+ 	floor = new HitBox(0, -GAME_HEIGHT , GAME_WIDTH * 2, 1, BOUND_DEPTH);
+ 	roof = new HitBox(0, GAME_HEIGHT, GAME_WIDTH * 2, 1, BOUND_DEPTH);
+ 	leftGoal = new HitBox(-GAME_WIDTH , 0, 1, GAME_HEIGHT * 2, BOUND_DEPTH);
+	rightGoal = new HitBox(GAME_WIDTH, 0, 1, GAME_HEIGHT * 2, BOUND_DEPTH); 
+	leftPaddle = new Paddle(-GAME_WIDTH + PADDLE_DISTANCE_FROM_GOAL , 0, randomColor());
+	rightPaddle = new Paddle(GAME_WIDTH - PADDLE_DISTANCE_FROM_GOAL, 0, randomColor());
+	speedOutput.innerHTML = speedSlider.value;
+	ballSliderOutput.innerHTML = ballSlider.value;
+    balls.push(new Ball(0,0,1, randomValue(), randomColor()))	
 	ballSlider.oninput = function() {
 		
 		ballSliderOutput.innerHTML = this.value;
@@ -542,7 +582,6 @@ function stopGame()
 	document.removeEventListener('keyup', keyUpHandler);
 	leftPlayerScore = 0;
     rightPlayerScore = 0;
-	BALL_SPEED = 0;
 	balls = [];
 	game_stop = true;
 }

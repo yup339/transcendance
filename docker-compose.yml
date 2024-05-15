@@ -15,5 +15,16 @@ services:
     ports:
       - "443:443"
 
+    #django:
+    #  container_name: django
+    #volumes: 
+    #  - django_vol:/var/www/html
+    #build: ./pong
+    #networks:
+    #  - inception
+    #ports:
+    #  - "8000"
+
 volumes:
   nginx_vol:
+  django_vol:
