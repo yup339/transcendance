@@ -21,7 +21,6 @@ RUN openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout /etc/nginx/ssl/n
 #COPY Ball.js    /
 #COPY pongScene.js    /
 COPY index.html /
-COPY pong_display_image.png /
 COPY custom_style.css /
 COPY bootstraptool.css /
 COPY script.js /
