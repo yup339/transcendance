@@ -5,7 +5,7 @@ const pages = {
     <div class="row justify-content-center mt-md-4 mt-2 mb-5 mx-md-0 mx-5 gy-4 mt-md-5 mt-3">
         <h1 class="display-5 text-center fw-bold text-white ">Choose Your Game</h1>
         <div class="col-lg-5 col-md-6 ">
-            <img src="https://via.placeholder.com/1000" class=" clickable shadow img-fluid image-button w-100 rounded-5 hover-scale" alt="Image 1" onclick="navigateTo('pong_choices')">
+            <img src="pong_display_image.png" class=" clickable shadow img-fluid image-button w-100 rounded-5 hover-scale" alt="Image 1" onclick="navigateTo('pong_choices')">
         </div>
         <div class="col-lg-5 col-md-6 ">
             <img src="https://via.placeholder.com/1000" class="clickable shadow img-fluid image-button w-100 rounded-5 hover-scale" alt="Image 1" onclick="location.href='#';">
