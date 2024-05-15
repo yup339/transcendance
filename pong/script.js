@@ -22,7 +22,7 @@ const pages = {
             <button  type="button" class="btn btn-color btn-lg w-75 p-3 text-white" onclick="navigateTo('pong')">Dual Player</button>
         </div>
         <div class="col-12  text-center px-5">
-            <button type="button" class="btn btn-color btn-lg w-75 p-3 text-white" onclick="navigateTo('game_choice')">AI Duel</button>
+            <button type="button" class="btn btn-color btn-lg w-75 p-3 text-white" onclick="navigateTo('pong_ai')">AI Duel</button>
         </div>
         <div class="col-12  text-center px-5 mb-3">
             <button type="button" class="btn btn-color btn-lg  w-75 p-3 text-white">Tournament</button>
@@ -68,6 +68,12 @@ window.addEventListener('popstate', function (event) {
 function displayPage(pageName) 
 {
     const content = document.getElementById('content');
+
+    if(pageName == 'pong_ai')
+    {
+        pageName = 'pong';
+        ai_on = true;
+    }
     if (pages.hasOwnProperty(pageName)) 
     {
         content.innerHTML = pages[pageName];
@@ -77,6 +83,7 @@ function displayPage(pageName)
 			stopGame();
     } 
 }
+
 
 function navigateTo(pageName)
 {
@@ -96,7 +103,6 @@ function initializePage()
         displayPage(substring);
     else
     {
-        
         history.pushState(null, null, null);
         displayPage('game_choice');
     }

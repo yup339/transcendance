@@ -176,6 +176,8 @@ class PongAi {
     }
 
     getBallPosition(){
+		if(game_stop)
+			return ;
 		this.ball = getClosestBall(this.paddle.x);
 		this.posX = this.ball.x;
 		this.posY = this.ball.y;
@@ -305,6 +307,7 @@ class Paddle {
 	}
 }
 let game_stop = true;
+let ai_on = false;
 
 var BALL_SPEED = 1;
 const GAME_WIDTH = 100;
@@ -563,6 +566,8 @@ function executeGame()
 	
 	setUpScene();
 	
+	if(ai_on)
+		rightPaddle.activateAI(leftGoal,balls);
 	update();
 	colorPicker.addEventListener('input', handleColorPicked);
     
@@ -578,6 +583,10 @@ function stopGame()
 	
 	document.removeEventListener('keydown', keyDownHandler);
 
+	if(ai_on)
+	{
+		ai_on = false;
+	}
 
 	document.removeEventListener('keyup', keyUpHandler);
 	leftPlayerScore = 0;
