@@ -61,7 +61,6 @@ window.addEventListener('popstate', function (event) {
         displayPage(pageName);
     else
         displayPage('game_choice');
-  
 
 });
 

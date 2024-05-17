@@ -8,7 +8,7 @@ services:
   nginx:
     container_name: nginx
     volumes: 
-      - nginx_vol:/var/www/html
+      - ./pong:/etc/frontend
     build: ./pong
     networks:
       - inception
@@ -26,5 +26,5 @@ services:
     #  - "8000"
 
 volumes:
-  nginx_vol:
+#  nginx_vol:
   django_vol:

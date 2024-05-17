@@ -42,8 +42,6 @@ class Ball {
 
 	update(){
 		if (this.HitBox.doesCollide(leftPaddle.HitBox)){
-			//wthis.velocityY =  leftPaddle.getImpactVector(this.y);
-			//this.velocityX *= -1;
 			this.vec.y =  leftPaddle.getImpactVector(this.y);
 			this.vec.x *= -1;
 			this.updateSpeed()
@@ -51,8 +49,6 @@ class Ball {
 			leftPaddle.disableHitbox();
 		}
 		if(this.HitBox.doesCollide(rightPaddle.HitBox)){
-			//this.velocityY =  rightPaddle.getImpactVector(this.y);
-			//this.velocityX *= -1;
 			this.vec.y =  rightPaddle.getImpactVector(this.y);
 			this.vec.x *= -1;
 			this.updateSpeed()
@@ -71,7 +67,6 @@ class Ball {
 			return;
 		} else if (this.HitBox.doesCollide(rightGoal)){
 			score("left");
-			console.log("score at: ", balls[0].y);
 			//this.velocityX *= -1;
 			this.vec.x *= -1;
 			this.reset(-1);
@@ -88,7 +83,6 @@ class Ball {
 		this.HitBox.setPosition(this.x, this.y);
 		this.light.position.set( this.x, this.y, 0);
 		this.sphereMesh.position.set(this.x,this.y, 0);
-		//console.log(this.x, " , ", this.y);
 	}
 
 	
@@ -280,16 +274,14 @@ class Paddle {
 	}
 
 	getImpactVector(y) {
-		var hitPosition = (y - this.y) / (this.height * 2);
-	
-		var maxAngle = Math.PI / 2; 
-		var minAngle = -Math.PI / 2; 
-	
-		var impactAngle = minAngle + (hitPosition * (maxAngle - minAngle));
-	
+		const MAX_ANGLE = 3;
+		var hitPosition = (y - this.y) / (this.height/2);
+		var maxAngle = Math.PI / MAX_ANGLE; 
+		var minAngle = -Math.PI / MAX_ANGLE; 
+		var impactAngle = hitPosition * (maxAngle - minAngle) / 2;
 		var dy = Math.sin(impactAngle);	
-		dy = dy * -1;
-		return dy;
+		console.log("hitPosition: ",hitPosition  ," , dy: ", dy);
+		return dy * BALL_SPEED;
 	}
 
 	activateAI(goal, ball){
@@ -594,4 +586,8 @@ function stopGame()
 	balls = [];
 	game_stop = true;
 }
+
+
+
+
 
