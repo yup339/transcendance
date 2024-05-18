@@ -341,8 +341,8 @@ var   rightPlayerScore = 0;
 
 
 
-let ball_color = randomColor();
-let extra_ball_number = 0;
+let ball_color;
+let extra_ball_number;
 
 
 
@@ -538,7 +538,8 @@ function prepareGame()
 	rightPaddle = new Paddle(GAME_WIDTH - PADDLE_DISTANCE_FROM_GOAL, 0, randomColor());
 	speedOutput.innerHTML = speedSlider.value;
 	
-
+	ball_color = randomColor();
+	 extra_ball_number = 0;
 	leftGoal.draw();
 	rightGoal.draw();
 	roof.draw();

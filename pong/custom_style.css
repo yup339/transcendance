@@ -1,5 +1,5 @@
 body{
-    background: linear-gradient(to right, hsl(199, 100%, 54%), #7ad5ff);
+    background: #232242;
 }
 
 .hover-scale
@@ -24,15 +24,15 @@ body{
 }
 
 .btn-color{
-    background-color: rgb(85, 187, 255);
+    background-color: #343CFF;
 }
 
-.btn-color:hover{
-    background-color: rgb(204, 204, 255);
+.btn-color:hover, .btn-color:active{
+    background-color: #5258ff !important;
 }
 
 .dark-color-bg{
-    background-color: rgb(35, 41, 71);
+    background-color: #131333;
 }
 
 
@@ -64,7 +64,7 @@ body{
     width: 25px; 
     height: 25px; 
     border-radius: 50%; 
-    background: #2c90e2; 
+    background: #343CFF; 
 }
 
 .slider::-moz-range-thumb
@@ -74,7 +74,7 @@ body{
     width: 25px; 
     height: 25px; 
     border-radius: 50%; 
-    background: #2c90e2; 
+    background: #343CFF; 
   
 }
 

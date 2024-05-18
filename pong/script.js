@@ -14,7 +14,7 @@ const pages = {
     </div>
     `,
     'pong_choices':`<div class="fullscreen ">
-    <div class="row   w-75 m-auto gy-2  rounded-4 dark-color-bg py-4">
+    <div class="row   w-75 m-auto gy-2  rounded-4 dark-color-bg shadow py-4">
         <div class="col-12 mb-3">
             <h5 class="text-center text-white h2 fw-bold ">Choose Your Game Mode</h5>
         </div>
@@ -23,6 +23,9 @@ const pages = {
         </div>
         <div class="col-12  text-center px-5">
             <button type="button" class="btn btn-color btn-lg w-75 p-3 text-white" onclick="navigateTo('pong_ai')">AI Duel</button>
+        </div>
+        <div class="col-12  text-center px-5 ">
+            <button type="button" class="btn btn-color btn-lg  w-75 p-3 text-white">Online</button>
         </div>
         <div class="col-12  text-center px-5 mb-3">
             <button type="button" class="btn btn-color btn-lg  w-75 p-3 text-white">Tournament</button>
