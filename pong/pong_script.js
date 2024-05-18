@@ -341,7 +341,8 @@ var   rightPlayerScore = 0;
 
 
 
-
+let ball_color = randomColor();
+let extra_ball_number = 0;
 
 
 
@@ -352,6 +353,7 @@ var   rightPlayerScore = 0;
 function handleColorPicked(event) {
 	const color = event.target.value;
 	colorBox.style.backgroundColor = color;
+	ball_color = color;
 	for (let i = 0; i < balls.length; i++) {
 		balls[i].changeColor(color);
 	}
@@ -431,10 +433,12 @@ function score(side){
 }
 
 function setBall(n){
+	if(n == 0)
+		return ;
 	if (n > balls.length){
 		const numberOfNewBall = n - balls.length;
 		for (let i = 0; i < numberOfNewBall; i++) {
-			balls.push(new Ball(0,0,randomSpeed(), randomValue(), randomColor()));
+			balls.push(new Ball(0,0,BALL_SPEED, randomValue(), ball_color));
 		}
 	}
 	else if (n < balls.length){
@@ -501,12 +505,11 @@ function keyUpHandler(event) {
 
 //-----------------------------------------
 
-
-function executeGame()
+function prepareGame()
 {
-	game_stop = false;
 	BALL_SPEED = 1;
-	const colorPicker = document.getElementById('colorPicker'); // assuming you have an input element with id 'colorPicker'
+	game_stop = false;
+	colorPicker = document.getElementById('colorPicker'); // assuming you have an input element with id 'colorPicker'
     colorBox = document.getElementById('colorBox'); // assuming you have a div element with id 'colorBox'
     canvas = document.getElementById("pongCanvas");
     ballSlider = document.getElementById("ballSlider");
@@ -515,7 +518,7 @@ function executeGame()
     speedOutput = document.getElementById("speedSliderValue");
 	scene = new THREE.Scene();
 	
-		backgroundGeometry = new THREE.BoxGeometry(GAME_WIDTH * 2, GAME_HEIGHT * 2 ,1)
+	backgroundGeometry = new THREE.BoxGeometry(GAME_WIDTH * 2, GAME_HEIGHT * 2 ,1)
 	backgroud_materail = new THREE.MeshStandardMaterial({color: 0x444444});
 	background = new THREE.Mesh( backgroundGeometry, backgroud_materail);
 	background.position.z = -BOUND_DEPTH / 2;
@@ -534,22 +537,7 @@ function executeGame()
 	leftPaddle = new Paddle(-GAME_WIDTH + PADDLE_DISTANCE_FROM_GOAL , 0, randomColor());
 	rightPaddle = new Paddle(GAME_WIDTH - PADDLE_DISTANCE_FROM_GOAL, 0, randomColor());
 	speedOutput.innerHTML = speedSlider.value;
-	ballSliderOutput.innerHTML = ballSlider.value;
-    balls.push(new Ball(0,0,1, randomValue(), randomColor()))	
-	ballSlider.oninput = function() {
-		
-		ballSliderOutput.innerHTML = this.value;
-		setBall(this.value);
-	}
 	
-	speedSlider.oninput = function() {
-		speedOutput.innerHTML = this.value;
-		BALL_SPEED = this.value;
-		for (let i = 0; i < balls.length; i++) {
-			balls[i].updateSpeed();
-		}
-	}
-
 
 	leftGoal.draw();
 	rightGoal.draw();
@@ -557,11 +545,47 @@ function executeGame()
 	floor.draw();
 	
 	setUpScene();
+	ballSliderOutput.innerHTML = ballSlider.value;
+	update();
 	
+	colorPicker.addEventListener('input', handleColorPicked);
+	
+	ballSlider.oninput = function() {
+		
+		ballSliderOutput.innerHTML = this.value;
+		extra_ball_number = this.value;
+		//setBall(this.value);
+	}
+	
+	speedSlider.oninput = function() {
+		speedOutput.innerHTML = this.value;
+		BALL_SPEED = this.value;
+		/*for (let i = 0; i < balls.length; i++) {
+			balls[i].updateSpeed();
+		}*/
+	}
+	//ball for presentation
+	balls.push(new Ball(0,0,0, 0, ball_color));
+}
+
+function startMatch()
+{
+	document.getElementById("play-link").remove();
+	
+	//delete the presentation ball
+	balls[0].cleanup();
+	balls = [];
+
+	//first ball
+	balls.push(new Ball(0,0,BALL_SPEED, randomValue(), ball_color))
+
+	//extra balls
+	setBall(extra_ball_number);
+
 	if(ai_on)
 		rightPaddle.activateAI(leftGoal,balls);
-	update();
-	colorPicker.addEventListener('input', handleColorPicked);
+
+	document.getElementById("customs").remove();
     
     document.addEventListener('keydown', keyDownHandler);
     document.addEventListener('keyup', keyUpHandler);

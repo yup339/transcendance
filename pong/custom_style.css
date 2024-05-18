@@ -35,12 +35,7 @@ body{
     background-color: rgb(35, 41, 71);
 }
 
-#pongCanvas {
-    width: 100%;
-    height: 100%;
-    display: block;
-    margin: 0 auto;
-}
+
 .clickable {
     cursor: pointer !important;
   }
@@ -49,6 +44,50 @@ body{
 {
 	width: 90%;
 }
+
+.slider {
+    appearance: none; /*overwrite browser styling */
+    width: 70%; 
+    height: 20px; 
+    border-radius: 50px; 
+    background: #ffe8e8 ; 
+    opacity: 0.8;
+}
+
+.slider:hover {
+    opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+    appearance: none; 
+    cursor: pointer; 
+    width: 25px; 
+    height: 25px; 
+    border-radius: 50%; 
+    background: #2c90e2; 
+}
+
+.slider::-moz-range-thumb
+{
+    appearance: none; 
+    cursor: pointer; 
+    width: 25px; 
+    height: 25px; 
+    border-radius: 50%; 
+    background: #2c90e2; 
+  
+}
+
+.slider::-webkit-slider-thumb:hover{
+    width: 26px; 
+    height: 27px; 
+}
+
+.slider::-moz-range-thumb:hover{
+    width: 26px; 
+    height: 27px; 
+}
+
 
 @media (min-width: 1200px) 
 {

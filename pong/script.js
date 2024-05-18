@@ -30,27 +30,41 @@ const pages = {
     </div>
 </div>`,
 	'pong': `<div class="container extra-top-padding mt-5" >
-
-	<div id="canvasContainer">
-		<canvas id="pongCanvas"></canvas>
+    
+    <div id="scoreContainer" class="d-flex">
+        <div class="me-auto text-white h2">
+            <span id="leftPlayerScore">Left Player: 0</span><br>
+        </div>
+        <div class="ms-auto text-white h2">
+            <span id="rightPlayerScore">Right Player: 0</span>
+        </div>
+    </div>
+	<div id="canvasContainer" class="position-relative mb-5">
+		<canvas id="pongCanvas" class="d-block m-auto w-100"></canvas>
+        <div id="play-link" class="position-absolute w-100 h-100 z-3 top-0 start-0 bg-dark opacity-50 ">
+            <a class=" clickable hover-scale w-100 h-100 d-flex justify-content-center align-items-center link-body-emphasis link-underline-opacity-0" onclick="startMatch()">
+            <p class=" mb-0 display-1 lead fw-bold text-white border px-5 py-3 rounded-5 ">Play</p>
+            </a>
+        </div>
 	</div>
 
-	<div id="scoreContainer">
-		<span id="leftPlayerScore">Left Player: 0</span><br>
-		<span id="rightPlayerScore">Right Player: 0</span>
-	</div>
+    <div id="customs" class="my-5">
 
-	<input type="color" id="colorPicker">
-	<div class="color-box" id="colorBox"></div>
+        <div class=" align-items-center row">
+            <div class="col-4 "><label class="form-label my-0 text-white h5">Ball Color</label></div>
+            <div class="col-8 "><input type="color" class="w-25" id="colorPicker"></div>
+            <div class="color-box" id="colorBox"></div>
+        </div>
 
-	<div>
-		<input type="range" min="1" max="10" value="1" class="slider" id="ballSlider">
-		<p>Value: <span id="ballSliderValue">1</span></p>
-	</div>
+        <div class="align-items-center mt-3 row">
+            <div class="col-4 "><label class="form-label my-0  text-white h5">Ball Count: <span id="ballSliderValue">1</span></label></div>
+            <div class="col-8 "><input type="range" min="1" max="10" value="1" class="slider " id="ballSlider"></div>
+        </div>
 
-	<div>
-		<input type="range" min="1" max="5" value="1" step="0.01" class="slider" id="speedSlider">
-		<p>Value: <span id="speedSliderValue">1</span></p>
+        <div class="align-items-center mt-3 row">
+            <div class="col-4 "> <label class="form-label my-0  text-white h5">Ball Speed: <span id="speedSliderValue">1</span></label></div>
+            <div class="col-8 "><input type="range" min="1" max="5" value="1" step="0.01" class="slider " id="speedSlider"></div>
+        </div>
 	</div>
 </div>`
 
@@ -77,7 +91,7 @@ function displayPage(pageName)
     {
         content.innerHTML = pages[pageName];
 		if(pageName == 'pong')
-			executeGame();
+			prepareGame();
 		else
 			stopGame();
     } 
