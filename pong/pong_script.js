@@ -299,7 +299,7 @@ class Paddle {
 	}
 }
 let game_stop = true;
-let ai_on = false;
+
 
 var BALL_SPEED = 1;
 const GAME_WIDTH = 100;
@@ -340,11 +340,14 @@ var   rightPlayerScore = 0;
 
 
 
-
+let scoreToWin;
 let ball_color;
 let extra_ball_number;
 
+let leftPlayer;
+let rightPlayer;
 
+let game_mode = "";
 
 //--------------------------------- classes
 
@@ -427,9 +430,22 @@ function score(side){
 		leftPlayerScore++;
 	else if (side === "right")
 		rightPlayerScore++;
+	
+	document.getElementById('leftPlayerScore').textContent = leftPlayer + ': ' + leftPlayerScore;
+	document.getElementById('rightPlayerScore').textContent = rightPlayer + ': ' + rightPlayerScore;	
 
-	document.getElementById('leftPlayerScore').textContent = 'Left Player: ' + leftPlayerScore;
-	document.getElementById('rightPlayerScore').textContent = 'Right Player: ' + rightPlayerScore;	
+	if(leftPlayerScore == scoreToWin || rightPlayerScore == scoreToWin)
+	{
+		game_stop = true;
+		let winner;
+		if(leftPlayerScore > rightPlayerScore)
+			winner = leftPlayer;
+		else
+			winner = rightPlayer;
+		$("#winModal").modal('show');
+		document.getElementById('winner').textContent = winner + " won!";
+	
+	}
 }
 
 function setBall(n){
@@ -507,15 +523,32 @@ function keyUpHandler(event) {
 
 function prepareGame()
 {
-	BALL_SPEED = 1;
 	game_stop = false;
+
+	if(game_mode == 'pong_dual')
+	{
+		leftPlayer = 'Left player';
+		rightPlayer = 'Right player';
+	}
+	else if(game_mode == 'pong_ai')
+	{
+		leftPlayer = 'You';
+		rightPlayer = 'Ai';
+	}
+
+	document.getElementById('leftPlayerScore').textContent = leftPlayer + ': ' + leftPlayerScore;
+	document.getElementById('rightPlayerScore').textContent = rightPlayer + ': ' + rightPlayerScore;	
+
+
 	colorPicker = document.getElementById('colorPicker'); // assuming you have an input element with id 'colorPicker'
     colorBox = document.getElementById('colorBox'); // assuming you have a div element with id 'colorBox'
     canvas = document.getElementById("pongCanvas");
     ballSlider = document.getElementById("ballSlider");
+	scoreSlider = document.getElementById("scoreSlider");
     ballSliderOutput = document.getElementById("ballSliderValue");
     speedSlider = document.getElementById("speedSlider");
     speedOutput = document.getElementById("speedSliderValue");
+	scoreOutput = document.getElementById("scoreSliderValue");
 	scene = new THREE.Scene();
 	
 	backgroundGeometry = new THREE.BoxGeometry(GAME_WIDTH * 2, GAME_HEIGHT * 2 ,1)
@@ -537,9 +570,10 @@ function prepareGame()
 	leftPaddle = new Paddle(-GAME_WIDTH + PADDLE_DISTANCE_FROM_GOAL , 0, randomColor());
 	rightPaddle = new Paddle(GAME_WIDTH - PADDLE_DISTANCE_FROM_GOAL, 0, randomColor());
 	speedOutput.innerHTML = speedSlider.value;
-	
+	BALL_SPEED = speedSlider.value;
 	ball_color = randomColor();
-	 extra_ball_number = 0;
+	extra_ball_number = 0;
+	scoreToWin = scoreSlider.value;
 	leftGoal.draw();
 	rightGoal.draw();
 	roof.draw();
@@ -547,6 +581,7 @@ function prepareGame()
 	
 	setUpScene();
 	ballSliderOutput.innerHTML = ballSlider.value;
+	scoreOutput.innerHTML = scoreSlider.value;
 	update();
 	
 	colorPicker.addEventListener('input', handleColorPicked);
@@ -564,6 +599,12 @@ function prepareGame()
 		/*for (let i = 0; i < balls.length; i++) {
 			balls[i].updateSpeed();
 		}*/
+	}
+
+		
+	scoreSlider.oninput = function() {
+		scoreOutput.innerHTML = this.value;
+		scoreToWin  = this.value;
 	}
 	//ball for presentation
 	balls.push(new Ball(0,0,0, 0, ball_color));
@@ -583,7 +624,7 @@ function startMatch()
 	//extra balls
 	setBall(extra_ball_number);
 
-	if(ai_on)
+	if(game_mode === 'pong_ai')
 		rightPaddle.activateAI(leftGoal,balls);
 
 	document.getElementById("customs").remove();
@@ -600,10 +641,7 @@ function stopGame()
 	
 	document.removeEventListener('keydown', keyDownHandler);
 
-	if(ai_on)
-	{
-		ai_on = false;
-	}
+	game_mode = "";
 
 	document.removeEventListener('keyup', keyUpHandler);
 	leftPlayerScore = 0;

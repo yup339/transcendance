@@ -19,7 +19,7 @@ const pages = {
             <h5 class="text-center text-white h2 fw-bold ">Choose Your Game Mode</h5>
         </div>
         <div class="col-12  text-center px-5">
-            <button  type="button" class="btn btn-color btn-lg w-75 p-3 text-white" onclick="navigateTo('pong')">Dual Player</button>
+            <button  type="button" class="btn btn-color btn-lg w-75 p-3 text-white" onclick="navigateTo('pong_dual')">Dual Player</button>
         </div>
         <div class="col-12  text-center px-5">
             <button type="button" class="btn btn-color btn-lg w-75 p-3 text-white" onclick="navigateTo('pong_ai')">AI Duel</button>
@@ -36,10 +36,10 @@ const pages = {
     
     <div id="scoreContainer" class="d-flex">
         <div class="me-auto text-white h2">
-            <span id="leftPlayerScore">Left Player: 0</span><br>
+            <span id="leftPlayerScore"></span><br>
         </div>
         <div class="ms-auto text-white h2">
-            <span id="rightPlayerScore">Right Player: 0</span>
+            <span id="rightPlayerScore"></span>
         </div>
     </div>
 	<div id="canvasContainer" class="position-relative mb-5">
@@ -59,6 +59,11 @@ const pages = {
             <div class="color-box" id="colorBox"></div>
         </div>
 
+		<div class="align-items-center mt-3 row">
+			<div class="col-4 "> <label class="form-label my-0  text-white h5">Score to win: <span id="scoreSliderValue">1</span></label></div>
+			<div class="col-8 "><input type="range" min="5" max="50" value="10" step="1" class="slider " id="scoreSlider"></div>
+		</div>
+
         <div class="align-items-center mt-3 row">
             <div class="col-4 "><label class="form-label my-0  text-white h5">Ball Count: <span id="ballSliderValue">1</span></label></div>
             <div class="col-8 "><input type="range" min="1" max="10" value="1" class="slider " id="ballSlider"></div>
@@ -66,14 +71,31 @@ const pages = {
 
         <div class="align-items-center mt-3 row">
             <div class="col-4 "> <label class="form-label my-0  text-white h5">Ball Speed: <span id="speedSliderValue">1</span></label></div>
-            <div class="col-8 "><input type="range" min="1" max="5" value="1" step="0.01" class="slider " id="speedSlider"></div>
+            <div class="col-8 "><input type="range" min="1" max="5" value="2" step="0.01" class="slider " id="speedSlider"></div>
         </div>
 	</div>
+</div>
+<div class="modal fade" id="winModal" tabindex="-1" role="dialog" aria-labelledby="winModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal-dialog modal-dialog-centered " role="document">
+	<div class="modal-content dark-color-bg text-white">
+		<div class="modal-body p-5">
+			<h1 class="tp-4 p-5 text-center" id="winner"></h1>
+			<button type="button" class="btn btn-color text-white d-block m-auto w-75 py-3" onclick="window.location.reload()">Play again</button>
+			<button type="button" data-dismiss="modal" aria-label="Close" class="close btn btn-color text-white d-block m-auto w-75 py-3 mt-3" onclick="navigateTo('game_choice')">Menu</button>
+		</div>
+	</div>
+</div>
 </div>`
 
 }
 window.addEventListener('popstate', function (event) {
     const pageName = event.state;
+
+	if ($('#winModal').hasClass('show')) 
+	{ 
+		$('#winModal').modal('hide');
+	}
+
     if(event.state)
         displayPage(pageName);
     else
@@ -84,12 +106,14 @@ window.addEventListener('popstate', function (event) {
 function displayPage(pageName) 
 {
     const content = document.getElementById('content');
-
-    if(pageName == 'pong_ai')
+	
+	//all pong modes
+    if(pageName == 'pong_ai' || pageName == 'pong_dual')
     {
+        game_mode = pageName;
         pageName = 'pong';
-        ai_on = true;
     }
+	
     if (pages.hasOwnProperty(pageName)) 
     {
         content.innerHTML = pages[pageName];
@@ -103,7 +127,7 @@ function displayPage(pageName)
 
 function navigateTo(pageName)
 {
- 
+	
     if (history.state !== pageName) 
         history.pushState(pageName, null, pageName);
     
