@@ -88,6 +88,10 @@ body{
     height: 27px; 
 }
 
+.big-text
+{
+	font-size: 15vw!important;
+}
 
 @media (min-width: 1200px) 
 {

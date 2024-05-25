@@ -28,7 +28,7 @@ const pages = {
             <button type="button" class="btn btn-color btn-lg  w-75 p-3 text-white">Online</button>
         </div>
         <div class="col-12  text-center px-5 mb-3">
-            <button type="button" class="btn btn-color btn-lg  w-75 p-3 text-white">Tournament</button>
+            <button type="button" class="btn btn-color btn-lg  w-75 p-3 text-white"  onclick="navigateTo('pong_tournament')">Tournament</button>
         </div>
     </div>
 </div>`,
@@ -88,9 +88,12 @@ const pages = {
 </div>`
 
 }
+
+const page404 = ` <div class="fullscreen"><h1 class="big-text text-white text-center m-0 p-0">404</h1></div>`
+
 window.addEventListener('popstate', function (event) {
     const pageName = event.state;
-
+	
 	if ($('#winModal').hasClass('show')) 
 	{ 
 		$('#winModal').modal('hide');
@@ -99,7 +102,9 @@ window.addEventListener('popstate', function (event) {
     if(event.state)
         displayPage(pageName);
     else
+	{
         displayPage('game_choice');
+	}
 
 });
 
@@ -108,43 +113,56 @@ function displayPage(pageName)
     const content = document.getElementById('content');
 	
 	//all pong modes
-    if(pageName == 'pong_ai' || pageName == 'pong_dual')
+    if(pageName == 'pong_ai' || pageName == 'pong_dual' || pageName == 'pong_tournament')
     {
-        game_mode = pageName;
+		game_mode = pageName;
         pageName = 'pong';
     }
 	
     if (pages.hasOwnProperty(pageName)) 
     {
+		
         content.innerHTML = pages[pageName];
 		if(pageName == 'pong')
 			prepareGame();
 		else
 			stopGame();
     } 
+	else
+	{
+		stopGame();
+		content.innerHTML = page404;
+	}
 }
 
 
 function navigateTo(pageName)
 {
-	
+
     if (history.state !== pageName) 
         history.pushState(pageName, null, pageName);
     
     displayPage(pageName);
 }
 
+//called at first and when you refresh page
 function initializePage() 
 {
-    
-    let currentUrl = window.location.href;
-    let substring = currentUrl.substring(currentUrl.lastIndexOf("/") + 1);
-    if(substring)
-        displayPage(substring);
+	const pathname = window.location.pathname;
+	console.log(pathname);
+	const route = pathname.substring(1);
+    if(route)
+		navigateTo(route);
     else
     {
-        history.pushState(null, null, null);
         displayPage('game_choice');
     }
-
 }
+
+//force reload the page when typping new url and pressing back
+window.addEventListener('pageshow', function(event) {
+    
+    if (event.persisted) {
+        window.location.reload();
+    }
+});
