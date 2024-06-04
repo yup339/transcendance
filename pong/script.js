@@ -91,6 +91,7 @@ const pages = {
 
 }
 
+//page format for error 404
 const page404 = ` <div class="fullscreen"><h1 class="big-text text-white text-center m-0 p-0">404</h1></div>`
 
 window.addEventListener('popstate', function (event) {
