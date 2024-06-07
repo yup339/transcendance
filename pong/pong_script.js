@@ -586,10 +586,12 @@ function endRound(winner, loser)
 	{
 		round++;
 		document.getElementById("play-link").style.visibility = 'visible';
+		document.getElementById("winner-text").innerHTML = winner + " won!";
 		//restartGame();
 	}
 	else
 	{
+		document.getElementById("winner-text").innerHTML = "";
 		$("#winModal").modal('show');
 		document.getElementById('winner').innerHTML = `<p id="pos1"></p><p id="pos2"></p><p id="pos3"></p> `;
 		document.getElementById("pos1").textContent = "First: " + first_pos;
@@ -600,28 +602,33 @@ function endRound(winner, loser)
 
 function set_round()
 {
-	document.getElementById("round").innerHTML = "Round: " + round;
+	let labelText;
 	if(round == 1)
 	{
 		leftPlayer = player1;
 		rightPlayer = player2;
+		labelText = "First Match";
 	}
 	else if(round == 2)
 	{
 		leftPlayer = player3;
 		rightPlayer = player4;
+		labelText = "Second Match";
 	}
 	else if(round == 3)
 	{
 		
 		leftPlayer = r1_winner;
 		rightPlayer = r2_winner;
+		labelText = "Final";
 	}
 	else if(round == 4)
 	{
 		leftPlayer = r1_loser;
 		rightPlayer = r2_loser;
+		labelText = "Third Place Playoff";
 	}
+	document.getElementById("round").innerHTML = labelText;
 }
 
 
@@ -700,6 +707,7 @@ function PongGame()
 		leftPlayer = 'Left player';
 		rightPlayer = 'Right player';
 		prepareGame();
+		document.getElementById("round").innerHTML = "Dual Player";
 
 	}
 	else if(game_mode == 'pong_ai')
@@ -707,6 +715,7 @@ function PongGame()
 		leftPlayer = 'You';
 		rightPlayer = 'Ai';
 		prepareGame();
+		document.getElementById("round").innerHTML = "Ai Duel";
 	}
 	else if(game_mode == 'pong_tournament')
 	{

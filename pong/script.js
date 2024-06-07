@@ -34,7 +34,7 @@ const pages = {
 </div>`,
 	'pong': `<div class="container extra-top-padding mt-5"  >
     <div id="pong-content">
-		<div class="h1 text-white text-center p-3 mb-5" id="round"> Round: 1</div>
+		<div class="h1 text-white text-center p-3 mb-5" id="round"></div>
 		<div id="scoreContainer" class="d-flex">
 			<div class="me-auto text-white h2">
 				<span id="leftPlayerScore"></span><br>
@@ -47,7 +47,10 @@ const pages = {
 			<canvas id="pongCanvas" class="d-block m-auto w-100"></canvas>
 			<div id="play-link" class="position-absolute w-100 h-100 z-3 top-0 start-0 bg-dark opacity-50 ">
 				<a class=" clickable hover-scale w-100 h-100 d-flex justify-content-center align-items-center link-body-emphasis link-underline-opacity-0" onclick="start_pong()">
-				<p class=" mb-0 display-1 lead fw-bold text-white border px-5 py-3 rounded-5 ">Play</p>
+				<div class=" mb-0 display-1 lead fw-bold text-white  border px-5 py-3 rounded-5 row" >
+				<div class="col-12 text-center p-0" id="winner-text"></div>
+				<div class="col-12 text-center p-0">Play</div>
+				</div>
 				</a>
 			</div>
 		</div>
