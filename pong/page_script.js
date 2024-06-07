@@ -90,6 +90,44 @@ const pages = {
 		</div>
 	</div>
 </div>
+</div>`,
+'signup':`
+<div class="container extra-top-padding  mt-5">
+<form>
+	<div class="row w-50 m-auto gy-5 gx-5">
+	   <div class="col-12 mb-3">
+		<h1 class="text-white text-center">Sign Up</h1>
+	  </div>
+	  <div class="col-12 form-group">
+		<input id="username" type="text" class="form-control mt-2" placeholder="Username" maxlength="15">
+	  </div>
+	  <div class="col-12 form-group">
+		<input id="password" type="password" class="form-control mt-2" placeholder="Password" maxlength="100">
+	  </div>
+	  <div class="col-12">
+		  <button type="button" class="btn btn-color text-white w-50 d-block m-auto mt-4 py-3" onclick="">Sign Up</button>
+	  </div>
+	</div>
+</form>
+</div>`,
+'login':`
+<div class="container extra-top-padding  mt-5">
+<form>
+	<div class="row w-50 m-auto gy-5 gx-5">
+	   <div class="col-12 mb-3">
+		<h1 class="text-white text-center">Log in</h1>
+	  </div>
+	  <div class="col-12 form-group">
+		<input id="username" type="text" class="form-control mt-2" placeholder="Username" maxlength="15">
+	  </div>
+	  <div class="col-12 form-group">
+		<input id="password" type="password" class="form-control mt-2" placeholder="Password" maxlength="100">
+	  </div>
+	  <div class="col-12">
+		  <button type="button" class="btn btn-color text-white w-50 d-block m-auto mt-4 py-3" onclick="">Login</button>
+	  </div>
+	</div>
+</form>
 </div>`
 
 }

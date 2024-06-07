@@ -13,11 +13,12 @@
 <body onload="initializePage()">
 
 	<header>
-		<nav class="navbar navbar-dark dark-color-bg py-4 fixed-top ">
+		<nav class="navbar navbar-expand navbar-dark dark-color-bg py-4 fixed-top ">
 			<div class="container ">
 				<a class="navbar-brand clickable"  onclick="navigateTo('game_choice')">ft_transcendence</a>
-				<div class="navbar-nav">
-					<a class="nav-link active clickable"  aria-current="page"  data-toggle="modal" data-target="#exampleModal">Log in</a>
+				<div class="navbar-nav gap-3">
+					<a class="nav-item nav-link active clickable" onclick="navigateTo('signup')" >Sign Up</a>
+					<a class="nav-item nav-link active clickable" onclick="navigateTo('login')">Log in</a>
 				</div>
 			</div>
 		</nav>
@@ -25,22 +26,6 @@
 	<main>
 		<div id="content"></div>
 	</main>
-	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-body ">
-					<button  type="button" class="close d-flex ms-auto  bg-white border-0 h3 " data-dismiss="modal" aria-label="Close">
-						<span >&times;</span>
-					</button>
-					<h4 class="tp-4">Enter your username</h4>
-					<div class="input-group flex-nowrap mt-3">
-						<input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping">
-						<button type="button" class="btn btn-color text-white">Submit</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
 		
 	<script src="page_script.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
