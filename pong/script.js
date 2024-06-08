@@ -8,7 +8,7 @@ const pages = {
             <img src="pong_img_button.png" class=" clickable shadow img-fluid image-button img-button-width rounded-5 hover-scale d-block m-auto" alt="Image 1" onclick="navigateTo('pong_choices')">
         </div>
         <div class="col-12 ">
-            <img src="pong_img_button.png" class="clickable shadow img-fluid image-button img-button-width rounded-5 hover-scale d-block m-auto" alt="Image 1" onclick="location.href='#';">
+            <img src="pong_img_button.png" class="clickable shadow img-fluid image-button img-button-width rounded-5 hover-scale d-block m-auto" alt="Image 1" onclick="navigateTo('up_choices')">
         </div>
         </div>
     </div>
@@ -32,6 +32,25 @@ const pages = {
         </div>
     </div>
 </div>`,
+	'up_choices':`<div class="fullscreen ">
+	<div class="row   w-75 m-auto gy-2  rounded-4 dark-color-bg shadow py-4">
+		<div class="col-12 mb-3">
+			<h5 class="text-center text-white h2 fw-bold ">Choose Your Game Mode</h5>
+		</div>
+		<div class="col-12  text-center px-5">
+			<button  type="button" class="btn btn-color btn-lg w-75 p-3 text-white" onclick="navigateTo('up_dual')">Dual Player</button>
+		</div>
+		<div class="col-12  text-center px-5">
+			<button type="button" class="btn btn-color btn-lg w-75 p-3 text-white" onclick="navigateTo('up_ai')">AI Duel</button>
+		</div>
+		<div class="col-12  text-center px-5 ">
+			<button type="button" class="btn btn-color btn-lg  w-75 p-3 text-white" onclick="navigateTo('up_online')">Online</button>
+		</div>
+		<div class="col-12  text-center px-5 mb-3">
+			<button type="button" class="btn btn-color btn-lg  w-75 p-3 text-white"  onclick="navigateTo('up_tournament')">Tournament</button>
+			</div>
+		</div>
+	</div>`,
 	'pong': `<div class="container extra-top-padding mt-5"  >
     <div id="pong-content">
 		<div class="h1 text-white text-center p-3 mb-5" id="round"> Round: 1</div>
@@ -74,20 +93,11 @@ const pages = {
 				<div class="col-8 "><input type="range" min="1" max="5" value="2" step="0.01" class="slider " id="speedSlider"></div>
 			</div>
 		</div>
-	</div>
-</div>
-
-<div class="modal fade" id="winModal" tabindex="-1" role="dialog" aria-labelledby="winModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-<div class="modal-dialog modal-dialog-centered " role="document">
-	<div class="modal-content dark-color-bg text-white">
-		<div class="modal-body p-5">
-			<p class="tp-4 p-5 text-center text-white h1" id="winner"></p>
-			<button type="button" class="btn btn-color text-white d-block m-auto w-75 py-3" onclick="window.location.reload()">Play again</button>
-			<button type="button" data-dismiss="modal" aria-label="Close" class="close btn btn-color text-white d-block m-auto w-75 py-3 mt-3" onclick="navigateTo('game_choice')">Menu</button>
-		</div>
-	</div>
-</div>
-</div>`
+	</div>`,
+	'up': `
+		<div>
+			<canvas id="upCanvas">  </canvas>
+		</div>`
 
 }
 
@@ -120,6 +130,11 @@ function displayPage(pageName)
 		game_mode = pageName;
         pageName = 'pong';
     }
+	else if(pageName == 'up_ai' || pageName == 'up_dual' || pageName == 'up_tournament' || pageName == 'up_online')
+    {
+		game_mode = pageName;
+        pageName = 'up';
+    }
 	
     if (pages.hasOwnProperty(pageName)) 
     {
@@ -127,6 +142,8 @@ function displayPage(pageName)
         content.innerHTML = pages[pageName];
 		if(pageName == 'pong')
 			PongGame();
+		else if(pageName == 'up')
+			UpGame();
 		else
 			stopGame();
     } 
