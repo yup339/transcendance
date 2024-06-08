@@ -293,7 +293,13 @@ class Paddle {
 	activateAI(goal, ball){
 		this.aiActive = true;
 		this.ai = new PongAi(this, goal, ball);
-		setInterval(() => this.ai.getBallPosition(), 1000);
+		this.aiIntervalId = setInterval(() => this.ai.getBallPosition(), 1000);
+	}
+
+	deactivateAI() {
+	
+		this.aiActive = false;
+		clearInterval(this.aiIntervalId);
 	}
 
 	changeColor(color){

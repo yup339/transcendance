@@ -199,6 +199,8 @@ function stopGame()
     rightPlayerScore = 0;
 	balls = [];
 	game_stop = true;
+	if(rightPaddle)
+		rightPaddle.deactivateAI();
 }
 
 function restartGame()
