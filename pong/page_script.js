@@ -171,6 +171,7 @@ window.addEventListener('popstate', function (event) {
     else
 	{
         displayPage('game_choice');
+		//displayPage('stats_pong'); for testing purposes only
 	}
 
 });
