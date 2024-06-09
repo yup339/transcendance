@@ -26,5 +26,5 @@ services:
     #  - "8000"
 
 volumes:
-#  nginx_vol:
-  django_vol:
+  nginx_vol:
+#  django_vol:
