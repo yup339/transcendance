@@ -26,12 +26,13 @@ SECRET_KEY = 'django-insecure-p(a$b5j0*_+ac5acy=n!!12ikge#%=pov_k1+_m=*_mb@i&c+s
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', os.getenv('HOME_IP')]
+ALLOWED_HOSTS = ['localhost','0.0.0.0' , '127.0.0.1', os.getenv('HOME_IP'), 'backend']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,9 +47,9 @@ INSTALLED_APPS = [
 ASGI_APPLICATION = 'backend.asgi.application'
 
 CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer"
-    }
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
 }
 
 

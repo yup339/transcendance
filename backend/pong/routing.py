@@ -1,6 +1,6 @@
 from django.urls import path
-from . import consumers
+from pong import consumers
 
-websocket_urlpatterns = [
-    path('ws/pong/', consumers.GameConsumer.as_asgi()),
+urlpatterns = [
+    path("ws/pong", consumers.GameConsumer.as_asgi()),
 ]
