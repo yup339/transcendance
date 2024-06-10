@@ -137,15 +137,42 @@ const pages = {
             </div>
             <div class="col-12 form-group">
                 <label for="total-games" class="text-white">Total Games Played:</label>
-                <input id="total-games" type="text" class="form-control mt-2" value="123" readonly>
+                <input id="total-games" type="text" class="form-control mt-2" placeholder="123" readonly>
             </div>
             <div class="col-12 form-group">
                 <label for="win-rate" class="text-white">Win Rate:</label>
-                <input id="win-rate" type="text" class="form-control mt-2" value="75%" readonly>
+                <input id="win-rate" type="text" class="form-control mt-2" placeholder="75%" readonly>
             </div>
             <div class="col-12 form-group">
                 <label for="highest-score" class="text-white">Highest Score:</label>
-                <input id="highest-score" type="text" class="form-control mt-2" value="21" readonly>
+                <input id="highest-score" type="text" class="form-control mt-2" placeholder="21" readonly>
+            </div>
+            <div class="col-12">
+                <button type="button" class="btn btn-color text-white w-50 d-block m-auto mt-4 py-3" onclick="refreshStats()">Refresh Stats</button>
+            </div>
+        </div>
+</div>`,
+'stats_jump':`
+<div class="container extra-top-padding mt-5">
+        <div class="row w-50 m-auto gy-5 gx-5">
+            <div class="col-12 mb-3">
+                <h1 class="text-white text-center">Jump Game Statistics</h1>
+            </div>
+            <div class="col-12 form-group">
+                <label for="total-games" class="text-white">Total Games Played:</label>
+                <input id="total-games" type="text" class="form-control mt-2" placeholder="123" readonly>
+            </div>
+            <div class="col-12 form-group">
+                <label for="win-rate" class="text-white">Win Rate:</label>
+                <input id="win-rate" type="text" class="form-control mt-2" placeholder="75%" readonly>
+            </div>
+            <div class="col-12 form-group">
+                <label for="highest-score" class="text-white">Highest Score:</label>
+                <input id="highest-score" type="text" class="form-control mt-2" placeholder="21" readonly>
+            </div>
+			<div class="col-12 form-group">
+                <label for="highest-score" class="text-white">Number Of Jumps:</label>
+                <input id="highest-score" type="text" class="form-control mt-2" placeholder="27" readonly>
             </div>
             <div class="col-12">
                 <button type="button" class="btn btn-color text-white w-50 d-block m-auto mt-4 py-3" onclick="refreshStats()">Refresh Stats</button>
@@ -171,7 +198,6 @@ window.addEventListener('popstate', function (event) {
     else
 	{
         displayPage('game_choice');
-		//displayPage('stats_pong'); for testing purposes only
 	}
 
 });
