@@ -1,6 +1,6 @@
-// gmae res
-const GAME_WIDTH = 1280;
-const GAME_HEIGHT = 720;
+// game res
+const GAME_WIDTH = 720;
+const GAME_HEIGHT = 480;
 
 //html stuff
 let upcanvas;
@@ -16,7 +16,7 @@ let uprenderer;
 let floor;
 // let leftPlayer;
 // let rightPlayer;
-// let startTime;
+let startTime;
 
 // score/players
 // let leftPlayerScore = 0;
@@ -59,6 +59,7 @@ function prepareUpGame()
 	uprenderer = new THREE.WebGLRenderer({canvas: upcanvas});
 	uprenderer.setSize(GAME_WIDTH, GAME_HEIGHT);
 	uprenderer.setClearColor(0x000000, 1);
+	console.log('up game prepared');
 
 	//time
 	let date = new Date();
@@ -74,6 +75,7 @@ function GetRandomInt(min, max)
 
 function UpGame()
 {
+	alert('up game');
 	game_stop = false;
 
 	if(game_mode == 'up_dual')
@@ -97,8 +99,13 @@ function UpGame()
 	}
 	else if(game_mode == 'up_tournament')
 	{
-		prepare_tournament();
+		prepare_up_tournament();
 	}
+}
+
+function prepare_up_tournament()
+{
+
 }
 
 function mainUp()

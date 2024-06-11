@@ -110,6 +110,9 @@ const pages = {
 	</div>
 </div>
 </div>`,
+'up': `
+	<div>Bonjour
+	</div>`,
 'signup':`
 <div class="container extra-top-padding  mt-5">
 <form>
