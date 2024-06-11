@@ -130,7 +130,7 @@ function displayPage(pageName)
 		game_mode = pageName;
         pageName = 'pong';
     }
-	else if(pageName == 'up_ai' || pageName == 'up_dual' || pageName == 'up_tournament' || pageName == 'up_online')
+	else if(pageName == 'up_ai' || pageName == 'up_dual' || pageName == 'up_online' || pageName == 'up_tournament')
     {
 		game_mode = pageName;
         pageName = 'up';

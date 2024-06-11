@@ -681,10 +681,8 @@ function score(side){
 
 function start_pong()
 {
-	
 	if(game_mode == "pong_tournament" && round > 1)
 	{
-	
 		restartGame();
 	}
 	else

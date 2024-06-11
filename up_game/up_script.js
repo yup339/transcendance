@@ -1,27 +1,27 @@
-
-const GAME_WIDTH = 100;
-const GAME_HEIGHT = 50;
+// gmae res
+const GAME_WIDTH = 1280;
+const GAME_HEIGHT = 720;
 
 //html stuff
-let canvas;
+let upcanvas;
 
 //scene
-let scene;
-let camera;
-let light; 
-let backgroundGeometry;
-let backgroud_materail;
-let background;
-let renderer;
+let upscene;
+let upcamera;
+let uplight; 
+// let backgroundGeometry;
+// let backgroud_materail;
+// let background;
+let uprenderer;
 let floor;
-let leftPlayer;
-let rightPlayer;
-let startTime;
+// let leftPlayer;
+// let rightPlayer;
+// let startTime;
 
-//score/players
-let leftPlayerScore = 0;
-let rightPlayerScore = 0;
-let scoreToWin;
+// score/players
+// let leftPlayerScore = 0;
+// let rightPlayerScore = 0;
+// let scoreToWin;
 let timeLimit = 40;
 
 // platforms
@@ -48,17 +48,17 @@ function getTimeFromStart()
 
 }
 
-function initiateUpGame()
+function prepareUpGame()
 {
-	canvas = document.getElementById('upCanvas');
-	canvas.width = GAME_WIDTH;
-	canvas.height = GAME_HEIGHT;
-	scene = new THREE.Scene();
-	camera = new THREE.PerspectiveCamera(75, GAME_WIDTH/GAME_HEIGHT, 0.1, 1000);
-	camera.position.z = 100;
-	renderer = new THREE.WebGLRenderer({canvas: canvas});
-	renderer.setSize(GAME_WIDTH, GAME_HEIGHT);
-	renderer.setClearColor(0x000000, 1);
+	upcanvas = document.getElementById('upCanvas');
+	upcanvas.width = GAME_WIDTH;
+	upcanvas.height = GAME_HEIGHT;
+	upscene = new THREE.Scene();
+	upcamera = new THREE.PerspectiveCamera(75, GAME_WIDTH/GAME_HEIGHT, 0.1, 1000);
+	upcamera.position.z = 100;
+	uprenderer = new THREE.WebGLRenderer({canvas: upcanvas});
+	uprenderer.setSize(GAME_WIDTH, GAME_HEIGHT);
+	uprenderer.setClearColor(0x000000, 1);
 
 	//time
 	let date = new Date();
@@ -101,7 +101,7 @@ function UpGame()
 	}
 }
 
-function ()
+function mainUp()
 {
 	
 }
