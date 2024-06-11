@@ -26,4 +26,4 @@ clean: down
 	@docker system prune -f
 	@docker volume ls -q | xargs docker volume rm
 
-.PHONY: up down start stop ps psa restart clean
+.PHONY: up down start stop ps psa restart clean 

@@ -53,7 +53,7 @@ const pages = {
 	</div>`,
 	'pong': `<div class="container extra-top-padding mt-5"  >
     <div id="pong-content">
-		<div class="h1 text-white text-center p-3 mb-5" id="round"> Round: 1</div>
+		<div class="h1 text-white text-center p-3 mb-5" id="round"></div>
 		<div id="scoreContainer" class="d-flex">
 			<div class="me-auto text-white h2">
 				<span id="leftPlayerScore"></span><br>
@@ -66,7 +66,10 @@ const pages = {
 			<canvas id="pongCanvas" class="d-block m-auto w-100"></canvas>
 			<div id="play-link" class="position-absolute w-100 h-100 z-3 top-0 start-0 bg-dark opacity-50 ">
 				<a class=" clickable hover-scale w-100 h-100 d-flex justify-content-center align-items-center link-body-emphasis link-underline-opacity-0" onclick="start_pong()">
-				<p class=" mb-0 display-1 lead fw-bold text-white border px-5 py-3 rounded-5 ">Play</p>
+				<div class=" mb-0 display-1 lead fw-bold text-white  border px-5 py-3 rounded-5 row" >
+				<div class="col-12 text-center p-0" id="winner-text"></div>
+				<div class="col-12 text-center p-0">Play</div>
+				</div>
 				</a>
 			</div>
 		</div>
@@ -93,14 +96,85 @@ const pages = {
 				<div class="col-8 "><input type="range" min="1" max="5" value="2" step="0.01" class="slider " id="speedSlider"></div>
 			</div>
 		</div>
-	</div>`,
-	'up': `
-		<div>
-			<canvas id="upCanvas">  </canvas>
-		</div>`
+	</div>
+</div>
+
+<div class="modal fade" id="winModal" tabindex="-1" role="dialog" aria-labelledby="winModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal-dialog modal-dialog-centered " role="document">
+	<div class="modal-content dark-color-bg text-white">
+		<div class="modal-body p-5">
+			<p class="tp-4 p-5 text-center text-white h1" id="winner"></p>
+			<button type="button" class="btn btn-color text-white d-block m-auto w-75 py-3" onclick="window.location.reload()">Play again</button>
+			<button type="button" data-dismiss="modal" aria-label="Close" class="close btn btn-color text-white d-block m-auto w-75 py-3 mt-3" onclick="navigateTo('game_choice')">Menu</button>
+		</div>
+	</div>
+</div>
+</div>`,
+'signup':`
+<div class="container extra-top-padding  mt-5">
+<form>
+	<div class="row w-50 m-auto gy-5 gx-5">
+	   <div class="col-12 mb-3">
+		<h1 class="text-white text-center">Sign Up</h1>
+	  </div>
+	  <div class="col-12 form-group">
+		<input id="username" type="text" class="form-control mt-2" placeholder="Username" maxlength="15">
+	  </div>
+	  <div class="col-12 form-group">
+		<input id="password" type="password" class="form-control mt-2" placeholder="Password" maxlength="100">
+	  </div>
+	  <div class="col-12">
+		  <button type="button" class="btn btn-color text-white w-50 d-block m-auto mt-4 py-3" onclick="">Sign Up</button>
+	  </div>
+	</div>
+</form>
+</div>`,
+'login':`
+<div class="container extra-top-padding  mt-5">
+<form>
+	<div class="row w-50 m-auto gy-5 gx-5">
+	   <div class="col-12 mb-3">
+		<h1 class="text-white text-center">Log in</h1>
+	  </div>
+	  <div class="col-12 form-group">
+		<input id="username" type="text" class="form-control mt-2" placeholder="Username" maxlength="15">
+	  </div>
+	  <div class="col-12 form-group">
+		<input id="password" type="password" class="form-control mt-2" placeholder="Password" maxlength="100">
+	  </div>
+	  <div class="col-12">
+		  <button type="button" class="btn btn-color text-white w-50 d-block m-auto mt-4 py-3" onclick="">Login</button>
+	  </div>
+	</div>
+</form>
+</div>`,
+'stats_pong':`
+<div class="container extra-top-padding mt-5">
+        <div class="row w-50 m-auto gy-5 gx-5">
+            <div class="col-12 mb-3">
+                <h1 class="text-white text-center">Pong Game Statistics</h1>
+            </div>
+            <div class="col-12 form-group">
+                <label for="total-games" class="text-white">Total Games Played:</label>
+                <input id="total-games" type="text" class="form-control mt-2" value="123" readonly>
+            </div>
+            <div class="col-12 form-group">
+                <label for="win-rate" class="text-white">Win Rate:</label>
+                <input id="win-rate" type="text" class="form-control mt-2" value="75%" readonly>
+            </div>
+            <div class="col-12 form-group">
+                <label for="highest-score" class="text-white">Highest Score:</label>
+                <input id="highest-score" type="text" class="form-control mt-2" value="21" readonly>
+            </div>
+            <div class="col-12">
+                <button type="button" class="btn btn-color text-white w-50 d-block m-auto mt-4 py-3" onclick="refreshStats()">Refresh Stats</button>
+            </div>
+        </div>
+</div>`
 
 }
 
+//page format for error 404
 const page404 = ` <div class="fullscreen"><h1 class="big-text text-white text-center m-0 p-0">404</h1></div>`
 
 window.addEventListener('popstate', function (event) {
@@ -116,6 +190,7 @@ window.addEventListener('popstate', function (event) {
     else
 	{
         displayPage('game_choice');
+		//displayPage('stats_pong'); for testing purposes only
 	}
 
 });
