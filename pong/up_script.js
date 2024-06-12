@@ -1,62 +1,98 @@
-// game res
-const UPGAME_WIDTH = document.getElementById('upCanvas').width;
-const UPGAME_HEIGHT = document.getElementById('upCanvas').height;
+// const vars
+const fps = 60;
 
 //html stuff
 let upcanvas;
+
+//time vars
+let stop;
+let lastTime;
+let startTime;
+let frameCount;
+let timeLimit;
+let fpsInterval;
 
 //scene
 let upscene;
 let upcamera;
 let uplight; 
 let uprenderer;
-let startTime;
 
 // score/players
 let playerLeft;
 let playerRight;
-// let leftPlayerScore = 0;
-// let rightPlayerScore = 0;
-// let scoreToWin;
-let timeLimit = 40;
 
 // platforms
-let platforms = [];
+let objects = [];
+let geometry, material, cube;
 
 //--------------------------------- classes
 
 class Platform 
 {
-	constructor(x, y, width, height)
+	constructor(geometry, material, mesh)
 	{
-		this.x = x;
-		this.y = y;
+		this.geometry = geometry;
+		this.material = material;
+		this.mesh = mesh;
+		this.x = 0;
+		this.y = 0;
 		this.z = 0;
 	}
 }
 
-function getTimeFromStart()
+class Player
 {
-	let date = new Date();
-	return (date.getTime() * 1000) - startTime;
+	constructor(geometry, material, mesh)
+	{
+		this.geometry = geometry;
+		this.material = material;
+		this.mesh = mesh;
+		this.x = 0;
+		this.y = 0;
+		this.z = 0;
+	}
 
 }
 
 function prepareUpGame()
 {
-	upcanvas = document.getElementById('upCanvas');
-	upcanvas.width = UPGAME_WIDTH;
-	upcanvas.height = UPGAME_HEIGHT;
+	upcanvas = document.getElementById('UpCanvas');
 	upscene = new THREE.Scene();
-	upcamera = new THREE.PerspectiveCamera(90, UPGAME_WIDTH/UPGAME_HEIGHT, 0.1, 500);
+	upcamera = new THREE.PerspectiveCamera(75, upcanvas.width/upcanvas.height, 0.1, 500);
 	upcamera.position.z = 100;
 	uprenderer = new THREE.WebGLRenderer({canvas: upcanvas});
-	uprenderer.setSize(UPGAME_WIDTH, UPGAME_HEIGHT);
-	uprenderer.setClearColor(0x000000, 1);
-
+	uprenderer.setSize(upcanvas.width, upcanvas.height);
+	
+	
+	const geometry = new THREE.BoxGeometry(5, 1, 5);
+	const material = new THREE.MeshBasicMaterial( { color: 0xff5a00 } );
+	const cube = new THREE.Mesh( geometry, material );
+	cube.position.x = -15;
+	const light = new THREE.AmbientLight(0xffffff);
+	upscene.add(light);
+	upscene.add(cube);
+	upscene.background = new THREE.Color(0x000000);
+	upcamera.position.z = 20;
+	upcamera.position.y = 5;
+	
 	//time
-	let date = new Date();
-	startTime = date.getTime() * 1000;
+	fpsInterval = 1000 / fps;
+	timeLimit = 40;
+	stop = false;
+	frameCount = 0;
+	lastTime = performance.now();
+	startTime = lastTime;
+	updateUpGame();
+}
+
+function updateUpGame()
+{
+	requestAnimationFrame(updateUpGame);
+	
+	let elapsedTime = performance.now() - lastTime;
+	lastTime = performance.now();
+	uprenderer.render(upscene, upcamera);
 
 }
 
@@ -69,6 +105,7 @@ function GetRandomInt(min, max)
 function UpGame()
 {
 	game_stop = false;
+	game_mode = 'up_dual';
 
 	if(game_mode == 'up_dual')
 	{
@@ -105,13 +142,4 @@ function mainUp()
 	
 }
 
-function timer()
-{
-    var timer = setInterval(function(){
-        document.getElementById('safeTimerDisplay').innerHTML='00:'+sec;
-        timeLimit--;
-        if (timeLimit < 0) {
-            clearInterval(timer);
-        }
-    }, 1000);
-}
+UpGame(); //TODO: remove this
