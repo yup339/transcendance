@@ -1,6 +1,6 @@
 // game res
-const GAME_WIDTH = 720;
-const GAME_HEIGHT = 480;
+const UPGAME_WIDTH = document.getElementById('upCanvas').width;
+const UPGAME_HEIGHT = document.getElementById('upCanvas').height;
 
 //html stuff
 let upcanvas;
@@ -9,16 +9,12 @@ let upcanvas;
 let upscene;
 let upcamera;
 let uplight; 
-// let backgroundGeometry;
-// let backgroud_materail;
-// let background;
 let uprenderer;
-let floor;
-// let leftPlayer;
-// let rightPlayer;
 let startTime;
 
 // score/players
+let playerLeft;
+let playerRight;
 // let leftPlayerScore = 0;
 // let rightPlayerScore = 0;
 // let scoreToWin;
@@ -31,13 +27,11 @@ let platforms = [];
 
 class Platform 
 {
-	constructor(x, y, width, height, color)
+	constructor(x, y, width, height)
 	{
 		this.x = x;
 		this.y = y;
-		this.width = width;
-		this.height = height;
-		this.color = color;
+		this.z = 0;
 	}
 }
 
@@ -51,15 +45,14 @@ function getTimeFromStart()
 function prepareUpGame()
 {
 	upcanvas = document.getElementById('upCanvas');
-	upcanvas.width = GAME_WIDTH;
-	upcanvas.height = GAME_HEIGHT;
+	upcanvas.width = UPGAME_WIDTH;
+	upcanvas.height = UPGAME_HEIGHT;
 	upscene = new THREE.Scene();
-	upcamera = new THREE.PerspectiveCamera(75, GAME_WIDTH/GAME_HEIGHT, 0.1, 1000);
+	upcamera = new THREE.PerspectiveCamera(90, UPGAME_WIDTH/UPGAME_HEIGHT, 0.1, 500);
 	upcamera.position.z = 100;
 	uprenderer = new THREE.WebGLRenderer({canvas: upcanvas});
-	uprenderer.setSize(GAME_WIDTH, GAME_HEIGHT);
+	uprenderer.setSize(UPGAME_WIDTH, UPGAME_HEIGHT);
 	uprenderer.setClearColor(0x000000, 1);
-	console.log('up game prepared');
 
 	//time
 	let date = new Date();
@@ -75,26 +68,25 @@ function GetRandomInt(min, max)
 
 function UpGame()
 {
-	alert('up game');
 	game_stop = false;
 
 	if(game_mode == 'up_dual')
 	{
-		leftPlayer = 'Left player';
-		rightPlayer = 'Right player';
+		playerLeft = 'Left player';
+		playerRight = 'Right player';
 		prepareUpGame();
 
 	}
 	else if(game_mode == 'up_ai')
 	{
-		leftPlayer = 'You';
-		rightPlayer = 'Ai';
+		playerLeft = 'You';
+		playerRight = 'Ai';
 		prepareUpGame();
 	}
 	else if(game_mode == 'up_online')
 	{
-		leftPlayer = 'You';
-		rightPlayer = 'Player 2';
+		playerLeft = 'You';
+		playerRight = 'Player 2';
 		prepareOnline();
 	}
 	else if(game_mode == 'up_tournament')
