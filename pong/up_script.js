@@ -12,8 +12,8 @@ let frameCount;
 
 //scene
 let scene;
-let light; 
 let renderer;
+let light;
 
 // score/players
 let playerLeft;
@@ -28,6 +28,7 @@ let objects = [];
 let platforms = [];
 let keys = {};
 let cube, material, geometry;
+let cycle = false;
 
 const views = [
 	{
@@ -128,14 +129,20 @@ function prepareUpGame()
 	
 	
 	geometry = new THREE.BoxGeometry(5, 1, 5);
-	material = new THREE.MeshBasicMaterial( { color: 0xffffff } );
+	material = new THREE.MeshBasicMaterial( { color: 0x7377ff } );
 	cube = new THREE.Mesh( geometry, material );
-	cube.position.x = 0;
-	cube.position.y = 0;
-	const light = new THREE.PointLight(0xffffff);
+	let cube2 = new THREE.Mesh( geometry, material ); // to remove
+	cube.position.x = 30;
+	cube.position.y = -5;
+
+	light = new THREE.PointLight( 0xffffff, 100 ); // red light
+	const helper = new THREE.PointLightHelper( light, 1 );
 	scene.add(light);
+	scene.add(helper);
+
 	scene.add(cube);
-	// scene.background = new THREE.Color(0x000000);
+	cube2.position.y = 5;
+	scene.add(cube2); // to remove
 	
 	// time
 	stop = false;
@@ -158,7 +165,7 @@ function keysEvent(elapsedTime)
 	}
 	if (keys[39]) // right 
 	{
-		if (cube.position.x < 30)
+		// if (cube.position.x < 30)
 			cube.position.x += playerSpeed * elapsedTime;
 	}
 	if (keys[38] && isJumping == false) //up or jump
@@ -187,6 +194,8 @@ function renderUp()
 		renderer.setScissor(left, bottom, width, height);
 		renderer.setScissorTest(true);
 		renderer.setClearColor(view.background);
+		// if (i == 0)
+		// 	camera.position.y = cube.position.y; // update camera position depending on player position
 		camera.aspect = width / height;
 		camera.updateProjectionMatrix();
 		renderer.render(scene, camera);
@@ -207,21 +216,23 @@ function updateUpGame()
 	lastTime = performance.now();
 
 	keysEvent(elapsedTime);
+	renderUp();
 
 	// player logic
 	if(isJumping)
 	{
-		cube.position.y += jumpSpeed * elapsedTime;
-		if (jumpSpeed != -30)
-			jumpSpeed -= 1;
-		if (cube.position.y <= jumpPos)
+		let nextPos = cube.position.y + jumpSpeed * elapsedTime;
+		if (nextPos > jumpPos)
+			cube.position.y = nextPos
+		else
 		{
 			isJumping = false;
 			jumpSpeed = 30;
+			cube.position.y = jumpPos;
 		}
+		if (jumpSpeed != -30)
+			jumpSpeed -= 1.5;
 	}
-
-	renderUp();
 }
 
 function GetRandomInt(min, max)
