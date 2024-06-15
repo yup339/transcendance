@@ -16,6 +16,8 @@ services:
       - "443:443"
   postgresql:
     container_name: postgresql
+    volumes:
+      - psql_vol:/var/lib/postgresql/data
     build: ./backend/database
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
@@ -36,4 +38,5 @@ services:
 
 volumes:
   nginx_vol:
+  psql_vol:
 #  django_vol:
