@@ -30,14 +30,13 @@ let playerSpeed = 10;
 let jumpSpeed = 30;
 let isJumping = false;
 let isFalling = false;
-let previousPos = [];
-let previousPos2 = [];
 let jumpPos = 0;
 
 // objects
 let light;
 let light2;
-let lightSphere
+let lightSphere;
+let lightSphere2;
 let objects = [];
 let objectsp2 = [];
 let platformsGeo = [
@@ -116,10 +115,18 @@ function prepareUpGame()
 	let mat = new THREE.MeshBasicMaterial({color: 0x404040});
 	lightSphere = new THREE.Mesh(geo, mat);
 	lightSphere.position.set(0, 4, 5);
-	light = new THREE.PointLight(0x404040, 7);
+	light = new THREE.PointLight(0x404040, 5, 50);
 	light.position.set( 0, 4, 5 );
 	scene.add(light);
 	scene.add(lightSphere);
+
+	//light for player 2
+	lightSphere2 = new THREE.Mesh(geo, mat);
+	lightSphere2.position.set(30, 4, 5);
+	light2 = new THREE.PointLight(0x404040, 5, 50);
+	light2.position.set( 30, 4, 5 );
+	scene.add(light2);
+	scene.add(lightSphere2);
 	
 	generateLevel();
 	
@@ -174,7 +181,13 @@ function generateLevel()
 		objects.push(platform);
 		scene.add(platform);
 	}
-
+	
+	for (let i = 0; i < objects.length; i++) // clone objects for player 2
+	{
+		objectsp2[i] = objects[i].clone();
+		objectsp2[i].position.x += 30;
+		scene.add(objectsp2[i]);
+	}
 	
 }
 
@@ -182,6 +195,9 @@ function keysEvent(elapsedTime)
 {
 	document.addEventListener('keydown', onKeyDown, false);
 	document.addEventListener('keyup', onKeyUp, false);
+
+	let nextPosP1;
+	let nextPosP2;
 
 	// player 1 movement
 	if (keys[65]) // a 
@@ -196,6 +212,7 @@ function keysEvent(elapsedTime)
 	}
 	if (keys[87] && isJumping == false) // w
 	{
+		// isFalling = true;
 		// isJumping = true;
 		// jumpPos = players[0].position.y;
 		players[0].position.y += playerSpeed * elapsedTime;
@@ -245,9 +262,15 @@ function renderUp()
 		renderer.setClearColor(view.background);
 		if (i == 0)
 		{
-			// lightSphere.position.y = cube.position.y + 14;
-			// light.position.y = cube.position.y + 14;
-			// camera.position.y = players[0].position.y + 10; // update camera position depending on player position
+			lightSphere.position.y = players[0].position.y + 14;
+			light.position.y = players[0].position.y + 14;
+			camera.position.y = players[0].position.y + 10; // update camera position depending on player position
+		}
+		else
+		{
+			lightSphere2.position.y = players[1].position.y + 14;
+			light2.position.y = players[1].position.y + 14;
+			camera.position.y = players[1].position.y + 10;
 		}
 		camera.aspect = width / height;
 		camera.updateProjectionMatrix();
