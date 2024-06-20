@@ -115,7 +115,7 @@ function prepareUpGame()
 	let mat = new THREE.MeshBasicMaterial({color: 0x404040});
 	lightSphere = new THREE.Mesh(geo, mat);
 	lightSphere.position.set(0, 4, 5);
-	light = new THREE.PointLight(0x404040, 5, 50);
+	light = new THREE.PointLight(0x404040, 10, 50);
 	light.position.set( 0, 4, 5 );
 	scene.add(light);
 	scene.add(lightSphere);
@@ -123,13 +123,12 @@ function prepareUpGame()
 	//light for player 2
 	lightSphere2 = new THREE.Mesh(geo, mat);
 	lightSphere2.position.set(30, 4, 5);
-	light2 = new THREE.PointLight(0x404040, 5, 50);
+	light2 = new THREE.PointLight(0x404040, 10, 50);
 	light2.position.set( 30, 4, 5 );
 	scene.add(light2);
 	scene.add(lightSphere2);
 	
 	generateLevel();
-	
 	// time
 	stop = false;
 	frameCount = 0;
@@ -152,12 +151,15 @@ function generateLevel()
 	let cube2 = new THREE.Mesh( geometry, material );
 	cube.position.set(0, -10, 0);
 	cube2.position.set(30, -10, 0);
+	let hitbox = new THREE.Box3().setFromObject(cube);
+	hitboxes.push(hitbox);
+	hitbox = new THREE.Box3().setFromObject(cube2);
+	hitboxes.push(hitbox);
 	scene.add(cube);
 	scene.add(cube2);
 	
 
 	let platform;
-	let hitbox;
 	let y = cube.position.y + 6;
 	for (let i = 0; i < 100; i++) // TODO: make it so that x values are  not too far apart
 	{
@@ -176,8 +178,8 @@ function generateLevel()
 		platform.position.x = GetRandomInt(-5, 5);
 		platform.position.y = y;
 		hitbox = new THREE.Box3().setFromObject(platform);
-		y += 6;
 		hitboxes.push(hitbox);
+		y += 6;
 		objects.push(platform);
 		scene.add(platform);
 	}
@@ -186,6 +188,8 @@ function generateLevel()
 	{
 		objectsp2[i] = objects[i].clone();
 		objectsp2[i].position.x += 30;
+		hitbox = new THREE.Box3().setFromObject(objectsp2[i]);
+		hitboxes.push(hitbox);
 		scene.add(objectsp2[i]);
 	}
 	
@@ -196,19 +200,19 @@ function keysEvent(elapsedTime)
 	document.addEventListener('keydown', onKeyDown, false);
 	document.addEventListener('keyup', onKeyUp, false);
 
-	let nextPosP1;
-	let nextPosP2;
+	let nextPosP1 = players[0].clone();
+	let nextPosP2 = players[1].clone();
 
 	// player 1 movement
 	if (keys[65]) // a 
 	{
-		if (players[0].position.x > -7)
-			players[0].position.x -= playerSpeed * elapsedTime;
+		if (nextPosP1.position.x > -7)
+		players[0].position.x -= playerSpeed * elapsedTime;
 	}
 	if (keys[68]) // d 
 	{
-		if (players[0].position.x < 7)
-			players[0].position.x += playerSpeed * elapsedTime;
+		if (nextPosP1.position.x < 7)
+		players[0].position.x += playerSpeed * elapsedTime;
 	}
 	if (keys[87] && isJumping == false) // w
 	{
@@ -243,6 +247,58 @@ function keysEvent(elapsedTime)
 		players[1].position.y -= playerSpeed * elapsedTime;
 	}
 
+	jumpLogic();
+	checkCollision(nextPosP1, nextPosP2);
+}
+
+function checkCollision(nextPosP1, nextPosP2)
+{
+	let playerBox = new THREE.Box3().setFromObject(nextPosP1);
+	let playerBox2 = new THREE.Box3().setFromObject(nextPosP2);
+	let hit = false;
+	let hit2 = false;
+	
+	for (let i = 0; i < hitboxes.length; i++)
+	{
+		if (playerBox.intersectsBox(hitboxes[i]))
+		{
+			console.log("player 1 hit");
+			hit = true;
+		}
+		if (playerBox2.intersectsBox(hitboxes[i]))
+		{
+			console.log("player 2 hit");
+			hit2 = true;
+		}
+	}
+
+	if (!hit)
+	{
+		players[0].position = nextPosP1.position;
+	}
+	if (!hit2)
+	{
+		players[1].position = nextPosP2.position;
+	}
+}
+
+function jumpLogic()
+{
+	// jump logic
+	// if(isJumping)
+	// {
+	// 	let nextPos = players[0].position.y + jumpSpeed * elapsedTime;
+	// 	if (nextPos > jumpPos)
+	// 		players[0].position.y = nextPos
+	// 	else
+	// 	{
+	// 		isJumping = false;
+	// 		jumpSpeed = 30;
+	// 		players[0].position.y = jumpPos;
+	// 	}
+	// 	if (jumpSpeed != -30)
+	// 		jumpSpeed -= 1.5;
+	// }
 }
 
 function renderUp()
@@ -260,41 +316,23 @@ function renderUp()
 		renderer.setScissor(left, bottom, width, height);
 		renderer.setScissorTest(true);
 		renderer.setClearColor(view.background);
-		if (i == 0)
-		{
-			lightSphere.position.y = players[0].position.y + 14;
-			light.position.y = players[0].position.y + 14;
-			camera.position.y = players[0].position.y + 10; // update camera position depending on player position
-		}
-		else
-		{
-			lightSphere2.position.y = players[1].position.y + 14;
-			light2.position.y = players[1].position.y + 14;
-			camera.position.y = players[1].position.y + 10;
-		}
+		// if (i == 0)
+		// {
+		// 	lightSphere.position.y = players[0].position.y + 14;
+		// 	light.position.y = players[0].position.y + 14;
+		// 	camera.position.y = players[0].position.y + 10; // update camera position depending on player position
+		// }
+		// else
+		// {
+		// 	lightSphere2.position.y = players[1].position.y + 14;
+		// 	light2.position.y = players[1].position.y + 14;
+		// 	camera.position.y = players[1].position.y + 10;
+		// }
 		camera.aspect = width / height;
 		camera.updateProjectionMatrix();
 		renderer.render(scene, camera);
 	
 	}
-}
-
-function checkCollision()
-{
-	let playerBox = new THREE.Box3().setFromObject(players[0]);
-	let playerBox2 = new THREE.Box3().setFromObject(players[1]);
-	for (let i = 0; i < hitboxes.length; i++)
-	{
-		if (playerBox.intersectsBox(hitboxes[i]))
-		{
-			
-		}
-		if (playerBox2.intersectsBox(hitboxes[i]))
-		{
-			
-		}
-	}
-
 }
 
 function updateUpGame()
@@ -312,22 +350,6 @@ function updateUpGame()
 
 	keysEvent(elapsedTime);
 	renderUp();
-
-	// player logic
-	if(isJumping)
-	{
-		let nextPos = players[0].position.y + jumpSpeed * elapsedTime;
-		if (nextPos > jumpPos)
-			players[0].position.y = nextPos
-		else
-		{
-			isJumping = false;
-			jumpSpeed = 30;
-			players[0].position.y = jumpPos;
-		}
-		if (jumpSpeed != -30)
-			jumpSpeed -= 1.5;
-	}
 }
 
 function GetRandomInt(min, max)
