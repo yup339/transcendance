@@ -207,12 +207,12 @@ function keysEvent(elapsedTime)
 	if (keys[65]) // a 
 	{
 		if (nextPosP1.position.x > -7)
-		players[0].position.x -= playerSpeed * elapsedTime;
+			players[0].position.x -= playerSpeed * elapsedTime;
 	}
 	if (keys[68]) // d 
 	{
 		if (nextPosP1.position.x < 7)
-		players[0].position.x += playerSpeed * elapsedTime;
+			players[0].position.x += playerSpeed * elapsedTime;
 	}
 	if (keys[87] && isJumping == false) // w
 	{
@@ -254,6 +254,8 @@ function keysEvent(elapsedTime)
 function checkCollision(nextPosP1, nextPosP2)
 {
 	let playerBox = new THREE.Box3().setFromObject(nextPosP1);
+	playerBox.min.y += 0.1;// so that it doesn't get stuck right away, to change
+	playerBox.max.y -= 0.1;
 	let playerBox2 = new THREE.Box3().setFromObject(nextPosP2);
 	let hit = false;
 	let hit2 = false;
