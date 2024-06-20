@@ -1,3 +1,8 @@
+ifneq (,$(wildcard ./.env))
+    include .env
+    export
+endif
+
 all : up
 
 up : 
@@ -20,10 +25,17 @@ psa:
 
 restart: down up
 
+
+psql :
+	@docker exec -it postgresql psql -U $(POSTGRES_USER) -d $(POSTGRES_DB)
+
+pbash :
+	@docker exec -it postgresql /bin/bash
+
 clean: down
 	@docker-compose down --rmi all -v
 	@docker volume prune -f
 	@docker system prune -f
 	@docker volume ls -q | xargs docker volume rm
 
-.PHONY: up down start stop ps psa restart clean 
+.PHONY: up down start stop ps psa restart clean psql pbash

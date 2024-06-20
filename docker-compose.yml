@@ -1,7 +1,7 @@
 version: '3'
   
 networks:
-  inception:
+  ft_transcendence:
     driver: bridge
 
 services: 
@@ -11,9 +11,20 @@ services:
       - ./pong:/etc/frontend
     build: ./pong
     networks:
-      - inception
+      - ft_transcendence
     ports:
       - "443:443"
+  postgresql:
+    container_name: postgresql
+    volumes:
+      - psql_vol:/var/lib/postgresql/data
+    build: ./backend/database
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    networks:
+      - ft_transcendence
 
     #django:
     #  container_name: django
@@ -27,4 +38,5 @@ services:
 
 volumes:
   nginx_vol:
+  psql_vol:
 #  django_vol:
