@@ -137,15 +137,35 @@ const pages = {
             </div>
             <div class="col-12 form-group">
                 <label for="total-games" class="text-white">Total Games Played:</label>
-                <input id="total-games" type="text" class="form-control mt-2" placeholder="123" readonly>
+                <input id="total-games" type="text" class="form-control mt-2" placeholder="win + losses" readonly>
+            </div>
+             <div class="col-12 form-group">
+                <label for="wins" class="text-white">Wins:</label>
+                <input id="wins" type="text" class="form-control mt-2" placeholder="21" readonly>
+            </div>
+             <div class="col-12 form-group">
+                <label for="losses" class="text-white">Losses:</label>
+                <input id="losses" type="text" class="form-control mt-2" placeholder="21" readonly>
             </div>
             <div class="col-12 form-group">
                 <label for="win-rate" class="text-white">Win Rate:</label>
                 <input id="win-rate" type="text" class="form-control mt-2" placeholder="75%" readonly>
             </div>
             <div class="col-12 form-group">
+                <label for="online-games" class="text-white">Online games played:</label>
+                <input id="online-games" type="text" class="form-control mt-2" placeholder="21" readonly>
+            </div>
+            <div class="col-12 form-group">
+                <label for="offline-games" class="text-white">Offline games played:</label>
+                <input id="offline-games" type="text" class="form-control mt-2" placeholder="21" readonly>
+            </div>
+            <div class="col-12 form-group">
                 <label for="highest-score" class="text-white">Highest Score:</label>
                 <input id="highest-score" type="text" class="form-control mt-2" placeholder="21" readonly>
+            </div>
+            <div class="col-12 form-group">
+                <label for="paddle-hit" class="text-white">Times the ball hit the paddle:</label>
+                <input id="paddle-hit" type="text" class="form-control mt-2" placeholder="21" readonly>
             </div>
             <div class="col-12">
                 <button type="button" class="btn btn-color text-white w-50 d-block m-auto mt-4 py-3" onclick="refreshStats()">Refresh Stats</button>
@@ -160,31 +180,39 @@ const pages = {
             </div>
             <div class="col-12 form-group">
                 <label for="total-games" class="text-white">Total Games Played:</label>
-                <input id="total-games" type="text" class="form-control mt-2" placeholder="123" readonly>
+                <input id="total-games" type="text" class="form-control mt-2" placeholder="wins + losses" readonly>
             </div>
             <div class="col-12 form-group">
                 <label for="win-rate" class="text-white">Win Rate:</label>
                 <input id="win-rate" type="text" class="form-control mt-2" placeholder="75%" readonly>
             </div>
 			<div class="col-12 form-group">
-                <label for="highest-score" class="text-white">Number of wins:</label>
-                <input id="highest-score" type="text" class="form-control mt-2" placeholder="21" readonly>
+                <label for="wins" class="text-white">Number of wins:</label>
+                <input id="wins" type="text" class="form-control mt-2" placeholder="21" readonly>
             </div>
 			<div class="col-12 form-group">
-                <label for="highest-score" class="text-white">Number of loses:</label>
-                <input id="highest-score" type="text" class="form-control mt-2" placeholder="21" readonly>
+                <label for="losses" class="text-white">Number of losses:</label>
+                <input id="losses" type="text" class="form-control mt-2" placeholder="21" readonly>
+            </div>
+            <div class="col-12 form-group">
+                <label for="online-games" class="text-white">Onlines games played:</label>
+                <input id="online-games" type="text" class="form-control mt-2" placeholder="21" readonly>
+            </div>
+            <div class="col-12 form-group">
+                <label for="offline-games" class="text-white">Offline games played:</label>
+                <input id="offline-games" type="text" class="form-control mt-2" placeholder="21" readonly>
             </div>
             <div class="col-12 form-group">
                 <label for="highest-score" class="text-white">Highest Score:</label>
                 <input id="highest-score" type="text" class="form-control mt-2" placeholder="21" readonly>
             </div>
 			<div class="col-12 form-group">
-                <label for="highest-score" class="text-white">Number Of Jumps:</label>
-                <input id="highest-score" type="text" class="form-control mt-2" placeholder="27" readonly>
+                <label for="jumps" class="text-white">Number Of Jumps:</label>
+                <input id="jumps" type="text" class="form-control mt-2" placeholder="27" readonly>
             </div>
 			<div class="col-12 form-group">
-                <label for="highest-score" class="text-white">Total distance:</label>
-                <input id="highest-score" type="text" class="form-control mt-2" placeholder="21" readonly>
+                <label for="distance" class="text-white">Total distance:</label>
+                <input id="distance" type="text" class="form-control mt-2" placeholder="21" readonly>
             </div>
             <div class="col-12">
                 <button type="button" class="btn btn-color text-white w-50 d-block m-auto mt-4 py-3" onclick="refreshStats()">Refresh Stats</button>
