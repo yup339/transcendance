@@ -75,7 +75,6 @@ body{
     height: 25px; 
     border-radius: 50%; 
     background: #343CFF; 
-  
 }
 
 .slider::-webkit-slider-thumb:hover{

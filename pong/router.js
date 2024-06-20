@@ -2,7 +2,7 @@
 class pongSocket{
     constructor() {
         try {
-            this.socket = new WebSocket(`wss://${window.location.host}/ws/pong`);
+            this.socket = new WebSocket(`wss://django/ws/pong/`);
             this.socket.onopen = this.handleOpen.bind(this);
             this.socket.onmessage = this.handleMessage.bind(this);
             this.socket.onclose = this.handleClose.bind(this);
@@ -20,7 +20,7 @@ class pongSocket{
     }
 
     sendInfo(info){
-        this.socket.send(JSON.stringify(message));
+        this.socket.send(JSON.stringify(info));
     };
 
     handleClose(event) {
@@ -32,4 +32,6 @@ class pongSocket{
 function test()
 {
         let router = new pongSocket();
+        console.log("test");
+        //router.sendInfo("je test");
 }
