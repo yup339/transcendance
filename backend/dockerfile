@@ -18,7 +18,7 @@ RUN pip install -r requirements.txt
 COPY . /code/
 
 # Expose the port that Daphne will run on
+EXPOSE 8001
 EXPOSE 8000
-
 # Command to run Daphne
 CMD python manage.py migrate && daphne backend.asgi:application --bind 0.0.0.0 --port 8000
