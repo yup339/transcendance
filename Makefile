@@ -1,3 +1,8 @@
+ifneq (,$(wildcard ./.env))
+    include .env
+    export
+endif
+
 all : up
 
 up : 
@@ -26,6 +31,11 @@ go_nx:
 go_django: 
 	docker-compose exec django /bin/sh
 
+psql :
+	@docker exec -it postgresql psql -U $(POSTGRES_USER) -d $(POSTGRES_DB)
+
+pbash :
+	@docker exec -it postgresql /bin/bash
 
 clean: down
 	@docker-compose down --rmi all -v
@@ -33,4 +43,4 @@ clean: down
 	@docker system prune -f
 	@docker volume ls -q | xargs docker volume rm
 
-.PHONY: up down start stop ps psa restart clean 
+.PHONY: up down start stop ps psa restart clean psql pbash
