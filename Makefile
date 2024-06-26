@@ -20,6 +20,13 @@ psa:
 
 restart: down up
 
+go_nx: 
+	docker-compose exec nginx /bin/sh
+
+go_django: 
+	docker-compose exec django /bin/sh
+
+
 clean: down
 	@docker-compose down --rmi all -v
 	@docker volume prune -f

@@ -1,33 +1,38 @@
 version: '3'
   
 networks:
-  inception:
+  transcendance:
     driver: bridge
 
 services: 
-  nginx:
-    container_name: nginx
-    volumes: 
-      - ./pong:/etc/frontend
-    build: ./pong
-    networks:
-      - inception
-    ports:
-      - "443:443"
 
   django:
     container_name: django
     volumes: 
       - ./backend:/code
+      - static:/static
     build: ./backend
     networks:
-      - inception
+      - transcendance
     ports:
       - 8000:8000
       - 8001:8001
     env_file:
       - .env
 
+  nginx:
+    container_name: nginx
+    volumes: 
+      - static:/static
+    build: ./nginx
+    networks:
+      - transcendance
+    ports:
+      - "443:443"
+    depends_on:
+      - django
+
+
 volumes:
-  nginx_vol:
-  django_vol:
+  static:
+

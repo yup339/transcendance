@@ -62,7 +62,7 @@ let r2_loser;
 let first_pos;
 let second_pos;
 let third_pos;
-
+let socket;
 //--------------------------------- random and colors
 
 // Function to invert a color passed in hexadecimal format
@@ -186,6 +186,26 @@ function keyUpHandler(event) {
 		rightPaddle.down = false;
     }
 	if (event.key === 'ArrowDown') {
+		rightPaddle.up = false;
+    }
+}
+
+
+function rightKeyDownHandler(event) {
+	if (event.key === 'w' || event.key === 'W' ) {
+		rightPaddle.down = true;
+    }
+	if (event.key === 's' || event.key === 'S') {
+		rightPaddle.up = true;
+    }
+	
+}
+
+function rightKeyUpHandler(event) {
+	if (event.key === 'w' || event.key === 'W' ) {
+		rightPaddle.down = false;
+    }
+	if (event.key === 's' || event.key === 'S') {
 		rightPaddle.up = false;
     }
 }
