@@ -5,10 +5,10 @@ const pages = {
     <div class="row justify-content-center mt-md-0 mt-2 mb-5 px-lg-5 gy-4 mt-md-5 mt-3">
         <h1 class="display-5 text-center fw-bold text-white ">Choose Your Game</h1>
         <div class="col-12 ">
-            <img src="{% static 'transcendence/asset/pong_img_button.png' %}" class=" clickable shadow img-fluid image-button img-button-width rounded-5 hover-scale d-block m-auto" alt="Image 1" onclick="navigateTo('pong_choices')">
+            <img src="/static/transcendence/asset/pong_img_button.png" class=" clickable shadow img-fluid image-button img-button-width rounded-5 hover-scale d-block m-auto" alt="Image 1" onclick="navigateTo('pong_choices')">
         </div>
         <div class="col-12 ">
-            <img src="{% static 'transcendence/asset/pong_img_button.png' %}" class="clickable shadow img-fluid image-button img-button-width rounded-5 hover-scale d-block m-auto" alt="Image 1" onclick="location.href='#';">
+            <img src="/static/transcendence/asset/pong_img_button.png" class="clickable shadow img-fluid image-button img-button-width rounded-5 hover-scale d-block m-auto" alt="Image 1" onclick="location.href='#';">
         </div>
         </div>
     </div>
@@ -44,7 +44,7 @@ const pages = {
 			</div>
 		</div>
 		<div id="canvasContainer" class="position-relative mb-5">
-			<canvas id="pongCanvas" class="d-block m-auto w-100"></canvas>
+            <canvas id="pongCanvas" width="1280" height="720" class="d-block m-auto w-100"></canvas>
 			<div id="play-link" class="position-absolute w-100 h-100 z-3 top-0 start-0 bg-dark opacity-50 ">
 				<a class=" clickable hover-scale w-100 h-100 d-flex justify-content-center align-items-center link-body-emphasis link-underline-opacity-0" onclick="start_pong()">
 				<div class=" mb-0 display-1 lead fw-bold text-white  border px-5 py-3 rounded-5 row" >

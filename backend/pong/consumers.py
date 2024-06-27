@@ -39,17 +39,9 @@ class PongConsumer(AsyncWebsocketConsumer):
             data_type = data.get('type')
             print(f"data received : {data_type}")
             if data_type == 'ballPosition':
-                await self.channel_layer.group_send(
-                    self.match_group_name,
-                    {
-                        'type': data_type,
-                        'x': data['x'],
-                        'y': data['y'],
-                        'dx': data['dx'],
-                        'dy': data['dy']
-                    }
-                )
+                self.receive_ball_position(data)
             elif data_type == 'paddlePosition':
+                print("yo dude got a paddle position")
                 await self.channel_layer.group_send(
                     self.match_group_name,
                     {
@@ -90,6 +82,19 @@ class PongConsumer(AsyncWebsocketConsumer):
             'side': 'left'
         }))
         print(f"Match created: {group_name} with players {player1.channel_name} and {player2.channel_name}")
+
+    async def receive_ball_position(self, content):
+        print("yo dude got a ball position")
+        await self.channel_layer.group_send(
+            self.match_group_name,
+            {
+                'type': data_type,
+                'x': data['x'],
+                'y': data['y'],
+                'dx': data['dx'],
+                'dy': data['dy']
+            }
+        )
 
 def generate_match_group_name(prefix='pong_match'):
         # Generate a unique suffix using current timestamp and a random component
