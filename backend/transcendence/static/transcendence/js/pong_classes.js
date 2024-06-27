@@ -325,6 +325,7 @@ class Paddle {
 	}
 
 	serialize() {
+		console.log()
         return JSON.stringify({
             type: 'paddlePosition',
             x: this.x,

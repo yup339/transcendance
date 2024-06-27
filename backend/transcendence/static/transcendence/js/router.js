@@ -16,17 +16,19 @@ class GameSocket{
 
     // use with serialize object
     sendInfo(info){
+        console.log("sending data");
         this.socket.send(info);
     };
     
     handleClose(event) {
-        console.log('WebSocket connection closed.');
+        console.log('WebSocket connection closed:', event);
     }
 
     handleMessage(event) {
         console.log("receiving data");
         try{
             const data = JSON.parse(event.data);
+            console.log(data.type);
             switch (data.type){
                 case 'ballPosition':
                     this.updateBallPos(data);
@@ -39,7 +41,7 @@ class GameSocket{
                     break;
                 case 'matchFound':
                     this.side = data.side;
-                    setOnlineMode(data);
+                    startOnlineMatch(data);
                 break;
             }
         }

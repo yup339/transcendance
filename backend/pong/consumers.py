@@ -16,9 +16,9 @@ class PongConsumer(AsyncWebsocketConsumer):
         if len(pong_queue) >= 2:
             player1 = pong_queue.pop(0)
             player2 = pong_queue.pop(0)
-            match_group_name = generate_match_group_name()
+            self.match_group_name = generate_match_group_name()
             
-            await self.create_match(player1, player2, match_group_name)
+            await self.create_match(player1, player2, self.match_group_name)
 
     async def disconnect(self, close_code):
         if hasattr(self, 'match_group_name'):
@@ -37,7 +37,7 @@ class PongConsumer(AsyncWebsocketConsumer):
         try:
             data = json.loads(text_data)
             data_type = data.get('type')
-
+            print(f"data received : {data_type}")
             if data_type == 'ballPosition':
                 await self.channel_layer.group_send(
                     self.match_group_name,
@@ -49,7 +49,6 @@ class PongConsumer(AsyncWebsocketConsumer):
                         'dy': data['dy']
                     }
                 )
-
             elif data_type == 'paddlePosition':
                 await self.channel_layer.group_send(
                     self.match_group_name,
@@ -81,12 +80,12 @@ class PongConsumer(AsyncWebsocketConsumer):
         )
 
         await player1.send(text_data=json.dumps({
-            'type': 'match_found',
+            'type': 'matchFound',
             'group': group_name,
             'side': 'right'
         }))
         await player2.send(text_data=json.dumps({
-            'type': 'match_found',
+            'type': 'matchFound',
             'group': group_name,
             'side': 'left'
         }))

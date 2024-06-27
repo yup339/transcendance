@@ -291,7 +291,8 @@ function restartGame()
 	update();
 }
 
-function setOnlineMode(data){
+function startOnlineMatch(data){
+	console.log("starting online match");
 	document.getElementById("play-link").style.visibility = 'hidden';
 	
 	//delete the presentation ball
@@ -312,7 +313,7 @@ function setOnlineMode(data){
 	}
 	else {
 		document.addEventListener('keydown', rightKeyDownHandler);
-		document.addEventListener('keyup', rightUpHandler);
+		document.addEventListener('keyup', rightKeyUpHandler);
 		rightPaddle.setOnline(true);
 	}
 }
