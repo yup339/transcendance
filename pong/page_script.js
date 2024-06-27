@@ -63,7 +63,7 @@ const pages = {
 			</div>
 		</div>
 		<div id="canvasContainer" class="position-relative mb-5">
-			<canvas id="pongCanvas" class="d-block m-auto w-100"></canvas>
+			<canvas id="pongCanvas" width="1280" height="720" class="d-block m-auto w-100"></canvas>
 			<div id="play-link" class="position-absolute w-100 h-100 z-3 top-0 start-0 bg-dark opacity-50 ">
 				<a class=" clickable hover-scale w-100 h-100 d-flex justify-content-center align-items-center link-body-emphasis link-underline-opacity-0" onclick="start_pong()">
 				<div class=" mb-0 display-1 lead fw-bold text-white  border px-5 py-3 rounded-5 row" >
@@ -111,10 +111,12 @@ const pages = {
 </div>
 </div>`,
 'up': `
-	<div>Bonjour
+	<div class="w-100 extra-top-padding container mt-5">
+	<canvas id="UpCanvas" width="1920" height="1080" class="m-auto d-block w-100 h-100"></canvas>
+
 	</div>`,
 'signup':`
-<div class="container extra-top-padding  mt-5">
+<div class="container extra-top-padding mt-5">
 <form>
 	<div class="row w-50 m-auto gy-5 gx-5">
 	   <div class="col-12 mb-3">
@@ -289,10 +291,14 @@ function displayPage(pageName)
 		else if(pageName == 'up')
 			UpGame();
 		else
+		{
+			upStop();
 			stopGame();
+		}
     } 
 	else
 	{
+		upStop();
 		stopGame();
 		content.innerHTML = page404;
 	}
