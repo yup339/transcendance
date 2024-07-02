@@ -167,6 +167,7 @@ function generateLevel()
 		platform.position.x = GetRandomInt(-5, 5);
 		platform.position.y = y;
 		y += 6;
+		platform.setHitbox();
 		objects.push(platform);
 		platform.render(upscene);
 	}

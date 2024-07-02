@@ -3,82 +3,71 @@ function keysEvent(elapsedTime)
 	document.addEventListener('keydown', onKeyDown, false);
 	document.addEventListener('keyup', onKeyUp, false);
 
-	let nextPosP1 = players[0].clone();
-	let nextPosP2 = players[1].clone();
+	players[0].update();
+	players[1].update();
+	players[0].nextPos.set(players[0].position.x, players[0].position.y, players[0].position.z);
 
 	// player 1 movement
 	if (keys[65]) // a 
 	{
 		if (players[0].position.x > -7)
-			players[0].position.x -= playerSpeed * elapsedTime;
+			players[0].nextPos.x -= playerSpeed * elapsedTime;
 	}
 	if (keys[68]) // d 
 	{
 		if (players[0].position.x < 7)
-			players[0].position.x += playerSpeed * elapsedTime;
+			players[0].nextPos.x += playerSpeed * elapsedTime;
 	}
 	if (keys[87] && isJumping == false) // w
 	{
 		// isFalling = true;
 		// isJumping = true;
 		// jumpPos = players[0].position.y;
-		players[0].position.y += playerSpeed * elapsedTime;
+		players[0].nextPos.y += playerSpeed * elapsedTime;
 	}
 	if (keys[83]) // s
 	{
-		players[0].position.y -= playerSpeed * elapsedTime;
+		players[0].nextPos.y -= playerSpeed * elapsedTime;
 	}
 
 	// player 2 movement
 	if (keys[37]) // left
 	{
 		if (players[1].position.x > 30 - 7)
-			players[1].position.x -= playerSpeed * elapsedTime;
+			players[1].nextPos.x -= playerSpeed * elapsedTime;
 	}
 	if (keys[39]) // right
 	{
 		if (players[1].position.x < 30 + 7)
-			players[1].position.x += playerSpeed * elapsedTime;
+			players[1].nextPos.x += playerSpeed * elapsedTime;
 	}
 	if (keys[38] && isJumping == false) // up
 	{
 		// isJumping = true;
-		players[1].position.y += playerSpeed * elapsedTime;
+		players[1].nextPos.y += playerSpeed * elapsedTime;
 	}
 	if (keys[40]) // down
 	{
-		players[1].position.y -= playerSpeed * elapsedTime;
+		players[1].nextPos.y -= playerSpeed * elapsedTime;
 	}
 
 	jumpLogic();
-	checkCollision(nextPosP1, nextPosP2);
+	checkCollision();
 }
 
-function compareTopHitbox(hitbox1, hitbox2)
+function checkCollision()
 {
-	if (hitbox1.max.y >= hitbox2.min.y && hitbox1.max.y <= hitbox2.max.y)
-		return (true);
-
-	return (false);
-}
-
-function checkCollision(nextPosP1, nextPosP2)
-{
-	let playerBox = new THREE.Box3().setFromObject(nextPosP1);
-	playerBox.min.y += 0.1;// so that it doesn't get stuck right away, to change
-	playerBox.max.y -= 0.1;
-	let playerBox2 = new THREE.Box3().setFromObject(nextPosP2);
 	let hit = false;
 	let hit2 = false;
 	
-	for (let i = 0; i < hitboxes.length; i++)
+	for (let i = 0; i < objects.length; i++)
 	{
-		if (compareTopHitbox(playerBox, hitboxes[i]))
+		if (players[0].checkCollision(objects[i].hitbox))
 		{
 			console.log("player 1 hit");
 			hit = true;
 		}
-		if (compareTopHitbox(playerBox2, hitboxes[i]))
+		if (players[1].checkCollision(objectsp2[i].hitbox))
 		{
 			console.log("player 2 hit");
 			hit2 = true;
@@ -87,11 +76,11 @@ function checkCollision(nextPosP1, nextPosP2)
 
 	if (!hit)
 	{
-		players[0].position = nextPosP1.position;
+		players[0].updatePos();
 	}
 	if (!hit2)
 	{
-		players[1].position = nextPosP2.position;
+		players[1].updatePos();
 	}
 }
 

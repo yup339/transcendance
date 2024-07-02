@@ -3,8 +3,9 @@ class UpObject extends THREE.Mesh
 	constructor(geometry, material)
 	{
 		super(geometry, material);
-		this.nextPos = new THREE.Vector3(this.position);
+		this.nextPos = this.position;
 		this.isRendered = false;
+		this.castShadow = true;
 	}
 
 	setHitbox()
@@ -12,14 +13,19 @@ class UpObject extends THREE.Mesh
 		this.hitbox = new THREE.Box3().setFromObject(this);
 	}
 
-	updatePos()
+	printPos()
 	{
-		this.mesh.position = this.nextPos;
+
 	}
 
-	updateNextPos(position)
+	updatePos()
 	{
-		this.nextPos.set(position);
+		this.position.set(this.nextPos.x, this.nextPos.y, this.nextPos.z);
+	}
+
+	update()
+	{
+		this.hitbox = new THREE.Box3().setFromObject(this);
 	}
 
 	render(scene)
@@ -40,33 +46,18 @@ class UpObject extends THREE.Mesh
 		}
 	}
 
-	setPosition(position)
+	setPosition(x, y ,z)
 	{
-		if (position != this.position)
-			this.position.set(position);
-	}
-}
-
-class Player
-{
-	constructor(geometry, material)
-	{
-		this.obj = new Object(geometry, material);
+		this.position.set(x, y, z);
 	}
 
-	doesCollide()
+	checkCollision(hitbox)
 	{
-		for (let i = 0; i < platforms.length; i++)
+		if (this.hitboxSet)
 		{
-			if (platforms.hitbox.intersectsBox(this.obj.hitbox) == true)
+			if (this.hitbox.intersectsBox(hitbox))
 				return (true);
-
 		}
 		return (false);
-	}
-
-	update()
-	{
-		this.nextPos = this.obj.mesh.position;
 	}
 }
