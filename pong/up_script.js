@@ -99,12 +99,12 @@ function prepareUpGame()
 	//players
 	let geometry = new THREE.BoxGeometry(1, 1, 1);
 	let material = new THREE.MeshStandardMaterial({color: 0xF8B7EE});
-	players[0] = new THREE.Mesh(geometry, material);
+	players[0] = new UpObject(geometry, material);
 	players[0].position.set(0, -9, 0);
 	upscene.add(players[0]);
 
 	let material2 = new THREE.MeshStandardMaterial({color: 0xC1F7B0});
-	players[1] = new THREE.Mesh(geometry, material2);
+	players[1] = new UpObject(geometry, material2);
 	players[1].position.set(30, -9, 0);
 	upscene.add(players[1]);
 	
@@ -139,49 +139,44 @@ function generateLevel()
 	// generate starting platforms
 	let geometry = new THREE.BoxGeometry(15, 1, 5); // starting platforms
 	let material = new THREE.MeshStandardMaterial( { color: 0x7377ff } );
-	let cube = new THREE.Mesh( geometry, material );
-	let cube2 = new THREE.Mesh( geometry, material );
-	cube.position.set(0, -10, 0);
-	cube2.position.set(30, -10, 0);
-	let hitbox = new THREE.Box3().setFromObject(cube);
-	hitboxes.push(hitbox);
-	hitbox = new THREE.Box3().setFromObject(cube2);
-	hitboxes.push(hitbox);
-	upscene.add(cube);
-	upscene.add(cube2);
-	
+	let startPlat = new UpObject(geometry, material);
+	let startPlat2 = new UpObject(geometry, material);
+	startPlat.position.set(0, -10, 0);
+	startPlat2.position.set(30, -10, 0);
+	startPlat.render(upscene);
+	startPlat2.render(upscene);
+	objects.push(startPlat);
+	objects.push(startPlat2);
 
 	let platform;
-	let y = cube.position.y + 6;
+	let y = startPlat.position.y + 6;
 	for (let i = 0; i < 100; i++) // TODO: make it so that x values are  not too far apart
 	{
 		if (y < 50)
-			platform = new THREE.Mesh(platformsGeo[0], material);
+			platform = new UpObject(platformsGeo[0], material);
 		else if (y < 100)
-			platform = new THREE.Mesh(platformsGeo[1], material);
+			platform = new UpObject(platformsGeo[1], material);
 		else if (y < 150)
-			platform = new THREE.Mesh(platformsGeo[2], material);
+			platform = new UpObject(platformsGeo[2], material);
 		else if (y < 200)
-			platform = new THREE.Mesh(platformsGeo[3], material);
+			platform = new UpObject(platformsGeo[3], material);
 		else if (y < 250)
-			platform = new THREE.Mesh(platformsGeo[4], material);
+			platform = new UpObject(platformsGeo[4], material);
 		else
-			platform = new THREE.Mesh(platformsGeo[5], material);
+			platform = new UpObject(platformsGeo[5], material);
 		platform.position.x = GetRandomInt(-5, 5);
 		platform.position.y = y;
-		hitbox = new THREE.Box3().setFromObject(platform);
-		hitboxes.push(hitbox);
 		y += 6;
 		objects.push(platform);
-		upscene.add(platform);
+		platform.render(upscene);
 	}
 	
 	for (let i = 0; i < objects.length; i++) // clone objects for player 2
 	{
 		objectsp2[i] = objects[i].clone();
 		objectsp2[i].position.x += 30;
-		hitbox = new THREE.Box3().setFromObject(objectsp2[i]);
-		hitboxes.push(hitbox);
+		objects[i].setHitbox();
+		objectsp2[i].setHitbox();
 		upscene.add(objectsp2[i]);
 	}
 	
@@ -219,10 +214,8 @@ function upStop()
 	document.removeEventListener('keydown', onKeyDown);
 	document.removeEventListener('keyup', onKeyUp);
 
-	for (let i = 0; i < objects.length(); i++)
+	for (let i = 0; i < objects.length; i++)
 	{
 		upscene.remove(objects[i]);
 	}
 }
-
-prepareUpGame();
