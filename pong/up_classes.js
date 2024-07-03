@@ -1,11 +1,18 @@
 class UpObject extends THREE.Mesh
 {
-	constructor(geometry, material)
+	constructor(geometry, material, height)
 	{
 		super(geometry, material);
-		this.nextPos = this.position;
+		this.height = height;
+		this.nextPos = new THREE.Vector3(0, 0, 0);
+		this.hitbox = new THREE.Box3().setFromObject(this);
 		this.isRendered = false;
 		this.castShadow = true;
+	}
+
+	setRaycast()
+	{
+		
 	}
 
 	setHitbox()
@@ -20,12 +27,14 @@ class UpObject extends THREE.Mesh
 
 	updatePos()
 	{
-		this.position.set(this.nextPos.x, this.nextPos.y, this.nextPos.z);
+		this.position.x += this.nextPos.x;
+		this.position.y += this.nextPos.y;
+		this.position.z += this.nextPos.z;
 	}
 
 	update()
 	{
-		this.hitbox = new THREE.Box3().setFromObject(this);
+		
 	}
 
 	render(scene)
@@ -53,11 +62,8 @@ class UpObject extends THREE.Mesh
 
 	checkCollision(hitbox)
 	{
-		if (this.hitboxSet)
-		{
-			if (this.hitbox.intersectsBox(hitbox))
-				return (true);
-		}
+		if (this.hitbox.intersectsBox(hitbox))
+			return (true);
 		return (false);
 	}
 }

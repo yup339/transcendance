@@ -3,9 +3,8 @@ function keysEvent(elapsedTime)
 	document.addEventListener('keydown', onKeyDown, false);
 	document.addEventListener('keyup', onKeyUp, false);
 
-	players[0].update();
-	players[1].update();
-	players[0].nextPos.set(players[0].position.x, players[0].position.y, players[0].position.z);
+	players[0].nextPos.set(0, 0, 0);
+	players[1].nextPos.set(0, 0, 0);
 
 	// player 1 movement
 	if (keys[65]) // a 
@@ -59,6 +58,12 @@ function checkCollision()
 {
 	let hit = false;
 	let hit2 = false;
+
+	players[0].hitbox.setFromObject(players[0]);
+	players[0].hitbox.translate(players[0].nextPos);
+
+	players[1].hitbox.setFromObject(players[1]);
+	players[1].hitbox.translate(players[1].nextPos);
 	
 	for (let i = 0; i < objects.length; i++)
 	{
@@ -66,11 +71,17 @@ function checkCollision()
 		{
 			console.log("player 1 hit");
 			hit = true;
+			break;
 		}
+	}
+
+	for (let i = 0; i < objectsp2.length; i++)
+	{
 		if (players[1].checkCollision(objectsp2[i].hitbox))
 		{
 			console.log("player 2 hit");
 			hit2 = true;
+			break;
 		}
 	}
 
@@ -154,6 +165,7 @@ function updateUpGame()
 function printPerSecond()
 {
 	// get time for current instance\
+	
 
 	let currentTime = performance.now();
 	if (Math.floor((currentTime - startTime) / 1000) )
