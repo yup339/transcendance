@@ -17,16 +17,24 @@ function keysEvent(elapsedTime)
 		if (players[0].position.x < 7)
 			players[0].nextPos.x += playerSpeed * elapsedTime;
 	}
-	if (keys[87] && isJumping == false) // w
+	if (keys[87] && isJumping == false && isFalling == false) // w
 	{
-		// isFalling = true;
-		// isJumping = true;
+		isFalling = true;
+		isJumping = true;
+		jumpCount1 += 1;
+		jumpSet = false;
 		// jumpPos = players[0].position.y;
-		players[0].nextPos.y += playerSpeed * elapsedTime;
+		// players[0].nextPos.y += playerSpeed * elapsedTime;
 	}
 	if (keys[83]) // s
 	{
 		players[0].nextPos.y -= playerSpeed * elapsedTime;
+	}
+
+	//TODO: REMOVE
+	if (keys[32]) // space
+	{
+		players[0].position.y = 250
 	}
 
 	// player 2 movement
@@ -50,7 +58,7 @@ function keysEvent(elapsedTime)
 		players[1].nextPos.y -= playerSpeed * elapsedTime;
 	}
 
-	jumpLogic();
+	jumpLogic(elapsedTime);
 	checkCollision();
 }
 
@@ -93,25 +101,47 @@ function checkCollision()
 	{
 		players[1].updatePos();
 	}
+	updateStats();
 }
 
-function jumpLogic()
+function updateStats()
+{
+	if (players[0].position.y > distanceTravelled1)
+		distanceTravelled1 = players[0].position.y;
+	if (players[1].position.y > distanceTravelled2)
+		distanceTravelled2 = players[1].position.y;
+}
+
+function jumpLogic(elapsedTime)
 {
 	// jump logic
-	// if(isJumping)
-	// {
-	// 	let nextPos = players[0].position.y + jumpSpeed * elapsedTime;
-	// 	if (nextPos > jumpPos)
-	// 		players[0].position.y = nextPos
-	// 	else
-	// 	{
-	// 		isJumping = false;
-	// 		jumpSpeed = 30;
-	// 		players[0].position.y = jumpPos;
-	// 	}
-	// 	if (jumpSpeed != -30)
-	// 		jumpSpeed -= 1.5;
-	// }
+	if(isJumping)
+	{
+		isJumping = false;
+		if (!jumpSet)
+		{
+			jumpSpeed = 30;
+			jumpSet = true;
+		}
+	}
+	if (isFalling)
+	{
+		if (!jumpSet)
+		{
+			jumpSpeed = -1.5;
+			jumpSet = true;
+		}
+		players[0].nextPos.y += jumpSpeed * elapsedTime;
+		
+		if (jumpSpeed > -30)
+			jumpSpeed -= 1;
+		else
+		{
+			jumpSet = false;
+			isFalling = false;
+		}
+
+	}
 }
 
 function renderUp()
@@ -149,6 +179,7 @@ function renderUp()
 function updateUpGame()
 {
 	requestAnimationFrame(updateUpGame);
+	printPerSecond();
 	if (stop)
 		return ;
 	
@@ -162,13 +193,19 @@ function updateUpGame()
 	renderUp();
 }
 
-function printPerSecond()
+function printPerSecond() // handles time events in the update loop
 {
-	// get time for current instance\
+	// get time for current instance
 	
-
 	let currentTime = performance.now();
-	if (Math.floor((currentTime - startTime) / 1000) )
-		console.log(Math.floor((currentTime - startTime) / 1000));
+	let showTime = Math.floor((currentTime - startTime) / 1000);
+
+	if (showTime != second)
+	{
+		console.log(showTime);
+		second = showTime;
+	}
+	// if (second == 50)
+	// 	stop = true;
 
 }

@@ -1,18 +1,14 @@
 class UpObject extends THREE.Mesh
 {
-	constructor(geometry, material, height)
+	constructor(geometry, material, width, height)
 	{
 		super(geometry, material);
+		this.width = width;
 		this.height = height;
 		this.nextPos = new THREE.Vector3(0, 0, 0);
 		this.hitbox = new THREE.Box3().setFromObject(this);
 		this.isRendered = false;
-		this.castShadow = true;
-	}
-
-	setRaycast()
-	{
-		
+		this.castShadow = true; //TODO: make sure renderer does shadows
 	}
 
 	setHitbox()
@@ -20,21 +16,11 @@ class UpObject extends THREE.Mesh
 		this.hitbox = new THREE.Box3().setFromObject(this);
 	}
 
-	printPos()
-	{
-
-	}
-
 	updatePos()
 	{
 		this.position.x += this.nextPos.x;
 		this.position.y += this.nextPos.y;
 		this.position.z += this.nextPos.z;
-	}
-
-	update()
-	{
-		
 	}
 
 	render(scene)

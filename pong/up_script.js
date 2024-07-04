@@ -8,7 +8,7 @@ let upcanvas;
 let stop;
 let lastTime;
 let startTime;
-let frameCount;
+let second;
 
 //scene
 let upscene;
@@ -30,6 +30,7 @@ let playerSpeed = 10;
 let jumpSpeed = 30;
 let isJumping = false;
 let isFalling = false;
+let jumpSet = false;
 let jumpPos = 0;
 
 // objects
@@ -99,31 +100,31 @@ function prepareUpGame()
 	//players
 	let geometry = new THREE.BoxGeometry(1, 1, 1);
 	let material = new THREE.MeshStandardMaterial({color: 0xF8B7EE});
-	players[0] = new UpObject(geometry, material);
-	players[0].position.set(0, -9, 0);
+	players[0] = new UpObject(geometry, material, 1, 1);
+	players[0].position.set(0, 0, 0);
+	distanceTravelled1
 	upscene.add(players[0]);
 
 	let material2 = new THREE.MeshStandardMaterial({color: 0xC1F7B0});
-	players[1] = new UpObject(geometry, material2);
-	players[1].position.set(30, -9, 0);
+	players[1] = new UpObject(geometry, material2, 1, 1);
+	players[1].position.set(30, 0, 0);
 	upscene.add(players[1]);
 	
 	//light and its helper
 	let geo = new THREE.SphereGeometry(1, 32, 16);
 	let mat = new THREE.MeshBasicMaterial({color: 0x404040});
 	light1 = new THREE.PointLight(0x404040, 10, 50);
-	light1.position.set( 0, 4, 5 );
+	light1.position.set( 0, 14, 5 );
 	upscene.add(light1);
 
 	//light for player 2
 	light2 = new THREE.PointLight(0x404040, 10, 50);
-	light2.position.set( 30, 4, 5 );
+	light2.position.set( 30, 14, 5 );
 	upscene.add(light2);
 	
 	generateLevel();
 	// time
 	stop = false;
-	frameCount = 0;
 	lastTime = performance.now();
 	startTime = lastTime;
 	updateUpGame();
@@ -141,8 +142,8 @@ function generateLevel()
 	let material = new THREE.MeshStandardMaterial( { color: 0x7377ff } );
 	let startPlat = new UpObject(geometry, material);
 	let startPlat2 = new UpObject(geometry, material);
-	startPlat.position.set(0, -10, 0);
-	startPlat2.position.set(30, -10, 0);
+	startPlat.position.set(0, -1, 0);
+	startPlat2.position.set(30, -1, 0);
 	startPlat.render(upscene);
 	startPlat2.render(upscene);
 	objects.push(startPlat);
@@ -153,21 +154,28 @@ function generateLevel()
 	for (let i = 0; i < 100; i++) // TODO: make it so that x values are  not too far apart
 	{
 		if (y < 50)
-			platform = new UpObject(platformsGeo[0], material);
+			platform = new UpObject(platformsGeo[0], material, 5, 1);
 		else if (y < 100)
-			platform = new UpObject(platformsGeo[1], material);
+			platform = new UpObject(platformsGeo[1], material, 4, 1);
 		else if (y < 150)
-			platform = new UpObject(platformsGeo[2], material);
+			platform = new UpObject(platformsGeo[2], material, 3, 1);
 		else if (y < 200)
-			platform = new UpObject(platformsGeo[3], material);
+			platform = new UpObject(platformsGeo[3], material, 2, 1);
 		else if (y < 250)
-			platform = new UpObject(platformsGeo[4], material);
+			platform = new UpObject(platformsGeo[4], material, 1, 1);
 		else
-			platform = new UpObject(platformsGeo[5], material);
+			platform = new UpObject(platformsGeo[5], material, 0.5, 1);
+
 		platform.position.x = GetRandomInt(-5, 5);
+		if (y > 199 && Math.max(platform.position.x, objects[i-1].position.x) - Math.min(platform.position.x, objects[i-1].position.x) > 6)
+		{
+			if (platform.position.x > objects[i-1].position.x)
+				platform.position.x -= 5;
+			else
+				platform.position.x += 5;
+		}
 		platform.position.y = y;
 		y += 6;
-		platform.setHitbox();
 		objects.push(platform);
 		platform.render(upscene);
 	}
