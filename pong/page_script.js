@@ -226,13 +226,47 @@ const pages = {
 </div>
 <style>
     .loading-container {
-        height: 100vh;
-        background-color: #343a40;
-    }
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #343a40;
+        }
     .spinner-border {
-        width: 3rem;
-        height: 3rem;
+    width: 5rem;
+    height: 5rem;
+    border: 0.5rem solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite, changeColor 1.5s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
     }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes changeColor {
+    0% {
+        border-top-color: blue;
+    }
+    25% {
+        border-top-color: green;
+    }
+    50% {
+        border-top-color: red;
+    }
+    75% {
+        border-top-color: yellow;
+    }
+    100% {
+        border-top-color: purple;
+    }
+}
     .loading-text {
         font-size: 1.5rem;
     }
