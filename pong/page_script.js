@@ -218,7 +218,25 @@ const pages = {
                 <button type="button" class="btn btn-color text-white w-50 d-block m-auto mt-4 py-3" onclick="refreshStats()">Refresh Stats</button>
             </div>
         </div>
-</div>`
+</div>`,
+'loading_page':`<div class="loading-container d-flex flex-column justify-content-center align-items-center">
+    <div class="spinner-border text-white mb-3" role="status">
+    </div>
+    <div class="loading-text text-white">Loading Game...</div>
+</div>
+<style>
+    .loading-container {
+        height: 100vh;
+        background-color: #343a40;
+    }
+    .spinner-border {
+        width: 3rem;
+        height: 3rem;
+    }
+    .loading-text {
+        font-size: 1.5rem;
+    }
+</style>`
 
 }
 
