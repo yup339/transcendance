@@ -9,6 +9,10 @@ class UpObject extends THREE.Mesh
 		this.hitbox = new THREE.Box3().setFromObject(this);
 		this.isRendered = false;
 		this.castShadow = true; //TODO: make sure renderer does shadows
+		this.isJumping = false;
+		this.isFalling = false;
+		this.jumpSet = false;
+		this.raycaster = new THREE.Raycaster(this.position, new THREE.Vector3(0, -1, 0), 0, 1);
 	}
 
 	setHitbox()

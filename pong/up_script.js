@@ -27,11 +27,6 @@ let distanceTravelled2 = 0;
 // player and player variables
 let players = [];
 let playerSpeed = 10;
-let jumpSpeed = 30;
-let isJumping = false;
-let isFalling = false;
-let jumpSet = false;
-let jumpPos = 0;
 
 // objects
 let light1;
@@ -93,6 +88,7 @@ function prepareUpGame()
 		view.camera = camera;
 	}
 
+	
 	upscene = new THREE.Scene();
 	uprenderer = new THREE.WebGLRenderer({canvas: upcanvas});
 	uprenderer.setSize(upcanvas.width, upcanvas.height);
@@ -104,7 +100,7 @@ function prepareUpGame()
 	players[0].position.set(0, 0, 0);
 	distanceTravelled1
 	upscene.add(players[0]);
-
+	
 	let material2 = new THREE.MeshStandardMaterial({color: 0xC1F7B0});
 	players[1] = new UpObject(geometry, material2, 1, 1);
 	players[1].position.set(30, 0, 0);
@@ -116,7 +112,7 @@ function prepareUpGame()
 	light1 = new THREE.PointLight(0x404040, 10, 50);
 	light1.position.set( 0, 14, 5 );
 	upscene.add(light1);
-
+	
 	//light for player 2
 	light2 = new THREE.PointLight(0x404040, 10, 50);
 	light2.position.set( 30, 14, 5 );
@@ -127,6 +123,8 @@ function prepareUpGame()
 	stop = false;
 	lastTime = performance.now();
 	startTime = lastTime;
+	document.addEventListener('keydown', onKeyDown, false);
+	document.addEventListener('keyup', onKeyUp, false);
 	updateUpGame();
 }
 
@@ -170,9 +168,9 @@ function generateLevel()
 		if (y > 199 && Math.max(platform.position.x, objects[i-1].position.x) - Math.min(platform.position.x, objects[i-1].position.x) > 6)
 		{
 			if (platform.position.x > objects[i-1].position.x)
-				platform.position.x -= 5;
+				platform.position.x -= 6;
 			else
-				platform.position.x += 5;
+				platform.position.x += 6;
 		}
 		platform.position.y = y;
 		y += 6;

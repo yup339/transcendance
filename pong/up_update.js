@@ -1,7 +1,5 @@
 function keysEvent(elapsedTime)
 {
-	document.addEventListener('keydown', onKeyDown, false);
-	document.addEventListener('keyup', onKeyUp, false);
 
 	players[0].nextPos.set(0, 0, 0);
 	players[1].nextPos.set(0, 0, 0);
@@ -17,13 +15,12 @@ function keysEvent(elapsedTime)
 		if (players[0].position.x < 7)
 			players[0].nextPos.x += playerSpeed * elapsedTime;
 	}
-	if (keys[87] && isJumping == false && isFalling == false) // w
+	if (keys[87] && players[0].isJumping == false && players[0].isFalling == false) // w
 	{
-		isFalling = true;
-		isJumping = true;
+		players[0].isFalling = true;
+		players[0].isJumping = true;
 		jumpCount1 += 1;
-		jumpSet = false;
-		// jumpPos = players[0].position.y;
+		players[0].jumpSet = false;
 		// players[0].nextPos.y += playerSpeed * elapsedTime;
 	}
 	if (keys[83]) // s
@@ -48,10 +45,13 @@ function keysEvent(elapsedTime)
 		if (players[1].position.x < 30 + 7)
 			players[1].nextPos.x += playerSpeed * elapsedTime;
 	}
-	if (keys[38] && isJumping == false) // up
+	if (keys[38] && players[1].isJumping == false && players[1].isFalling == false) // up
 	{
-		// isJumping = true;
-		players[1].nextPos.y += playerSpeed * elapsedTime;
+		players[1].isFalling = true;
+		players[1].isJumping = true;
+		jumpCount2 += 1;
+		players[1].jumpSet = false;
+		// players[1].nextPos.y += playerSpeed * elapsedTime;
 	}
 	if (keys[40]) // down
 	{
@@ -69,7 +69,6 @@ function checkCollision()
 
 	players[0].hitbox.setFromObject(players[0]);
 	players[0].hitbox.translate(players[0].nextPos);
-
 	players[1].hitbox.setFromObject(players[1]);
 	players[1].hitbox.translate(players[1].nextPos);
 	
@@ -77,22 +76,21 @@ function checkCollision()
 	{
 		if (players[0].checkCollision(objects[i].hitbox))
 		{
-			console.log("player 1 hit");
+			// console.log("player 1 hit");
 			hit = true;
 			break;
 		}
 	}
-
 	for (let i = 0; i < objectsp2.length; i++)
 	{
 		if (players[1].checkCollision(objectsp2[i].hitbox))
 		{
-			console.log("player 2 hit");
+			// console.log("player 2 hit");
 			hit2 = true;
 			break;
 		}
 	}
-
+	
 	if (!hit)
 	{
 		players[0].updatePos();
@@ -101,6 +99,25 @@ function checkCollision()
 	{
 		players[1].updatePos();
 	}
+
+	players[0].raycaster.ray.origin.copy(players[0].position);
+	let intersections = players[0].raycaster.intersectObjects(objects);
+	if (intersections.length > 0)
+		players[0].isFalling = false;
+	else
+	{
+		players[0].isFalling = true;
+	}
+
+	players[1].raycaster.ray.origin.copy(players[1].position);
+	intersections = players[1].raycaster.intersectObjects(objectsp2);
+	if (intersections.length > 0)
+		players[1].isFalling = false;
+	else
+	{
+		players[1].isFalling = true;
+	}
+
 	updateStats();
 }
 
@@ -115,32 +132,33 @@ function updateStats()
 function jumpLogic(elapsedTime)
 {
 	// jump logic
-	if(isJumping)
-	{
-		isJumping = false;
-		if (!jumpSet)
-		{
-			jumpSpeed = 30;
-			jumpSet = true;
-		}
-	}
-	if (isFalling)
-	{
-		if (!jumpSet)
-		{
-			jumpSpeed = -1.5;
-			jumpSet = true;
-		}
-		players[0].nextPos.y += jumpSpeed * elapsedTime;
-		
-		if (jumpSpeed > -30)
-			jumpSpeed -= 1;
-		else
-		{
-			jumpSet = false;
-			isFalling = false;
-		}
 
+	for (let i = 0; i < 2; i++)
+	{
+		if(players[i].isJumping)
+		{
+			players[i].isJumping = false;
+			if (!players[i].jumpSet)
+			{
+				players[i].jumpSpeed = 30;
+				players[i].jumpSet = true;
+			}
+		}
+		if (players[i].isFalling)
+		{
+			if (!players[i].jumpSet)
+			{
+				players[i].jumpSpeed = 0;
+				players[i].jumpSet = true;
+			}
+			players[i].nextPos.y += players[i].jumpSpeed * elapsedTime;
+			
+			if (players[i].jumpSpeed > -30)
+				players[i].jumpSpeed -= 1;
+	
+		}
+		else
+			players[i].jumpSet = false;
 	}
 }
 
