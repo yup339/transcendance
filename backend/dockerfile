@@ -19,4 +19,4 @@ EXPOSE 8000
 #distribute the file
 RUN python manage.py collectstatic --noinput
 # Command to run Daphne
-CMD python manage.py migrate && daphne backend.asgi:application --bind 0.0.0.0 --port 8000
+CMD python manage.py makemigrations && python manage.py migrate && daphne backend.asgi:application --bind 0.0.0.0 --port 8000

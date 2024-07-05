@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'transcendence',
     'pong',
-    'channels'
+    'channels',
+    'database',
 ]
 
 ASGI_APPLICATION = 'backend.asgi.application'
