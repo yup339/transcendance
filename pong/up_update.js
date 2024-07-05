@@ -102,18 +102,15 @@ function checkCollision()
 	}
 
 	// players[0].setHitbox();
+	let vec = players[0].position.clone();
 
-	players[0].raycaster.ray.origin.copy(players[0].position);
+	players[0].raycaster.ray.origin.copy(vec);
 	let intersections = players[0].raycaster.intersectObjects(objects);
 	if (intersections.length > 0)
 	{
 		players[0].isFalling = false;
 		players[0].jumpSpeed = 0;
-		players[0].position.y = Math.floor(players[0].position.y) + 0.01;
-	}
-	else
-	{
-		players[0].isFalling = true;
+		players[0].position.y = Math.floor(players[0].position.y) + 0.05;
 	}
 
 	players[1].raycaster.ray.origin.copy(players[1].position);
@@ -122,11 +119,7 @@ function checkCollision()
 	{
 		players[1].isFalling = false;
 		players[1].jumpSpeed = 0;
-		players[1].position.y = Math.floor(players[1].position.y) + 0.01;
-	}
-	else
-	{
-		players[1].isFalling = true;
+		players[1].position.y = Math.floor(players[1].position.y) + 0.05;
 	}
 
 	updateStats();
