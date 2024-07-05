@@ -1,3 +1,35 @@
+Enumerator = {
+	'paddle_touched': 0,
+	'player_won': 1,
+	'player_online_end': 2,
+	'player_offline_end': 3,
+}
+
+class game_event {
+	constructor(name, player) {
+		this.name = name;
+		this.player = player;
+	}
+	
+	serialize() {
+		return JSON.stringify({
+			type: 'event',
+			name: this.name,
+			player: this.player
+		});
+	}
+	
+	deserialize(data) {
+		if (data.type === 'event') {
+			if (data.hasOwnProperty('name')) {
+				this.name = data.name;
+			}
+			if (data.hasOwnProperty('player')) {
+				this.player = data.player;
+			}
+		}
+	}
+}
 class Ball {
 	constructor(x, y , dx, dy, color) {
 		this.x = x;

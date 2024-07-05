@@ -105,7 +105,7 @@ const pages = {
 		<input id="password" type="password" class="form-control mt-2" placeholder="Password" maxlength="100">
 	  </div>
 	  <div class="col-12">
-		  <button type="button" class="btn btn-color text-white w-50 d-block m-auto mt-4 py-3" onclick="">Sign Up</button>
+		  <button type="button" class="btn btn-color text-white w-50 d-block m-auto mt-4 py-3" onclick="register_user()">Sign Up</button>
 	  </div>
 	</div>
 </form>
@@ -124,7 +124,7 @@ const pages = {
 		<input id="password" type="password" class="form-control mt-2" placeholder="Password" maxlength="100">
 	  </div>
 	  <div class="col-12">
-		  <button type="button" class="btn btn-color text-white w-50 d-block m-auto mt-4 py-3" onclick="">Login</button>
+		  <button type="button" class="btn btn-color text-white w-50 d-block m-auto mt-4 py-3" onclick="login_user()">Login</button>
 	  </div>
 	</div>
 </form>
@@ -224,6 +224,7 @@ const pages = {
 
 //page format for error 404
 const page404 = ` <div class="fullscreen"><h1 class="big-text text-white text-center m-0 p-0">404</h1></div>`
+user = null;
 
 window.addEventListener('popstate', function (event) {
     const pageName = event.state;
@@ -241,6 +242,37 @@ window.addEventListener('popstate', function (event) {
 	}
 
 });
+
+function register_user()
+{
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const data = {type: 'register', username: username, password: password};
+    
+    if (username.length < 3 || password.length < 8)
+    {
+        alert("Username must be at least 3 characters long and password must be at least 8 characters long.");
+        return
+    }
+    if (!user)
+    {
+        user = new UserSocket();
+    }    
+    user.sendInfo(JSON.stringify(data));
+}
+
+function login_user()
+{
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const data = {type:'login', username: username, password: password};
+
+    if (!user)
+    {
+        user = new UserSocket();
+    }
+    user.sendInfo(JSON.stringify(data));
+}
 
 function displayPage(pageName) 
 {
@@ -284,6 +316,7 @@ function initializePage()
 {
 	const pathname = window.location.pathname;
 	const route = pathname.substring(1);
+    user = new UserSocket();
     if(route)
 		navigateTo(route);
     else
