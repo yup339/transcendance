@@ -8,7 +8,6 @@ let upcanvas;
 let stop;
 let lastTime;
 let startTime;
-let second;
 
 //scene
 let upscene;
@@ -18,11 +17,14 @@ let uprenderer;
 let playerLeft;
 let playerRight;
 
-// stats
+// game stats for after
 let jumpCount1 = 0;
 let jumpCount2 = 0;
+
+// in-game on-screen info
 let distanceTravelled1 = 0;
 let distanceTravelled2 = 0;
+let second; // timer for current round
 
 // player and player variables
 let players = [];
@@ -43,8 +45,6 @@ let platformsGeo = [
 let hitboxes = [];
 let keys = {};
 let cycle = false;
-
-UpGame
 
 const views = [
 	{
@@ -224,5 +224,11 @@ function upStop()
 	for (let i = 0; i < objects.length; i++)
 	{
 		upscene.remove(objects[i]);
+		upscene.remove(objectsp2[i]);
 	}
+	objects.clear();
+	objectsp2.clear();
+	players.clear();
+	upscene.remove(light1);
+	upscene.remove(light2);
 }

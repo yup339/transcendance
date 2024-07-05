@@ -1,6 +1,5 @@
 function keysEvent(elapsedTime)
 {
-
 	players[0].nextPos.set(0, 0, 0);
 	players[1].nextPos.set(0, 0, 0);
 
@@ -19,8 +18,8 @@ function keysEvent(elapsedTime)
 	{
 		players[0].isFalling = true;
 		players[0].isJumping = true;
-		jumpCount1 += 1;
 		players[0].jumpSet = false;
+		jumpCount1 += 1;
 		// players[0].nextPos.y += playerSpeed * elapsedTime;
 	}
 	if (keys[83]) // s
@@ -49,8 +48,8 @@ function keysEvent(elapsedTime)
 	{
 		players[1].isFalling = true;
 		players[1].isJumping = true;
-		jumpCount2 += 1;
 		players[1].jumpSet = false;
+		jumpCount2 += 1;
 		// players[1].nextPos.y += playerSpeed * elapsedTime;
 	}
 	if (keys[40]) // down
@@ -76,6 +75,7 @@ function checkCollision()
 	{
 		if (players[0].checkCollision(objects[i].hitbox))
 		{
+			// players[0].collisionResolution(objects[i])
 			// console.log("player 1 hit");
 			hit = true;
 			break;
@@ -85,6 +85,7 @@ function checkCollision()
 	{
 		if (players[1].checkCollision(objectsp2[i].hitbox))
 		{
+			// players[1].collisionResolution(objectsp2[i])
 			// console.log("player 2 hit");
 			hit2 = true;
 			break;
@@ -100,10 +101,16 @@ function checkCollision()
 		players[1].updatePos();
 	}
 
+	// players[0].setHitbox();
+
 	players[0].raycaster.ray.origin.copy(players[0].position);
 	let intersections = players[0].raycaster.intersectObjects(objects);
 	if (intersections.length > 0)
+	{
 		players[0].isFalling = false;
+		players[0].jumpSpeed = 0;
+		players[0].position.y = Math.floor(players[0].position.y) + 0.01;
+	}
 	else
 	{
 		players[0].isFalling = true;
@@ -112,7 +119,11 @@ function checkCollision()
 	players[1].raycaster.ray.origin.copy(players[1].position);
 	intersections = players[1].raycaster.intersectObjects(objectsp2);
 	if (intersections.length > 0)
+	{
 		players[1].isFalling = false;
+		players[1].jumpSpeed = 0;
+		players[1].position.y = Math.floor(players[1].position.y) + 0.01;
+	}
 	else
 	{
 		players[1].isFalling = true;
@@ -158,7 +169,9 @@ function jumpLogic(elapsedTime)
 	
 		}
 		else
+		{
 			players[i].jumpSet = false;
+		}
 	}
 }
 
@@ -225,5 +238,4 @@ function printPerSecond() // handles time events in the update loop
 	}
 	// if (second == 50)
 	// 	stop = true;
-
 }

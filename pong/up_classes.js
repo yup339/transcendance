@@ -9,6 +9,7 @@ class UpObject extends THREE.Mesh
 		this.hitbox = new THREE.Box3().setFromObject(this);
 		this.isRendered = false;
 		this.castShadow = true; //TODO: make sure renderer does shadows
+		this.jumpSpeed = 0;
 		this.isJumping = false;
 		this.isFalling = false;
 		this.jumpSet = false;
@@ -56,4 +57,20 @@ class UpObject extends THREE.Mesh
 			return (true);
 		return (false);
 	}
+
+	// collisionResolution(object) // for adjusting movement after interaction with an object
+	// {
+	// 	this.hitbox.translate(-this.nextPos.x, 0);
+
+	// 	if (!this.checkCollision(object.hitbox))
+	// 		this.nextPos.x = 0;
+
+	// 	this.hitbox.translate(0, -this.nextPos.y);
+
+	// 	if (!this.checkCollision(object.hitbox))
+	// 	{
+	// 		this.nextPos.y = 0;
+	// 		this.jumpSpeed = 0;
+	// 	}
+	// }
 }
