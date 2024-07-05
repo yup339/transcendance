@@ -13,10 +13,6 @@ let startTime;
 let upscene;
 let uprenderer;
 
-// score/players
-let playerLeft;
-let playerRight;
-
 // game stats for after
 let jumpCount1 = 0;
 let jumpCount2 = 0;
@@ -35,16 +31,8 @@ let light1;
 let light2;
 let objects = [];
 let objectsp2 = [];
-let platformsGeo = [
-	new THREE.BoxGeometry(5, 1, 5), // first 50 y
-	new THREE.BoxGeometry(4, 1, 5), // next 50 y, etc.. to augment difficulty
-	new THREE.BoxGeometry(3, 1, 5),
-	new THREE.BoxGeometry(2, 1, 5),
-	new THREE.BoxGeometry(1, 1, 5),
-	new THREE.BoxGeometry(0.5, 1, 5),];
-let hitboxes = [];
+let platformsGeo;
 let keys = {};
-let cycle = false;
 
 const views = [
 	{
@@ -75,10 +63,30 @@ function onKeyUp(event)
 	keys[event.keyCode] = false;
 }
 
+function setGlobals()
+{
+	platformsGeo = [
+		new THREE.BoxGeometry(5, 1, 5), // first 50 y
+		new THREE.BoxGeometry(4, 1, 5), // next 50 y, etc.. to augment difficulty
+		new THREE.BoxGeometry(3, 1, 5),
+		new THREE.BoxGeometry(2, 1, 5),
+		new THREE.BoxGeometry(1, 1, 5),
+		new THREE.BoxGeometry(0.5, 1, 5)];
+
+	players = [];
+	objects = [];
+	objectsp2 = [];
+	second = 0;
+	distanceTravelled1 = 0;
+	distanceTravelled2 = 0;
+	jumpCount1 = 0;
+	jumpCount2 = 0;
+
+}
+
 function prepareUpGame()
 {
 	upcanvas = document.getElementById('UpCanvas');
-
 	// set up cameras
 	for (let i = 0; i < views.length; ++i)
 	{
@@ -88,6 +96,7 @@ function prepareUpGame()
 		view.camera = camera;
 	}
 
+	setGlobals();
 	
 	upscene = new THREE.Scene();
 	uprenderer = new THREE.WebGLRenderer({canvas: upcanvas});
@@ -225,10 +234,22 @@ function upStop()
 	{
 		upscene.remove(objects[i]);
 		upscene.remove(objectsp2[i]);
+		objects[i].dispose();
+		objectsp2[i].dispose();
 	}
-	objects.clear();
-	objectsp2.clear();
-	players.clear();
+	objects = [];
+	objectsp2 = [];
+
+	for (let i = 0; i < players.length; i++)
+	{
+		upscene.remove(players[i]);
+		players[i].dispose();
+	}
+	players = [];
+	platformsGeo = [];
 	upscene.remove(light1);
 	upscene.remove(light2);
+
+	uprenderer.dispose();
+	upscene.dispose();
 }
