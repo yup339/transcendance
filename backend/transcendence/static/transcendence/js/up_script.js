@@ -1,8 +1,6 @@
-// const vars
-const timeLimit = 30; // timelimit for the round
-
 //html stuff
 let upcanvas;
+let requestId; // to stop loop
 
 //time vars
 let stop;
@@ -12,10 +10,6 @@ let startTime;
 //scene
 let upscene;
 let uprenderer;
-
-// score/players
-let playerLeft;
-let playerRight;
 
 // game stats for after
 let jumpCount1 = 0;
@@ -35,16 +29,8 @@ let light1;
 let light2;
 let objects = [];
 let objectsp2 = [];
-let platformsGeo = [
-	new THREE.BoxGeometry(5, 1, 5), // first 50 y
-	new THREE.BoxGeometry(4, 1, 5), // next 50 y, etc.. to augment difficulty
-	new THREE.BoxGeometry(3, 1, 5),
-	new THREE.BoxGeometry(2, 1, 5),
-	new THREE.BoxGeometry(1, 1, 5),
-	new THREE.BoxGeometry(0.5, 1, 5),];
-let hitboxes = [];
+let platformsGeo;
 let keys = {};
-let cycle = false;
 
 const views = [
 	{
@@ -75,10 +61,30 @@ function onKeyUp(event)
 	keys[event.keyCode] = false;
 }
 
+function setGlobals()
+{
+	platformsGeo = [
+		new THREE.BoxGeometry(5, 1, 5), // first 50 y
+		new THREE.BoxGeometry(4, 1, 5), // next 50 y, etc.. to augment difficulty
+		new THREE.BoxGeometry(3, 1, 5),
+		new THREE.BoxGeometry(2, 1, 5),
+		new THREE.BoxGeometry(1, 1, 5),
+		new THREE.BoxGeometry(0.5, 1, 5)];
+
+	players = [];
+	objects = [];
+	objectsp2 = [];
+	second = 0;
+	distanceTravelled1 = 0;
+	distanceTravelled2 = 0;
+	jumpCount1 = 0;
+	jumpCount2 = 0;
+
+}
+
 function prepareUpGame()
 {
 	upcanvas = document.getElementById('UpCanvas');
-
 	// set up cameras
 	for (let i = 0; i < views.length; ++i)
 	{
@@ -87,7 +93,8 @@ function prepareUpGame()
 		camera.position.fromArray(view.position);
 		view.camera = camera;
 	}
-
+	
+	setGlobals();
 	
 	upscene = new THREE.Scene();
 	uprenderer = new THREE.WebGLRenderer({canvas: upcanvas});
@@ -113,14 +120,16 @@ function prepareUpGame()
 	light1.position.set( 0, 14, 5 );
 	upscene.add(light1);
 	
+	
 	//light for player 2
 	light2 = new THREE.PointLight(0x404040, 10, 50);
 	light2.position.set( 30, 14, 5 );
 	upscene.add(light2);
 	
 	generateLevel();
-	// time
+
 	stop = false;
+	// requestId = undefined;
 	lastTime = performance.now();
 	startTime = lastTime;
 	document.addEventListener('keydown', onKeyDown, false);
@@ -220,15 +229,36 @@ function upStop()
 	stop = true;
 	document.removeEventListener('keydown', onKeyDown);
 	document.removeEventListener('keyup', onKeyUp);
+	cancelAnimationFrame(requestId);
+	requestId = undefined;
+
 
 	for (let i = 0; i < objects.length; i++)
 	{
 		upscene.remove(objects[i]);
 		upscene.remove(objectsp2[i]);
+		objects[i].geometry.dispose();
+		objects[i].material.dispose();
+		objectsp2[i].geometry.dispose();
+		objectsp2[i].material.dispose();
 	}
-	objects.clear();
-	objectsp2.clear();
-	players.clear();
-	upscene.remove(light1);
-	upscene.remove(light2);
+	objects = [];
+	objectsp2 = [];
+
+	for (let i = 0; i < players.length; i++)
+	{
+		upscene.remove(players[i]);
+		players[i].geometry.dispose();
+		players[i].material.dispose();
+	}
+	players = [];
+	platformsGeo = [];
+	if (light1 && light2)
+	{
+		upscene.remove(light2);
+		upscene.remove(light1);
+	}
+
+	if (uprenderer)
+		uprenderer.dispose();
 }
