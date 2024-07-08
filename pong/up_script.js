@@ -1,8 +1,6 @@
-// const vars
-const timeLimit = 30; // timelimit for the round
-
 //html stuff
 let upcanvas;
+let requestId; // to stop loop
 
 //time vars
 let stop;
@@ -95,7 +93,7 @@ function prepareUpGame()
 		camera.position.fromArray(view.position);
 		view.camera = camera;
 	}
-
+	
 	setGlobals();
 	
 	upscene = new THREE.Scene();
@@ -129,8 +127,9 @@ function prepareUpGame()
 	upscene.add(light2);
 	
 	generateLevel();
-	// time
+
 	stop = false;
+	// requestId = undefined;
 	lastTime = performance.now();
 	startTime = lastTime;
 	document.addEventListener('keydown', onKeyDown, false);
@@ -230,13 +229,18 @@ function upStop()
 	stop = true;
 	document.removeEventListener('keydown', onKeyDown);
 	document.removeEventListener('keyup', onKeyUp);
+	cancelAnimationFrame(requestId);
+	requestId = undefined;
+
 
 	for (let i = 0; i < objects.length; i++)
 	{
 		upscene.remove(objects[i]);
 		upscene.remove(objectsp2[i]);
-		objects[i].dispose();
-		objectsp2[i].dispose();
+		objects[i].geometry.dispose();
+		objects[i].material.dispose();
+		objectsp2[i].geometry.dispose();
+		objectsp2[i].material.dispose();
 	}
 	objects = [];
 	objectsp2 = [];
@@ -244,13 +248,17 @@ function upStop()
 	for (let i = 0; i < players.length; i++)
 	{
 		upscene.remove(players[i]);
-		players[i].dispose();
+		players[i].geometry.dispose();
+		players[i].material.dispose();
 	}
 	players = [];
 	platformsGeo = [];
-	upscene.remove(light1);
-	upscene.remove(light2);
+	if (light1 && light2)
+	{
+		upscene.remove(light2);
+		upscene.remove(light1);
+	}
 
-	uprenderer.dispose();
-	upscene.dispose();
+	if (uprenderer)
+		uprenderer.dispose();
 }

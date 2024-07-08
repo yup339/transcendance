@@ -196,7 +196,9 @@ function renderUp()
 
 function updateUpGame()
 {
-	requestAnimationFrame(updateUpGame);
+	requestId = undefined;
+	if (!requestId)
+		requestId = requestAnimationFrame(updateUpGame);
 	printPerSecond();
 	if (stop)
 		return ;
