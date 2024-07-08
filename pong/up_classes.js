@@ -9,11 +9,13 @@ class UpObject extends THREE.Mesh
 		this.hitbox = new THREE.Box3().setFromObject(this);
 		this.isRendered = false;
 		this.castShadow = true; //TODO: make sure renderer does shadows
-		this.jumpSpeed = 0;
+		this.jumpSpeed = -1;
 		this.isJumping = false;
 		this.isFalling = false;
 		this.jumpSet = false;
+		this.jumpTimer = 0;
 		this.raycaster = new THREE.Raycaster(this.position, new THREE.Vector3(0, -1, 0), 0, 1);
+		this.geometry.computeBoundingBox();
 	}
 
 	setHitbox()
@@ -58,19 +60,39 @@ class UpObject extends THREE.Mesh
 		return (false);
 	}
 
-	// collisionResolution(object) // for adjusting movement after interaction with an object
-	// {
-	// 	this.hitbox.translate(-this.nextPos.x, 0);
+	collisionResolution(object) // for adjusting movement after interaction with an object
+	{
+		let dirHitbox = new THREE.Box3().setFromObject(this);
+		let newPos = new THREE.Vector3()
+		
+		dirHitbox.translate(this.nextPos.x, 0, 0);
+		if (dirHitbox.intersectsBox(object.hitbox))
+		{
+			// console.log("min in", this.dirHitbox.min);
+			this.nextPos.x = 0;
+		}
 
-	// 	if (!this.checkCollision(object.hitbox))
-	// 		this.nextPos.x = 0;
-
-	// 	this.hitbox.translate(0, -this.nextPos.y);
-
-	// 	if (!this.checkCollision(object.hitbox))
-	// 	{
-	// 		this.nextPos.y = 0;
-	// 		this.jumpSpeed = 0;
-	// 	}
-	// }
+		dirHitbox.translate(-this.nextPos.x, this.nextPos.y, 0);
+		if (dirHitbox.intersectsBox(object.hitbox))
+		{
+			if (this.nextPos.y < 0)
+			{
+				this.isFalling = false;
+				this.jumpSpeed = 0;
+			}
+			else
+			{
+				this.jumpSpeed = 0;
+			}
+			this.nextPos.y = 0;
+		}
+		
+		dirHitbox.translate(this.nextPos.x, 0, 0);
+		if (dirHitbox.intersectsBox(object.hitbox))
+		{
+			this.nextPos.x = 0;
+			this.nextPos.y = 0;
+			return;
+		}
+	}
 }

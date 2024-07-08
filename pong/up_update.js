@@ -75,7 +75,7 @@ function checkCollision()
 	{
 		if (players[0].checkCollision(objects[i].hitbox))
 		{
-			// players[0].collisionResolution(objects[i])
+			players[0].collisionResolution(objects[i])
 			// console.log("player 1 hit");
 			hit = true;
 			break;
@@ -85,7 +85,7 @@ function checkCollision()
 	{
 		if (players[1].checkCollision(objectsp2[i].hitbox))
 		{
-			// players[1].collisionResolution(objectsp2[i])
+			players[1].collisionResolution(objectsp2[i])
 			// console.log("player 2 hit");
 			hit2 = true;
 			break;
@@ -100,26 +100,20 @@ function checkCollision()
 	{
 		players[1].updatePos();
 	}
-
-	// players[0].setHitbox();
-	let vec = players[0].position.clone();
-
-	players[0].raycaster.ray.origin.copy(vec);
+	
+	players[0].raycaster.ray.origin.copy(players[0].position);
 	let intersections = players[0].raycaster.intersectObjects(objects);
-	if (intersections.length > 0)
+	if (intersections.length <= 0)
 	{
-		players[0].isFalling = false;
-		players[0].jumpSpeed = 0;
-		players[0].position.y = Math.floor(players[0].position.y) + 0.05;
+		if (!hit)
+			players[0].isFalling = true;
 	}
-
 	players[1].raycaster.ray.origin.copy(players[1].position);
 	intersections = players[1].raycaster.intersectObjects(objectsp2);
-	if (intersections.length > 0)
+	if (intersections.length <= 0)
 	{
-		players[1].isFalling = false;
-		players[1].jumpSpeed = 0;
-		players[1].position.y = Math.floor(players[1].position.y) + 0.05;
+		if (!hit2)
+			players[1].isFalling = true;
 	}
 
 	updateStats();
@@ -157,7 +151,7 @@ function jumpLogic(elapsedTime)
 			}
 			players[i].nextPos.y += players[i].jumpSpeed * elapsedTime;
 			
-			if (players[i].jumpSpeed > -30)
+			if (players[i].jumpSpeed > -50)
 				players[i].jumpSpeed -= 1;
 	
 		}
@@ -206,8 +200,12 @@ function updateUpGame()
 	printPerSecond();
 	if (stop)
 		return ;
-	
-	
+
+	if (second >= 60)
+	{
+		stop = true;
+		console.log("Game Over");
+	}
 	
 	// delta time
 	let elapsedTime = (performance.now() - lastTime) / 1000;

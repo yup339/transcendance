@@ -122,6 +122,7 @@ function prepareUpGame()
 	light1.position.set( 0, 14, 5 );
 	upscene.add(light1);
 	
+	
 	//light for player 2
 	light2 = new THREE.PointLight(0x404040, 10, 50);
 	light2.position.set( 30, 14, 5 );
