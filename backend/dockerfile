@@ -1,5 +1,5 @@
 # Use an official Python runtime as a base image
-FROM python:3.9
+FROM python:3.10
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -8,17 +8,15 @@ ENV PYTHONUNBUFFERED 1
 # Set the working directory in the container
 WORKDIR /code
 
-# Copy the dependencies file to the working directory
-COPY requirements.txt /code/
-
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy the current directory contents into the container at /code
 COPY . /code/
 
-# Expose the port that Daphne will run on
-EXPOSE 8000
+# Install dependencies
+RUN pip install -r requirements.txt
 
+# Expose the port that Daphne will run on
+EXPOSE 8001
+EXPOSE 8000
+#distribute the file
+RUN python manage.py collectstatic --noinput
 # Command to run Daphne
-CMD ["daphne", "-b", "0.0.0.0", "-p", "8000", "your_project.asgi:application"]
+CMD python manage.py makemigrations && python manage.py migrate && daphne backend.asgi:application --bind 0.0.0.0 --port 8000

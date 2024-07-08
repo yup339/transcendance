@@ -1,3 +1,35 @@
+Enumerator = {
+	'paddle_touched': 0,
+	'player_won': 1,
+	'player_online_end': 2,
+	'player_offline_end': 3,
+}
+
+class game_event {
+	constructor(name, player) {
+		this.name = name;
+		this.player = player;
+	}
+	
+	serialize() {
+		return JSON.stringify({
+			type: 'event',
+			name: this.name,
+			player: this.player
+		});
+	}
+	
+	deserialize(data) {
+		if (data.type === 'event') {
+			if (data.hasOwnProperty('name')) {
+				this.name = data.name;
+			}
+			if (data.hasOwnProperty('player')) {
+				this.player = data.player;
+			}
+		}
+	}
+}
 class Ball {
 	constructor(x, y , dx, dy, color) {
 		this.x = x;
@@ -17,6 +49,7 @@ class Ball {
 		this.vec = new THREE.Vector2(dx, dy);
 		this.updateSpeed();
 		this.HitBox = new HitBox(this.x, this.y ,this.radius * 2,this.radius * 2, this.radius * 2);
+		this.online = false;
 	}
 
 	cleanup() {
@@ -40,6 +73,10 @@ class Ball {
 		this.sphereMesh.position.set(this.x,this.y, 0)
 	}
 
+	setOnline(){
+		this.online = true;
+	}
+
 	update(){
 		if(game_stop)
 		{
@@ -52,6 +89,8 @@ class Ball {
 			this.updateSpeed()
 			this.HitBox.disable();
 			leftPaddle.disableHitbox();
+			if (this.online && socket.side === 'left')
+				socket.sendInfo(this.serialize);
 		}
 		if(this.HitBox.doesCollide(rightPaddle.HitBox)){
 			this.vec.y =  rightPaddle.getImpactVector(this.y);
@@ -59,6 +98,8 @@ class Ball {
 			this.updateSpeed()
 			this.HitBox.disable();
 			rightPaddle.disableHitbox();
+			if (this.online && socket.side === 'right')
+				socket.sendInfo(this.serialize);
 		}
 		if (this.HitBox.doesCollide(roof) || this.HitBox.doesCollide(floor)){
 			this.vec.y *= -1;
@@ -69,12 +110,16 @@ class Ball {
 			//this.velocityX *= -1;
 			this.vec.x *= -1;
 			this.reset(1);
+			if (this.online && socket.side === 'right')
+				socket.sendInfo(this.serialize);
 			return;
 		} else if (this.HitBox.doesCollide(rightGoal)){
 			score("left");
 			//this.velocityX *= -1;
 			this.vec.x *= -1;
 			this.reset(-1);
+			if (this.online && socket.side === 'left')
+				socket.sendInfo(this.serialize);
 			return;
 		}
 			
@@ -89,6 +134,33 @@ class Ball {
 		this.light.position.set( this.x, this.y, 0);
 		this.sphereMesh.position.set(this.x,this.y, 0);
 	}
+
+	deserialize(data) {
+        if (data.type === 'ballPosition') {
+            if (data.hasOwnProperty('x')) {
+                this.x = data.x;
+            }
+            if (data.hasOwnProperty('y')) {
+                this.y = data.y;
+            }
+            if (data.hasOwnProperty('dx')) {
+                this.vec.y = data.dy;
+            }
+            if (data.hasOwnProperty('dx')) {
+                this.vec.x = data.dx;
+            }
+		}
+	}
+
+	serialize() {
+        return JSON.stringify({
+            type: 'ballPosition',
+            x: this.x,
+			y: this.y,
+			dx: this.vec.x,
+			dy: this.vec.y
+        });
+    }
 
 	
 	changeColor(color){
@@ -255,12 +327,44 @@ class Paddle {
         this.model = new THREE.Mesh( geometry, material );
 		this.model.position.set(this.x,this.y, 1)
 		scene.add(this.model);
+		this.online = false;
+	}
+
+	setOnline(){
+		this.online = true;
 	}
 
 	draw() {
 		context.fillStyle = this.color;
 		context.fillRect(this.x, this.y, this.width, this.height);
 	}
+
+	deserialize(data) {
+        if (data.type === 'paddlePosition') {
+            if (data.hasOwnProperty('x')) {
+                this.x = data.x;
+            }
+            if (data.hasOwnProperty('y')) {
+                this.y = data.y;
+            }
+            if (data.hasOwnProperty('down')) {
+                this.down = data.down;
+            }
+            if (data.hasOwnProperty('up')) {
+                this.up = data.up;
+            }
+		}
+	}
+
+	serialize() {
+        return JSON.stringify({
+            type: 'paddlePosition',
+            x: this.x,
+			y: this.y,
+			down: this.down,
+			up: this.up
+        });
+    }
 
 	update(){
 		if(game_stop)
@@ -277,6 +381,9 @@ class Paddle {
 		}
 		this.HitBox.setPosition(this.x,this.y)
 		this.model.position.set(this.x, this.y , 0);
+		if (this.online){
+			socket.sendInfo(this.serialize());
+		}
 	}
 
 	getImpactVector(y) {
@@ -312,5 +419,6 @@ class Paddle {
 
 	remove(){
         scene.remove(this.model)
-    }
+	}
+	
 }
