@@ -8,7 +8,7 @@ const pages = {
             <img src="{% static 'transcendence/asset/pong_img_button.png' %}" class=" clickable shadow img-fluid image-button img-button-width rounded-5 hover-scale d-block m-auto" alt="Image 1" onclick="navigateTo('pong_choices')">
         </div>
         <div class="col-12 ">
-            <img src="{% static 'transcendence/asset/pong_img_button.png' %}" class="clickable shadow img-fluid image-button img-button-width rounded-5 hover-scale d-block m-auto" alt="Image 1" onclick="location.href='#';">
+            <img src="pong_img_button.png" class="clickable shadow img-fluid image-button img-button-width rounded-5 hover-scale d-block m-auto" alt="Image 1" onclick="navigateTo('up_choices')">
         </div>
         </div>
     </div>
@@ -32,6 +32,25 @@ const pages = {
         </div>
     </div>
 </div>`,
+	'up_choices':`<div class="fullscreen ">
+	<div class="row   w-75 m-auto gy-2  rounded-4 dark-color-bg shadow py-4">
+		<div class="col-12 mb-3">
+			<h5 class="text-center text-white h2 fw-bold ">Choose Your Game Mode</h5>
+		</div>
+		<div class="col-12  text-center px-5">
+			<button  type="button" class="btn btn-color btn-lg w-75 p-3 text-white" onclick="navigateTo('up_dual')">Dual Player</button>
+		</div>
+		<div class="col-12  text-center px-5">
+			<button type="button" class="btn btn-color btn-lg w-75 p-3 text-white" onclick="navigateTo('up_ai')">AI Duel</button>
+		</div>
+		<div class="col-12  text-center px-5 ">
+			<button type="button" class="btn btn-color btn-lg  w-75 p-3 text-white" onclick="navigateTo('up_online')">Online</button>
+		</div>
+		<div class="col-12  text-center px-5 mb-3">
+			<button type="button" class="btn btn-color btn-lg  w-75 p-3 text-white"  onclick="navigateTo('up_tournament')">Tournament</button>
+			</div>
+		</div>
+	</div>`,
 	'pong': `<div class="container extra-top-padding mt-5"  >
     <div id="pong-content">
 		<div class="h1 text-white text-center p-3 mb-5" id="round"></div>
@@ -44,7 +63,7 @@ const pages = {
 			</div>
 		</div>
 		<div id="canvasContainer" class="position-relative mb-5">
-			<canvas id="pongCanvas" class="d-block m-auto w-100"></canvas>
+			<canvas id="pongCanvas" width="1280" height="720" class="d-block m-auto w-100"></canvas>
 			<div id="play-link" class="position-absolute w-100 h-100 z-3 top-0 start-0 bg-dark opacity-50 ">
 				<a class=" clickable hover-scale w-100 h-100 d-flex justify-content-center align-items-center link-body-emphasis link-underline-opacity-0" onclick="start_pong()">
 				<div class=" mb-0 display-1 lead fw-bold text-white  border px-5 py-3 rounded-5 row" >
@@ -91,8 +110,13 @@ const pages = {
 	</div>
 </div>
 </div>`,
+'up': `
+	<div class="w-100 extra-top-padding container mt-5">
+	<canvas id="UpCanvas" width="1920" height="1080" class="m-auto d-block w-100 h-100"></canvas>
+
+	</div>`,
 'signup':`
-<div class="container extra-top-padding  mt-5">
+<div class="container extra-top-padding mt-5">
 <form>
 	<div class="row w-50 m-auto gy-5 gx-5">
 	   <div class="col-12 mb-3">
@@ -283,6 +307,11 @@ function displayPage(pageName)
 		game_mode = pageName;
         pageName = 'pong';
     }
+	else if(pageName == 'up_ai' || pageName == 'up_dual' || pageName == 'up_online' || pageName == 'up_tournament')
+    {
+		game_mode = pageName;
+        pageName = 'up';
+    }
 	
     if (pages.hasOwnProperty(pageName)) 
     {
@@ -290,11 +319,17 @@ function displayPage(pageName)
         content.innerHTML = pages[pageName];
 		if(pageName == 'pong')
 			PongGame();
+		else if(pageName == 'up')
+			UpGame();
 		else
+		{
+			upStop();
 			stopGame();
+		}
     } 
 	else
 	{
+		upStop();
 		stopGame();
 		content.innerHTML = page404;
 	}
