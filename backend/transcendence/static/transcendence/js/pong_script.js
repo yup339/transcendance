@@ -62,7 +62,7 @@ let r2_loser;
 let first_pos;
 let second_pos;
 let third_pos;
-
+let socket;
 //--------------------------------- random and colors
 
 // Function to invert a color passed in hexadecimal format
