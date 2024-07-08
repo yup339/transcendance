@@ -53,7 +53,7 @@ class UserSocket{
     loginSuccess(data){
         this.loggedIn = true;
         try{
-            console.log("Successfully logged in" + data.username);
+            console.log("Successfully logged in " + data.username);
             navigateTo('game_choice');
         }
         catch (error){

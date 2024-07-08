@@ -224,7 +224,6 @@ const pages = {
 
 //page format for error 404
 const page404 = ` <div class="fullscreen"><h1 class="big-text text-white text-center m-0 p-0">404</h1></div>`
-user = null;
 
 window.addEventListener('popstate', function (event) {
     const pageName = event.state;
@@ -310,6 +309,8 @@ function navigateTo(pageName)
     
     displayPage(pageName);
 }
+
+var user;
 
 //called at first and when you refresh page
 function initializePage() 
