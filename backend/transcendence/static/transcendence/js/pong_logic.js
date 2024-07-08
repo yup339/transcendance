@@ -153,7 +153,7 @@ function prepareGame()
 
 	colorPicker = document.getElementById('colorPicker'); // assuming you have an input element with id 'colorPicker'
     colorBox = document.getElementById('colorBox'); // assuming you have a div element with id 'colorBox'
-    canvas = document.getElementById("pongCanvas");
+    upcanvas = document.getElementById("pongCanvas");
     ballSlider = document.getElementById("ballSlider");
 	scoreSlider = document.getElementById("scoreSlider");
     ballSliderOutput = document.getElementById("ballSliderValue");
@@ -166,8 +166,8 @@ function prepareGame()
 	backgroud_materail = new THREE.MeshStandardMaterial({color: 0x444444});
 	background = new THREE.Mesh( backgroundGeometry, backgroud_materail);
 	background.position.z = -BOUND_DEPTH / 2;
-	renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true, alpha: true, pixelRatio: window.devicePixelRatio });
-	camera = new THREE.PerspectiveCamera( 90, canvas.width / canvas.height, 0.1, 1000 );
+	renderer = new THREE.WebGLRenderer({canvas: upcanvas, antialias: true, alpha: true, pixelRatio: window.devicePixelRatio });
+	camera = new THREE.PerspectiveCamera( 90, upcanvas.width / upcanvas.height, 0.1, 1000 );
 	light = new THREE.AmbientLight( 0x404040 ); // soft white light
 	scene.add(light);
 	scene.background = new THREE.Color(0x000000);
