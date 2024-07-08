@@ -5,10 +5,10 @@ const pages = {
     <div class="row justify-content-center mt-md-0 mt-2 mb-5 px-lg-5 gy-4 mt-md-5 mt-3">
         <h1 class="display-5 text-center fw-bold text-white ">Choose Your Game</h1>
         <div class="col-12 ">
-            <img src="{% static 'transcendence/asset/pong_img_button.png' %}" class=" clickable shadow img-fluid image-button img-button-width rounded-5 hover-scale d-block m-auto" alt="Image 1" onclick="navigateTo('pong_choices')">
+            <img src="/static/transcendence/asset/pong_img_button.png" class=" clickable shadow img-fluid image-button img-button-width rounded-5 hover-scale d-block m-auto" alt="Image 1" onclick="navigateTo('pong_choices')">
         </div>
         <div class="col-12 ">
-            <img src="{% static 'transcendence/asset/pong_img_button.png' %}" class="clickable shadow img-fluid image-button img-button-width rounded-5 hover-scale d-block m-auto" alt="Image 1" onclick="location.href='#';">
+            <img src="/static/transcendence/asset/pong_img_button.png" class="clickable shadow img-fluid image-button img-button-width rounded-5 hover-scale d-block m-auto" alt="Image 1" onclick="location.href='#';">
         </div>
         </div>
     </div>
