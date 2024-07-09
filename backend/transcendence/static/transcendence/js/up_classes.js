@@ -78,7 +78,7 @@ class UpObject extends THREE.Mesh
 			if (this.nextPos.y < 0)
 			{
 				this.isFalling = false;
-				this.jumpSpeed = 0;
+				this.jumpSpeed = -5;
 			}
 			else
 			{

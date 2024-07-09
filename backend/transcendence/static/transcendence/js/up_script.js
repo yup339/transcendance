@@ -104,13 +104,13 @@ function prepareUpGame()
 	let geometry = new THREE.BoxGeometry(1, 1, 1);
 	let material = new THREE.MeshStandardMaterial({color: 0xF8B7EE});
 	players[0] = new UpObject(geometry, material, 1, 1);
-	players[0].position.set(0, 0, 0);
+	players[0].position.set(0, 0.2, 0);
 	distanceTravelled1
 	upscene.add(players[0]);
 	
 	let material2 = new THREE.MeshStandardMaterial({color: 0xC1F7B0});
 	players[1] = new UpObject(geometry, material2, 1, 1);
-	players[1].position.set(30, 0, 0);
+	players[1].position.set(30, 0.2, 0);
 	upscene.add(players[1]);
 	
 	//light and its helper
@@ -145,7 +145,7 @@ function countdown()
 function generateLevel()
 {
 	// generate starting platforms
-	let geometry = new THREE.BoxGeometry(15, 1, 5); // starting platforms
+	let geometry = new THREE.BoxGeometry(15, 1, 5);
 	let material = new THREE.MeshStandardMaterial( { color: 0x7377ff } );
 	let startPlat = new UpObject(geometry, material);
 	let startPlat2 = new UpObject(geometry, material);
@@ -154,11 +154,11 @@ function generateLevel()
 	startPlat.render(upscene);
 	startPlat2.render(upscene);
 	objects.push(startPlat);
-	objects.push(startPlat2);
+	objectsp2.push(startPlat2);
 
 	let platform;
 	let y = startPlat.position.y + 6;
-	for (let i = 0; i < 100; i++) // TODO: make it so that x values are  not too far apart
+	for (let i = 0; i < 100; i++)
 	{
 		if (y < 50)
 			platform = new UpObject(platformsGeo[0], material, 5, 1);

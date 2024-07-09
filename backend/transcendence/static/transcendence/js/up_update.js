@@ -20,11 +20,6 @@ function keysEvent(elapsedTime)
 		players[0].isJumping = true;
 		players[0].jumpSet = false;
 		jumpCount1 += 1;
-		// players[0].nextPos.y += playerSpeed * elapsedTime;
-	}
-	if (keys[83]) // s
-	{
-		players[0].nextPos.y -= playerSpeed * elapsedTime;
 	}
 
 	//TODO: REMOVE
@@ -50,7 +45,6 @@ function keysEvent(elapsedTime)
 		players[1].isJumping = true;
 		players[1].jumpSet = false;
 		jumpCount2 += 1;
-		// players[1].nextPos.y += playerSpeed * elapsedTime;
 	}
 
 	jumpLogic(elapsedTime);
@@ -67,50 +61,64 @@ function checkCollision()
 	players[1].hitbox.setFromObject(players[1]);
 	players[1].hitbox.translate(players[1].nextPos);
 	
-	for (let i = 0; i < objects.length; i++)
+	// for (let i = 0; i < objects.length; i++)
+	// {
+	// 	if (players[0].checkCollision(objects[Math.floor((players[0].position.y + 3) / 6)].hitbox))
+	// 	{
+	// 		players[0].collisionResolution(objects[i])
+	// 		console.log("player 1 hit");
+	// 		hit = true;
+	// 		break;
+	// 	}
+	// }
+	// for (let i = 0; i < objectsp2.length; i++)
+	// {
+	// 	if (players[1].checkCollision(objectsp2[i].hitbox))
+	// 	{
+	// 		players[1].collisionResolution(objectsp2[i])
+	// 		// console.log("player 2 hit");
+	// 		hit2 = true;
+	// 		break;
+	// 	}
+	// }
+
+	//TODO: add checks for falling off platforms(the smart way), just check the x coordinate bozo
+
+	let currentPlatform = Math.floor((players[0].position.y + 3) / 6);
+
+	if (players[0].checkCollision(objects[currentPlatform].hitbox))
 	{
-		if (players[0].checkCollision(objects[i].hitbox))
-		{
-			players[0].collisionResolution(objects[i])
-			// console.log("player 1 hit");
-			hit = true;
-			break;
-		}
+		players[0].collisionResolution(objects[currentPlatform]);
+		console.log("player 1 hit");
+		hit = true;
 	}
-	for (let i = 0; i < objectsp2.length; i++)
+
+	currentPlatform = Math.floor((players[1].position.y + 3) / 6);	
+
+	if (players[1].checkCollision(objectsp2[currentPlatform].hitbox))
 	{
-		if (players[1].checkCollision(objectsp2[i].hitbox))
-		{
-			players[1].collisionResolution(objectsp2[i])
-			// console.log("player 2 hit");
-			hit2 = true;
-			break;
-		}
+		players[1].collisionResolution(objectsp2[currentPlatform]);
+		// console.log("player 2 hit");
+		hit2 = true;
 	}
 	
-	if (!hit)
-	{
-		players[0].updatePos();
-	}
-	if (!hit2)
-	{
-		players[1].updatePos();
-	}
+	players[0].updatePos();
+	players[1].updatePos();
 	
-	players[0].raycaster.ray.origin.copy(players[0].position);
-	let intersections = players[0].raycaster.intersectObjects(objects);
-	if (intersections.length <= 0)
-	{
-		if (!hit)
-			players[0].isFalling = true;
-	}
-	players[1].raycaster.ray.origin.copy(players[1].position);
-	intersections = players[1].raycaster.intersectObjects(objectsp2);
-	if (intersections.length <= 0)
-	{
-		if (!hit2)
-			players[1].isFalling = true;
-	}
+	// players[0].raycaster.ray.origin.copy(players[0].position);
+	// let intersections = players[0].raycaster.intersectObjects(objects);
+	// if (intersections.length <= 0)
+	// {
+	// 	if (!hit)
+	// 		players[0].isFalling = true;
+	// }
+	// players[1].raycaster.ray.origin.copy(players[1].position);
+	// intersections = players[1].raycaster.intersectObjects(objectsp2);
+	// if (intersections.length <= 0)
+	// {
+	// 	if (!hit2)
+	// 		players[1].isFalling = true;
+	// }
 
 	updateStats();
 }
@@ -197,7 +205,10 @@ function updateUpGame()
 		requestId = requestAnimationFrame(updateUpGame);
 	printPerSecond();
 	if (stop)
+	{
+		upStop();
 		return ;
+	}
 
 	if (second >= 60)
 	{
