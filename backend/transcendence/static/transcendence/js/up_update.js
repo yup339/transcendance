@@ -52,10 +52,6 @@ function keysEvent(elapsedTime)
 		jumpCount2 += 1;
 		// players[1].nextPos.y += playerSpeed * elapsedTime;
 	}
-	if (keys[40]) // down
-	{
-		players[1].nextPos.y -= playerSpeed * elapsedTime;
-	}
 
 	jumpLogic(elapsedTime);
 	checkCollision();
@@ -229,6 +225,4 @@ function printPerSecond() // handles time events in the update loop
 		console.log(showTime);
 		second = showTime;
 	}
-	// if (second == 50)
-	// 	stop = true;
 }

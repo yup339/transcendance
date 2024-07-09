@@ -10,7 +10,7 @@ services:
     container_name: django
     volumes: 
       - ./backend:/code
-      - static:/static
+      - ./backend/transcendence/static/:/static/
     build: ./backend
     networks:
       - transcendance
@@ -25,7 +25,7 @@ services:
   nginx:
     container_name: nginx
     volumes: 
-      - static:/static
+      - ./backend/transcendence/static/:/static/
     build: ./nginx
     networks:
       - transcendance
