@@ -1,3 +1,5 @@
+const COTOYE = 50;
+
 //html stuff
 let upcanvas;
 let requestId; // to stop loop
@@ -174,7 +176,7 @@ function generateLevel()
 			platform = new UpObject(platformsGeo[5], material, 0.5, 1);
 
 		platform.position.x = GetRandomInt(-5, 5);
-		if (y > 199 && Math.max(platform.position.x, objects[i-1].position.x) - Math.min(platform.position.x, objects[i-1].position.x) > 6)
+		if (y > 150 && Math.max(platform.position.x, objects[i-1].position.x) - Math.min(platform.position.x, objects[i-1].position.x) > 6)
 		{
 			if (platform.position.x > objects[i-1].position.x)
 				platform.position.x -= 6;
@@ -190,6 +192,8 @@ function generateLevel()
 	for (let i = 0; i < objects.length; i++) // clone objects for player 2
 	{
 		objectsp2[i] = objects[i].clone();
+		objectsp2[i].height = objects[i].height;
+		objectsp2[i].width = objects[i].width;
 		objectsp2[i].position.x += 30;
 		objects[i].setHitbox();
 		objectsp2[i].setHitbox();

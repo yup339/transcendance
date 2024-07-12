@@ -113,6 +113,8 @@ const pages = {
 'up': `
 	<div class="w-100 extra-top-padding container mt-5">
 	<canvas id="UpCanvas" width="1920" height="1080" class="m-auto d-block w-100 h-100"></canvas>
+	</div>
+	<div id="score">
 
 	</div>`,
 'signup':`

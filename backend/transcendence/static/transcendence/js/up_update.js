@@ -89,8 +89,14 @@ function checkCollision()
 	if (players[0].checkCollision(objects[currentPlatform].hitbox))
 	{
 		players[0].collisionResolution(objects[currentPlatform]);
-		console.log("player 1 hit");
-		hit = true;
+		// console.log("player 1 hit");
+	}
+	if (players[0].position.x - 0.5 > objects[currentPlatform].position.x + objects[currentPlatform].width/2 ||
+		players[0].position.x + 0.5 < objects[currentPlatform].position.x - objects[currentPlatform].width/2)
+	{
+		players[0].jumpTime = performance.now();
+		players[0].isFalling = true;
+
 	}
 
 	currentPlatform = Math.floor((players[1].position.y + 3) / 6);	
@@ -99,7 +105,12 @@ function checkCollision()
 	{
 		players[1].collisionResolution(objectsp2[currentPlatform]);
 		// console.log("player 2 hit");
-		hit2 = true;
+	}
+	if (players[1].position.x - 0.5 > objectsp2[currentPlatform].position.x + objectsp2[currentPlatform].width/2 ||
+		players[1].position.x + 0.5 < objectsp2[currentPlatform].position.x - objectsp2[currentPlatform].width/2)
+	{
+		players[1].jumpTime = performance.now();
+		players[1].isFalling = true;
 	}
 	
 	players[0].updatePos();

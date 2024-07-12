@@ -14,7 +14,7 @@ class UpObject extends THREE.Mesh
 		this.isFalling = false;
 		this.jumpSet = false;
 		this.jumpTimer = 0;
-		this.raycaster = new THREE.Raycaster(this.position, new THREE.Vector3(0, -1, 0), 0, 1);
+		this.jumpCount = 0;
 		this.geometry.computeBoundingBox();
 	}
 
