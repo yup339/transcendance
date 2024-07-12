@@ -5,6 +5,7 @@ let upcanvas;
 let requestId; // to stop loop
 
 //time vars
+let uponline = false;
 let stop;
 let lastTime;
 let startTime;
@@ -128,7 +129,8 @@ function prepareUpGame()
 	light2.position.set( 30, 14, 5 );
 	upscene.add(light2);
 	
-	generateLevel();
+	if (!uponline)
+		generateLevel();
 
 	stop = false;
 	// requestId = undefined;
@@ -199,7 +201,74 @@ function generateLevel()
 		objectsp2[i].setHitbox();
 		upscene.add(objectsp2[i]);
 	}
+}
+
+function generateLevelOnline()
+{
+// generate starting platforms
+	let geometry = new THREE.BoxGeometry(15, 1, 5);
+	let material = new THREE.MeshStandardMaterial( { color: 0x7377ff } );
+	let startPlat = new UpObject(geometry, material);
+	let startPlat2 = new UpObject(geometry, material);
+	startPlat.position.set(0, -1, 0);
+	startPlat2.position.set(30, -1, 0);
+	startPlat.render(upscene);
+	startPlat2.render(upscene);
+	objects.push(startPlat);
+	objectsp2.push(startPlat2);
+
+	let platform;
+	let y = startPlat.position.y + 6;
+	for (let i = 0; i < 100; i++)
+	{
+		if (y < 50)
+			platform = new UpObject(platformsGeo[0], material, 5, 1);
+		else if (y < 100)
+			platform = new UpObject(platformsGeo[1], material, 4, 1);
+		else if (y < 150)
+			platform = new UpObject(platformsGeo[2], material, 3, 1);
+		else if (y < 200)
+			platform = new UpObject(platformsGeo[3], material, 2, 1);
+		else if (y < 250)
+			platform = new UpObject(platformsGeo[4], material, 1, 1);
+		else
+			platform = new UpObject(platformsGeo[5], material, 0.5, 1);
+
+		platform.position.x = GetRandomInt(-5, 5);
+		if (y > 150 && Math.max(platform.position.x, objects[i-1].position.x) - Math.min(platform.position.x, objects[i-1].position.x) > 6)
+		{
+			if (platform.position.x > objects[i-1].position.x)
+				platform.position.x -= 6;
+			else
+				platform.position.x += 6;
+		}
+		platform.position.y = y;
+		y += 6;
+		objects.push(platform);
+		platform.render(upscene);
+	}
 	
+	let platformJSON = objectsp2[1].serializePlatform();
+	for (let i = 2; i < objects.length; i++) // clone objects for player 2
+	{
+		objectsp2[i] = objects[i].clone();
+		objectsp2[i].height = objects[i].height;
+		objectsp2[i].width = objects[i].width;
+		objectsp2[i].position.x += 30;
+		objects[i].setHitbox();
+		platformJSON.concat(objectsp2[i].serializePlatform());
+		// upscene.add(objectsp2[i]);
+	}
+	console.log(platformJSON);
+	socket.send(platformJSON);
+}
+
+function sendPlatforms()
+{
+	for (let i = 0; i < objects.length; i++)
+	{
+		objects[i].seria
+	}
 }
 
 function GetRandomInt(min, max)
@@ -211,8 +280,8 @@ function GetRandomInt(min, max)
 function UpGame()
 {
 	stop = false;
-	game_mode = 'up_dual';
-
+	uponline = false;
+	
 	if(game_mode == 'up_dual')
 	{
 		playerLeft = 'Left player';
@@ -226,6 +295,52 @@ function UpGame()
 		playerRight = 'Player 2';
 		prepareOnline();
 	}
+}
+
+function startUpOnline(data)
+{
+	if (data.size == 'left')
+	{
+		prepareUpGame();
+		generateLevelOnline();
+	}
+}
+
+function prepareOnline()
+{
+	uponline = true;
+
+	console.log("hi");
+	// prepareUpGame();
+
+	upcanvas = document.getElementById('UpCanvas');
+	// set up cameras
+	for (let i = 0; i < views.length; ++i)
+	{
+		const view = views[i];
+		const camera = new THREE.PerspectiveCamera(50, upcanvas.width/upcanvas.height, 0.1, 500);
+		camera.position.fromArray(view.position);
+		view.camera = camera;
+	}
+
+	setGlobals();
+
+	upscene = new THREE.Scene();
+	uprenderer = new THREE.WebGLRenderer({canvas: upcanvas});
+	uprenderer.setSize(upcanvas.width, upcanvas.height);
+
+	let geometry = new THREE.BoxGeometry(15, 1, 5);
+	let material = new THREE.MeshStandardMaterial( { color: 0x7377ff } );
+	let startPlat = new UpObject(geometry, material);
+	let startPlat2 = new UpObject(geometry, material);
+	startPlat.position.set(0, -1, 0);
+	startPlat2.position.set(30, -1, 0);
+	startPlat.render(upscene);
+	startPlat2.render(upscene);
+	objects.push(startPlat);
+	objectsp2.push(startPlat2);
+
+	socket = new UpSocket()
 }
 
 function upStop()

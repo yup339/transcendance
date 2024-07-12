@@ -325,14 +325,14 @@ function displayPage(pageName)
 			UpGame();
 		else
 		{
-			upStop();
 			stopGame();
+			upStop();
 		}
     } 
 	else
 	{
-		upStop();
 		stopGame();
+		upStop();
 		content.innerHTML = page404;
 	}
 }

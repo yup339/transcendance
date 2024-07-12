@@ -153,3 +153,54 @@ class GameSocket{
         }
     }
 }
+
+// for up
+class UpSocket{
+    constructor() {
+        try {
+            this.socket = new WebSocket(`wss://${window.location.host}/ws/up`);
+            this.socket.onopen = this.handleOpen.bind(this);
+            this.socket.onmessage = this.handleMessage.bind(this);
+            this.socket.onclose = this.handleClose.bind(this);
+        } catch (error) {
+            console.error('WebSocket connection error:', error);
+        }
+    }
+    handleOpen(event) {
+        console.log('WebSocket connection opened.');
+    }
+
+    // use with serialize object
+    sendInfo(info){
+        this.socket.send(info);
+    };
+    
+    handleClose(event) {
+        console.log('WebSocket connection closed.');
+    }
+
+    handleMessage(event) {
+        console.log("receiving data");
+        try{
+            const data = JSON.parse(event.data);
+            switch (data.type){
+                case 'playerPositionSync':
+                    this.updatePosition(data);
+                    break;
+                case 'disconect':
+                    console.log("disconect TODO");
+                    break;
+                case 'matchFound':
+                    this.side = data.side;
+                    startUpOnline(data);
+                break;
+            }
+        }
+        catch (error){console.error(error)}
+    }
+
+    updatePosition(data)
+	{
+		
+	}
+}
