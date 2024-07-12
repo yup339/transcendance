@@ -28,6 +28,7 @@ let leftGoal;
 let rightGoal; 
 let leftPaddle;
 let rightPaddle;
+let previousTimePong;
 
 //balls
 var balls = [];

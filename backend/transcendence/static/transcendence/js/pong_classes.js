@@ -45,7 +45,7 @@ class Ball {
 		this.online = true;
 	}
 
-	update(){
+	update(magnitude){
 		if(game_stop)
 		{
 			return ;
@@ -58,7 +58,7 @@ class Ball {
 			this.HitBox.disable();
 			leftPaddle.disableHitbox();
 			if (this.online && socket.side === 'left')
-				socket.sendInfo(this.serialize);
+				socket.sendInfo(this.serialize());
 		}
 		if(this.HitBox.doesCollide(rightPaddle.HitBox)){
 			this.vec.y =  rightPaddle.getImpactVector(this.y);
@@ -67,7 +67,7 @@ class Ball {
 			this.HitBox.disable();
 			rightPaddle.disableHitbox();
 			if (this.online && socket.side === 'right')
-				socket.sendInfo(this.serialize);
+				socket.sendInfo(this.serialize());
 		}
 		if (this.HitBox.doesCollide(roof) || this.HitBox.doesCollide(floor)){
 			this.vec.y *= -1;
@@ -79,7 +79,7 @@ class Ball {
 			this.vec.x *= -1;
 			this.reset(1);
 			if (this.online && socket.side === 'right')
-				socket.sendInfo(this.serialize);
+				socket.sendInfo(this.serialize());
 			return;
 		} else if (this.HitBox.doesCollide(rightGoal)){
 			score("left");
@@ -87,16 +87,14 @@ class Ball {
 			this.vec.x *= -1;
 			this.reset(-1);
 			if (this.online && socket.side === 'left')
-				socket.sendInfo(this.serialize);
+				socket.sendInfo(this.serialize());
 			return;
 		}
 			
 
-		this.x += this.vec.x;
-		this.y += this.vec.y;
+		this.x += this.vec.x * magnitude;
+		this.y += this.vec.y * magnitude;
 
-		//this.x += this.velocityX;
-		//this.y += this.velocityY;
 
 		this.HitBox.setPosition(this.x, this.y);
 		this.light.position.set( this.x, this.y, 0);
@@ -104,7 +102,7 @@ class Ball {
 	}
 
 	deserialize(data) {
-        if (data.type === 'ballPosition') {
+        if (data.type === 'ballPositionSync') {
             if (data.hasOwnProperty('x')) {
                 this.x = data.x;
             }
@@ -122,11 +120,12 @@ class Ball {
 
 	serialize() {
         return JSON.stringify({
-            type: 'ballPosition',
+        	type: 'ballPosition',
             x: this.x,
 			y: this.y,
 			dx: this.vec.x,
-			dy: this.vec.y
+			dy: this.vec.y,
+			group: socket.group
         });
     }
 
@@ -308,7 +307,7 @@ class Paddle {
 	}
 
 	deserialize(data) {
-        if (data.type === 'paddlePosition') {
+        if (data.type === 'paddlePositionSync') {
             if (data.hasOwnProperty('x')) {
                 this.x = data.x;
             }
@@ -325,28 +324,29 @@ class Paddle {
 	}
 
 	serialize() {
-		console.log()
         return JSON.stringify({
             type: 'paddlePosition',
             x: this.x,
 			y: this.y,
 			down: this.down,
-			up: this.up
+			up: this.up,
+			side: socket.side,
+			group: socket.group
         });
     }
 
-	update(){
+	update(magnitude){
 		if(game_stop)
 			return ;
 		if (this.aiActive)
 			this.ai.update();
 		if(this.up && !this.down){
 			if (!this.HitBox.doesCollide(floor))
-			this.y -= this.speed;
+				this.y -= this.speed * magnitude;
 		}
 		if(this.down && !this.up){
 			if (!this.HitBox.doesCollide(roof))
-				this.y += this.speed;
+				this.y += this.speed * magnitude;
 		}
 		this.HitBox.setPosition(this.x,this.y)
 		this.model.position.set(this.x, this.y , 0);

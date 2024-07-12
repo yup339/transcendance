@@ -1,11 +1,16 @@
 function update(){
 	if(game_stop)
 		return ;
+
+	let elapsedTime = (performance.now() - previousTimePong);
+	previousTimePong = performance.now();
+	let magnitude = elapsedTime / (1000 / 60) // have game logic be 60 fps
+
 	for (let i = 0; i < balls.length; i++) {
-		balls[i].update();
+		balls[i].update(magnitude);
 	}
-	leftPaddle.update();
-	rightPaddle.update();
+	leftPaddle.update(magnitude);
+	rightPaddle.update(magnitude);
 	renderer.render(scene, camera)
 	requestAnimationFrame(update);
 }
@@ -133,7 +138,7 @@ function prepare_online_Game()
 	rightGoal.draw();
 	roof.draw();
 	floor.draw();
-	
+	previousTimePong = performance.now()
 	setUpScene();
 	ballSliderOutput.innerHTML = ballSlider.value;
 	scoreOutput.innerHTML = scoreSlider.value;
@@ -261,6 +266,8 @@ function stopGame()
 	game_stop = true;
 	if(rightPaddle)
 		rightPaddle.deactivateAI();
+	if(socket)
+		socket.disconect();
 }
 
 function restartGame()

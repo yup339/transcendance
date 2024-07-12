@@ -10,13 +10,13 @@ class GameSocket{
             console.error('WebSocket connection error:', error);
         }
     }
+
     handleOpen(event) {
         console.log('WebSocket connection opened.');
     }
 
     // use with serialize object
     sendInfo(info){
-        console.log("sending data");
         this.socket.send(info);
     };
     
@@ -25,15 +25,13 @@ class GameSocket{
     }
 
     handleMessage(event) {
-        console.log("receiving data");
         try{
             const data = JSON.parse(event.data);
-            console.log(data.type);
             switch (data.type){
-                case 'ballPosition':
+                case 'ballPositionSync':
                     this.updateBallPos(data);
                     break;
-                case 'paddlePosition':
+                case 'paddlePositionSync':
                     this.updatePaddlePos(data);
                     break;
                 case 'disconect':
@@ -41,6 +39,7 @@ class GameSocket{
                     break;
                 case 'matchFound':
                     this.side = data.side;
+                    this.group = data.group
                     startOnlineMatch(data);
                 break;
             }
@@ -60,4 +59,13 @@ class GameSocket{
             leftPaddle.deserialize(data);
         }
     }
-}
+
+    disconect(){
+        if (this.socket.readyState === WebSocket.OPEN) {
+            this.socket.close();
+            console.log("WebSocket connection closed manually.");
+        } else {
+            console.log("WebSocket is not open.");
+        }
+    }
+    }
