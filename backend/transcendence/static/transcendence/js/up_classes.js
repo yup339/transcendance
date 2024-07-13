@@ -123,11 +123,6 @@ class UpObject extends THREE.Mesh
 
 function deserializePlatform(data)
 {
-	let platform;
-	let material = new THREE.MeshStandardMaterial( { color: 0x7377ff } );
-
-	platform = new UpObject(new THREE.BoxGeometry(data.width, 1, 5), material, data.width, 1);
-
-	platform.position.x = data.x;
-	platform.position.y = data.y;
+	console.log("je suis une fonction pas faites snif snif snif sad face");
+	
 }

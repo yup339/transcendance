@@ -104,6 +104,7 @@ class GameSocket{
             console.error('WebSocket connection error:', error);
         }
     }
+
     handleOpen(event) {
         console.log('WebSocket connection opened.');
     }
@@ -114,18 +115,17 @@ class GameSocket{
     };
     
     handleClose(event) {
-        console.log('WebSocket connection closed.');
+        console.log('WebSocket connection closed:', event);
     }
 
     handleMessage(event) {
-        console.log("receiving data");
         try{
             const data = JSON.parse(event.data);
             switch (data.type){
-                case 'ballPosition':
+                case 'ballPositionSync':
                     this.updateBallPos(data);
                     break;
-                case 'paddlePosition':
+                case 'paddlePositionSync':
                     this.updatePaddlePos(data);
                     break;
                 case 'disconect':
@@ -133,7 +133,8 @@ class GameSocket{
                     break;
                 case 'matchFound':
                     this.side = data.side;
-                    setOnlineMode(data);
+                    this.group = data.group
+                    startOnlineMatch(data);
                 break;
             }
         }
@@ -172,6 +173,7 @@ class UpSocket{
 
     // use with serialize object
     sendInfo(info){
+        console.log(info);
         this.socket.send(info);
     };
     
@@ -184,16 +186,14 @@ class UpSocket{
         try{
             const data = JSON.parse(event.data);
             switch (data.type){
-                case 'playerPositionSync':
-                    this.updatePosition(data);
-                    break;
-                case 'disconect':
-                    console.log("disconect TODO");
-                    break;
                 case 'matchFound':
                     this.side = data.side;
+                    console.log(this.side);
                     startUpOnline(data);
-                break;
+                    break;
+                case 'platformSetUp':
+                    deserializePlatform(data);
+                    break;
             }
         }
         catch (error){console.error(error)}

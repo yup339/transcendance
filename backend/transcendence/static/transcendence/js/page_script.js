@@ -63,7 +63,7 @@ const pages = {
 			</div>
 		</div>
 		<div id="canvasContainer" class="position-relative mb-5">
-			<canvas id="pongCanvas" width="1280" height="720" class="d-block m-auto w-100"></canvas>
+            <canvas id="pongCanvas" width="1280" height="720" class="d-block m-auto w-100"></canvas>
 			<div id="play-link" class="position-absolute w-100 h-100 z-3 top-0 start-0 bg-dark opacity-50 ">
 				<a class=" clickable hover-scale w-100 h-100 d-flex justify-content-center align-items-center link-body-emphasis link-underline-opacity-0" onclick="start_pong()">
 				<div class=" mb-0 display-1 lead fw-bold text-white  border px-5 py-3 rounded-5 row" >

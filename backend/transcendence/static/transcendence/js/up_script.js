@@ -205,20 +205,9 @@ function generateLevel()
 
 function generateLevelOnline()
 {
-// generate starting platforms
-	let geometry = new THREE.BoxGeometry(15, 1, 5);
-	let material = new THREE.MeshStandardMaterial( { color: 0x7377ff } );
-	let startPlat = new UpObject(geometry, material);
-	let startPlat2 = new UpObject(geometry, material);
-	startPlat.position.set(0, -1, 0);
-	startPlat2.position.set(30, -1, 0);
-	startPlat.render(upscene);
-	startPlat2.render(upscene);
-	objects.push(startPlat);
-	objectsp2.push(startPlat2);
-
 	let platform;
-	let y = startPlat.position.y + 6;
+	let material = new THREE.MeshStandardMaterial( { color: 0x7377ff } );
+	let y = 5; //ok compliquer pour rien de faire des calcul qui sont toujours = a 5 donc ca vas etre ca ici vus que la platform de depart de toute facons est declarer dans une autre fonction pour le online si jamais tu as un problem avec ca deal with it ceci mets donc fin a ce long commentaire constructif
 	for (let i = 0; i < 100; i++)
 	{
 		if (y < 50)
@@ -248,19 +237,19 @@ function generateLevelOnline()
 		platform.render(upscene);
 	}
 	
-	let platformJSON = objectsp2[1].serializePlatform();
-	for (let i = 2; i < objects.length; i++) // clone objects for player 2
+	let platformJSON = [];
+	for (let i = 1; i < objects.length; i++) // clone objects for player 2
 	{
 		objectsp2[i] = objects[i].clone();
 		objectsp2[i].height = objects[i].height;
 		objectsp2[i].width = objects[i].width;
 		objectsp2[i].position.x += 30;
 		objects[i].setHitbox();
-		platformJSON.concat(objectsp2[i].serializePlatform());
-		// upscene.add(objectsp2[i]);
+		platformJSON.push(objects[i].serializePlatform());
+		upscene.add(objectsp2[i]);
 	}
-	console.log(platformJSON);
-	socket.send(platformJSON);
+	socket.sendInfo(JSON.stringify(platformJSON));
+	renderUp();
 }
 
 function sendPlatforms()
@@ -299,10 +288,13 @@ function UpGame()
 
 function startUpOnline(data)
 {
-	if (data.size == 'left')
+	if (data.side == 'left')
 	{
-		prepareUpGame();
+		console.log("left")
 		generateLevelOnline();
+	}
+	else{
+		console.log("trash side")
 	}
 }
 
@@ -310,15 +302,14 @@ function prepareOnline()
 {
 	uponline = true;
 
-	console.log("hi");
 	// prepareUpGame();
-
 	upcanvas = document.getElementById('UpCanvas');
 	// set up cameras
 	for (let i = 0; i < views.length; ++i)
 	{
 		const view = views[i];
 		const camera = new THREE.PerspectiveCamera(50, upcanvas.width/upcanvas.height, 0.1, 500);
+		console.log(views.length)
 		camera.position.fromArray(view.position);
 		view.camera = camera;
 	}
@@ -329,8 +320,35 @@ function prepareOnline()
 	uprenderer = new THREE.WebGLRenderer({canvas: upcanvas});
 	uprenderer.setSize(upcanvas.width, upcanvas.height);
 
-	let geometry = new THREE.BoxGeometry(15, 1, 5);
-	let material = new THREE.MeshStandardMaterial( { color: 0x7377ff } );
+	//players
+	let geometry = new THREE.BoxGeometry(1, 1, 1);
+	let material = new THREE.MeshStandardMaterial({color: 0xF8B7EE});
+	players[0] = new UpObject(geometry, material, 1, 1);
+	players[0].position.set(0, 0.2, 0);
+	distanceTravelled1
+	upscene.add(players[0]);
+	
+	let material2 = new THREE.MeshStandardMaterial({color: 0xC1F7B0});
+	players[1] = new UpObject(geometry, material2, 1, 1);
+	players[1].position.set(30, 0.2, 0);
+	upscene.add(players[1]);
+	
+	//light and its helper
+	let geo = new THREE.SphereGeometry(1, 32, 16);
+	let mat = new THREE.MeshBasicMaterial({color: 0x404040});
+	light1 = new THREE.PointLight(0x404040, 10, 50);
+	light1.position.set( 0, 14, 5 );
+	upscene.add(light1);
+	
+	
+	//light for player 2
+	light2 = new THREE.PointLight(0x404040, 10, 50);
+	light2.position.set( 30, 14, 5 );
+	upscene.add(light2);
+
+	//add starting platform
+	geometry = new THREE.BoxGeometry(15, 1, 5);
+	material = new THREE.MeshStandardMaterial( { color: 0x7377ff } );
 	let startPlat = new UpObject(geometry, material);
 	let startPlat2 = new UpObject(geometry, material);
 	startPlat.position.set(0, -1, 0);
@@ -340,6 +358,8 @@ function prepareOnline()
 	objects.push(startPlat);
 	objectsp2.push(startPlat2);
 
+
+	renderUp();
 	socket = new UpSocket()
 }
 

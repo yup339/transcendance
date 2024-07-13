@@ -37,7 +37,12 @@ psql :
 pbash :
 	@docker exec -it postgresql /bin/bash
 
-clean: down
+clean:
+	@docker-compose down -v
+
+run: clean up
+
+fclean: down
 	@docker-compose down --rmi all -v
 	@docker volume prune -f
 	@docker system prune -f
