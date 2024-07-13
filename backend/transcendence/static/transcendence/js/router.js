@@ -104,6 +104,7 @@ class GameSocket{
             console.error('WebSocket connection error:', error);
         }
     }
+
     handleOpen(event) {
         console.log('WebSocket connection opened.');
     }
@@ -114,18 +115,17 @@ class GameSocket{
     };
     
     handleClose(event) {
-        console.log('WebSocket connection closed.');
+        console.log('WebSocket connection closed:', event);
     }
 
     handleMessage(event) {
-        console.log("receiving data");
         try{
             const data = JSON.parse(event.data);
             switch (data.type){
-                case 'ballPosition':
+                case 'ballPositionSync':
                     this.updateBallPos(data);
                     break;
-                case 'paddlePosition':
+                case 'paddlePositionSync':
                     this.updatePaddlePos(data);
                     break;
                 case 'disconect':
@@ -133,7 +133,8 @@ class GameSocket{
                     break;
                 case 'matchFound':
                     this.side = data.side;
-                    setOnlineMode(data);
+                    this.group = data.group
+                    startOnlineMatch(data);
                 break;
             }
         }
@@ -152,4 +153,13 @@ class GameSocket{
             leftPaddle.deserialize(data);
         }
     }
-}
+
+    disconect(){
+        if (this.socket.readyState === WebSocket.OPEN) {
+            this.socket.close();
+            console.log("WebSocket connection closed manually.");
+        } else {
+            console.log("WebSocket is not open.");
+        }
+    }
+    }
