@@ -141,11 +141,6 @@ function prepareUpGame()
 	updateUpGame();
 }
 
-function countdown()
-{
-	
-}
-
 function generateLevel()
 {
 	// generate starting platforms
@@ -252,14 +247,6 @@ function generateLevelOnline()
 	renderUp();
 }
 
-function sendPlatforms()
-{
-	for (let i = 0; i < objects.length; i++)
-	{
-		objects[i].seria
-	}
-}
-
 function GetRandomInt(min, max)
 {
 	return Math.floor(Math.random() * (max - min + 1) + min);
@@ -325,7 +312,6 @@ function prepareOnline()
 	let material = new THREE.MeshStandardMaterial({color: 0xF8B7EE});
 	players[0] = new UpObject(geometry, material, 1, 1);
 	players[0].position.set(0, 0.2, 0);
-	distanceTravelled1
 	upscene.add(players[0]);
 	
 	let material2 = new THREE.MeshStandardMaterial({color: 0xC1F7B0});
@@ -358,6 +344,9 @@ function prepareOnline()
 	objects.push(startPlat);
 	objectsp2.push(startPlat2);
 
+	stop = false;
+	lastTime = performance.now();
+	startTime = lastTime;
 
 	renderUp();
 	socket = new UpSocket()

@@ -57,6 +57,12 @@ class upConsumer(AsyncWebsocketConsumer):
 
             elif data['type'] == 'playerPos':
                 print ("lalala")
+            elif data['type'] == 'gameReady':
+                await self.channel_layer.group_send(
+                    data['group'],
+                    {
+                        'type': 'startosgamos',
+                    })
             else : 
                 print("unknown datatype")
                 
@@ -67,13 +73,18 @@ class upConsumer(AsyncWebsocketConsumer):
             print(f"KeyError: Missing key {str(e)} in received data.")
 
     async def platformSetUp(self, data):
-        print ("sending shit")
         if (data['side'] != self.side):
             await self.send(text_data=json.dumps({
                     'type': 'platformSetUp',
                     'pos': data['pos'],
                 }
             ))
+
+    async def startosgamos(self, data):
+        await self.send(text_data=json.dumps({
+                'type': 'startosgamos',
+            }
+        ))
 
     async def create_match(self, player1, player2, group_name):
         player1.match_group_name = group_name

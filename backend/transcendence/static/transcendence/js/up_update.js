@@ -231,7 +231,8 @@ function updateUpGame()
 	let elapsedTime = (performance.now() - lastTime) / 1000;
 	lastTime = performance.now();
 
-	keysEvent(elapsedTime);
+	if (!uponline)
+		keysEvent(elapsedTime);
 	renderUp();
 }
 

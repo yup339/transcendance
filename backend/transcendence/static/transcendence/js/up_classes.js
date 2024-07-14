@@ -123,6 +123,25 @@ class UpObject extends THREE.Mesh
 
 function deserializePlatform(data)
 {
-	console.log("je suis une fonction pas faites snif snif snif sad face");
-	
+	//console.log("je suis une fonction pas faites snif snif snif sad face");
+	//console.log("je vais travailler sur la fonction un peu, assez de snif snif sad face par ici")
+
+	let platformPos = data.pos;
+	let geometry;
+	let material = new THREE.MeshStandardMaterial({color: 0x7377ff});
+
+	for (let i = 0; i < platformPos.length; i++)
+	{
+		geometry = new THREE.BoxGeometry(platformPos[i].width, 1, 5);
+		objects[i + 1] = new UpObject(geometry, material, platformPos[i].width, 1);
+		objects[i + 1].position.set(platformPos[i].x, platformPos[i].y, 0);
+		objectsp2[i + 1] = new UpObject(geometry, material, platformPos[i].width, 1);
+		objectsp2[i + 1].position.set(platformPos[i].x + 30, platformPos[i].y, 0);
+		objects[i + 1].setHitbox();
+		objectsp2[i + 1].setHitbox();
+		upscene.add(objects[i + 1]);
+		upscene.add(objectsp2[i + 1]);
+	}
+	renderUp();
+	socket.sendInfo(JSON.stringify({type: "gameReady"}))
 }

@@ -194,6 +194,8 @@ class UpSocket{
                 case 'platformSetUp':
                     deserializePlatform(data);
                     break;
+                case 'startosgamos':
+                    gameReady();
             }
         }
         catch (error){console.error(error)}
