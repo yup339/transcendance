@@ -53,36 +53,11 @@ function keysEvent(elapsedTime)
 
 function checkCollision()
 {
-	let hit = false;
-	let hit2 = false;
 
 	players[0].hitbox.setFromObject(players[0]);
 	players[0].hitbox.translate(players[0].nextPos);
 	players[1].hitbox.setFromObject(players[1]);
 	players[1].hitbox.translate(players[1].nextPos);
-	
-	// for (let i = 0; i < objects.length; i++)
-	// {
-	// 	if (players[0].checkCollision(objects[Math.floor((players[0].position.y + 3) / 6)].hitbox))
-	// 	{
-	// 		players[0].collisionResolution(objects[i])
-	// 		console.log("player 1 hit");
-	// 		hit = true;
-	// 		break;
-	// 	}
-	// }
-	// for (let i = 0; i < objectsp2.length; i++)
-	// {
-	// 	if (players[1].checkCollision(objectsp2[i].hitbox))
-	// 	{
-	// 		players[1].collisionResolution(objectsp2[i])
-	// 		// console.log("player 2 hit");
-	// 		hit2 = true;
-	// 		break;
-	// 	}
-	// }
-
-	//TODO: add checks for falling off platforms(the smart way), just check the x coordinate bozo
 
 	let currentPlatform = Math.floor((players[0].position.y + 3) / 6);
 
@@ -96,7 +71,6 @@ function checkCollision()
 	{
 		players[0].jumpTime = performance.now();
 		players[0].isFalling = true;
-
 	}
 
 	currentPlatform = Math.floor((players[1].position.y + 3) / 6);	
@@ -115,22 +89,6 @@ function checkCollision()
 	
 	players[0].updatePos();
 	players[1].updatePos();
-	
-	// players[0].raycaster.ray.origin.copy(players[0].position);
-	// let intersections = players[0].raycaster.intersectObjects(objects);
-	// if (intersections.length <= 0)
-	// {
-	// 	if (!hit)
-	// 		players[0].isFalling = true;
-	// }
-	// players[1].raycaster.ray.origin.copy(players[1].position);
-	// intersections = players[1].raycaster.intersectObjects(objectsp2);
-	// if (intersections.length <= 0)
-	// {
-	// 	if (!hit2)
-	// 		players[1].isFalling = true;
-	// }
-
 	updateStats();
 }
 
@@ -148,7 +106,7 @@ function jumpLogic(elapsedTime)
 
 	for (let i = 0; i < 2; i++)
 	{
-		if(players[i].isJumping)
+		if (players[i].isJumping)
 		{
 			players[i].isJumping = false;
 			if (!players[i].jumpSet)
@@ -228,8 +186,9 @@ function updateUpGame()
 	}
 	
 	// delta time
-	let elapsedTime = (performance.now() - lastTime) / 1000;
-	lastTime = performance.now();
+	// let elapsedTime = (performance.now() - lastTime) / 1000;
+	// lastTime = performance.now();
+	elapsedTime = 1/60.0;
 
 	if (!uponline)
 		keysEvent(elapsedTime);

@@ -74,13 +74,13 @@ function setGlobals()
 		new THREE.BoxGeometry(1, 1, 5),
 		new THREE.BoxGeometry(0.5, 1, 5)];
 
-	players = [];
-	objects = [];
-	objectsp2 = [];
-	second = 0;
-	distanceTravelled1 = 0;
+	players = []; // players
+	objects = []; // platforms for p1
+	objectsp2 = []; // platforms for p2
+	second = 0; // timer
+	distanceTravelled1 = 0; //stat
 	distanceTravelled2 = 0;
-	jumpCount1 = 0;
+	jumpCount1 = 0; //stat
 	jumpCount2 = 0;
 
 }
@@ -88,6 +88,7 @@ function setGlobals()
 function prepareUpGame()
 {
 	upcanvas = document.getElementById('UpCanvas');
+	uponline = false;
 	// set up cameras
 	for (let i = 0; i < views.length; ++i)
 	{
@@ -116,7 +117,7 @@ function prepareUpGame()
 	players[1].position.set(30, 0.2, 0);
 	upscene.add(players[1]);
 	
-	//light and its helper
+	//light
 	let geo = new THREE.SphereGeometry(1, 32, 16);
 	let mat = new THREE.MeshBasicMaterial({color: 0x404040});
 	light1 = new THREE.PointLight(0x404040, 10, 50);
@@ -129,8 +130,7 @@ function prepareUpGame()
 	light2.position.set( 30, 14, 5 );
 	upscene.add(light2);
 	
-	if (!uponline)
-		generateLevel();
+	generateLevel();
 
 	stop = false;
 	// requestId = undefined;
@@ -271,85 +271,6 @@ function UpGame()
 		playerRight = 'Player 2';
 		prepareOnline();
 	}
-}
-
-function startUpOnline(data)
-{
-	if (data.side == 'left')
-	{
-		console.log("left")
-		generateLevelOnline();
-	}
-	else{
-		console.log("trash side")
-	}
-}
-
-function prepareOnline()
-{
-	uponline = true;
-
-	// prepareUpGame();
-	upcanvas = document.getElementById('UpCanvas');
-	// set up cameras
-	for (let i = 0; i < views.length; ++i)
-	{
-		const view = views[i];
-		const camera = new THREE.PerspectiveCamera(50, upcanvas.width/upcanvas.height, 0.1, 500);
-		console.log(views.length)
-		camera.position.fromArray(view.position);
-		view.camera = camera;
-	}
-
-	setGlobals();
-
-	upscene = new THREE.Scene();
-	uprenderer = new THREE.WebGLRenderer({canvas: upcanvas});
-	uprenderer.setSize(upcanvas.width, upcanvas.height);
-
-	//players
-	let geometry = new THREE.BoxGeometry(1, 1, 1);
-	let material = new THREE.MeshStandardMaterial({color: 0xF8B7EE});
-	players[0] = new UpObject(geometry, material, 1, 1);
-	players[0].position.set(0, 0.2, 0);
-	upscene.add(players[0]);
-	
-	let material2 = new THREE.MeshStandardMaterial({color: 0xC1F7B0});
-	players[1] = new UpObject(geometry, material2, 1, 1);
-	players[1].position.set(30, 0.2, 0);
-	upscene.add(players[1]);
-	
-	//light and its helper
-	let geo = new THREE.SphereGeometry(1, 32, 16);
-	let mat = new THREE.MeshBasicMaterial({color: 0x404040});
-	light1 = new THREE.PointLight(0x404040, 10, 50);
-	light1.position.set( 0, 14, 5 );
-	upscene.add(light1);
-	
-	
-	//light for player 2
-	light2 = new THREE.PointLight(0x404040, 10, 50);
-	light2.position.set( 30, 14, 5 );
-	upscene.add(light2);
-
-	//add starting platform
-	geometry = new THREE.BoxGeometry(15, 1, 5);
-	material = new THREE.MeshStandardMaterial( { color: 0x7377ff } );
-	let startPlat = new UpObject(geometry, material);
-	let startPlat2 = new UpObject(geometry, material);
-	startPlat.position.set(0, -1, 0);
-	startPlat2.position.set(30, -1, 0);
-	startPlat.render(upscene);
-	startPlat2.render(upscene);
-	objects.push(startPlat);
-	objectsp2.push(startPlat2);
-
-	stop = false;
-	lastTime = performance.now();
-	startTime = lastTime;
-
-	renderUp();
-	socket = new UpSocket()
 }
 
 function upStop()
