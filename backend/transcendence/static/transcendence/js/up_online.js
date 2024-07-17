@@ -28,9 +28,11 @@ function deserializePlatform(data)
 		upscene.add(objectsp2[i + 1]);
 	}
 	socket.sendInfo(JSON.stringify({type: "gameReady"}))
+
+	renderUp();
 }
 
-function startUpOnline(data)
+function startUpOnline(data) // separation of 2 players
 {
 	document.addEventListener('keydown', onKeyDown, false);
 	document.addEventListener('keyup', onKeyUp, false);
@@ -197,7 +199,6 @@ function playerController(side, elapsedTime)
 {
 	if (side == 'left')
 	{
-		console.log("MOVE1");
 		players[0].nextPos.set(0, 0, 0);
 	
 		if (keys[65]) // a 
@@ -220,17 +221,16 @@ function playerController(side, elapsedTime)
 	}
 	else
 	{
-		console.log("MOVE2");
 		players[1].nextPos.set(0, 0, 0);
 	
 		if (keys[65]) // a 
 		{
-			if (players[1].position.x > -7)
+			if (players[1].position.x > -7 + 30)
 				players[1].nextPos.x -= playerSpeed * elapsedTime;
 		}
 		if (keys[68]) // d 
 		{
-			if (players[1].position.x < 7)
+			if (players[1].position.x < 7 + 30)
 				players[1].nextPos.x += playerSpeed * elapsedTime;
 		}
 		if (keys[87] && players[1].isJumping == false && players[1].isFalling == false) // w
@@ -250,9 +250,7 @@ function jumpLogicOnline(side, elapsedTime)
 {
 	let i;
 	if (side == 'left')
-	{
 		i = 0;
-	}
 	else
 		i = 1;
 
@@ -288,9 +286,7 @@ function checkCollisionOnline(side)
 {
 	let i;
 	if (side == 'left')
-	{
 		i = 0;
-	}
 	else
 		i = 1;
 
