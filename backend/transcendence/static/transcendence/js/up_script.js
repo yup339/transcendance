@@ -27,6 +27,9 @@ let second; // timer for current round
 let players = [];
 let playerSpeed = 10;
 
+// online
+let currentSide;
+
 // objects
 let light1;
 let light2;
@@ -82,6 +85,7 @@ function setGlobals()
 	distanceTravelled2 = 0;
 	jumpCount1 = 0; //stat
 	jumpCount2 = 0;
+	let currentSide = undefined;
 
 }
 
@@ -198,55 +202,6 @@ function generateLevel()
 	}
 }
 
-function generateLevelOnline()
-{
-	let platform;
-	let material = new THREE.MeshStandardMaterial( { color: 0x7377ff } );
-	let y = 5; //ok compliquer pour rien de faire des calcul qui sont toujours = a 5 donc ca vas etre ca ici vus que la platform de depart de toute facons est declarer dans une autre fonction pour le online si jamais tu as un problem avec ca deal with it ceci mets donc fin a ce long commentaire constructif
-	for (let i = 0; i < 100; i++)
-	{
-		if (y < 50)
-			platform = new UpObject(platformsGeo[0], material, 5, 1);
-		else if (y < 100)
-			platform = new UpObject(platformsGeo[1], material, 4, 1);
-		else if (y < 150)
-			platform = new UpObject(platformsGeo[2], material, 3, 1);
-		else if (y < 200)
-			platform = new UpObject(platformsGeo[3], material, 2, 1);
-		else if (y < 250)
-			platform = new UpObject(platformsGeo[4], material, 1, 1);
-		else
-			platform = new UpObject(platformsGeo[5], material, 0.5, 1);
-
-		platform.position.x = GetRandomInt(-5, 5);
-		if (y > 150 && Math.max(platform.position.x, objects[i-1].position.x) - Math.min(platform.position.x, objects[i-1].position.x) > 6)
-		{
-			if (platform.position.x > objects[i-1].position.x)
-				platform.position.x -= 6;
-			else
-				platform.position.x += 6;
-		}
-		platform.position.y = y;
-		y += 6;
-		objects.push(platform);
-		platform.render(upscene);
-	}
-	
-	let platformJSON = [];
-	for (let i = 1; i < objects.length; i++) // clone objects for player 2
-	{
-		objectsp2[i] = objects[i].clone();
-		objectsp2[i].height = objects[i].height;
-		objectsp2[i].width = objects[i].width;
-		objectsp2[i].position.x += 30;
-		objects[i].setHitbox();
-		platformJSON.push(objects[i].serializePlatform());
-		upscene.add(objectsp2[i]);
-	}
-	socket.sendInfo(JSON.stringify(platformJSON));
-	renderUp();
-}
-
 function GetRandomInt(min, max)
 {
 	return Math.floor(Math.random() * (max - min + 1) + min);
@@ -276,6 +231,7 @@ function UpGame()
 function upStop()
 {
 	stop = true;
+	uponline = false;
 	document.removeEventListener('keydown', onKeyDown);
 	document.removeEventListener('keyup', onKeyUp);
 	cancelAnimationFrame(requestId);

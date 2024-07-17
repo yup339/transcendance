@@ -27,7 +27,6 @@ function deserializePlatform(data)
 		upscene.add(objects[i + 1]);
 		upscene.add(objectsp2[i + 1]);
 	}
-	renderUp();
 	socket.sendInfo(JSON.stringify({type: "gameReady"}))
 }
 
@@ -40,12 +39,12 @@ function startUpOnline(data)
 	startTime = lastTime;
 	if (data.side == 'left')
 	{
-		console.log("left")
+		console.log("SIDE: ", socket.side);
 		generateLevelOnline();
 		onlineUpdate(data.side)
 	}
 	else{
-		console.log("trash side")
+		console.log("SIDE: ", socket.side);
 		onlineUpdate(data.side);
 	}
 }
@@ -107,18 +106,71 @@ function prepareOnline()
 	startPlat2.render(upscene);
 	objects.push(startPlat);
 	objectsp2.push(startPlat2);
+	startPlat.setHitbox();
+	startPlat2.setHitbox();
 
 	renderUp();
 
 	socket = new UpSocket()
 }
 
+function generateLevelOnline()
+{
+	let platform;
+	let material = new THREE.MeshStandardMaterial( { color: 0x7377ff } );
+	let y = 5; //ok compliquer pour rien de faire des calcul qui sont toujours = a 5 donc ca vas etre ca ici vus que la platform de depart de toute facons est declarer dans une autre fonction pour le online si jamais tu as un problem avec ca deal with it ceci mets donc fin a ce long commentaire constructif
+	for (let i = 0; i < 100; i++)
+	{
+		if (y < 50)
+			platform = new UpObject(platformsGeo[0], material, 5, 1);
+		else if (y < 100)
+			platform = new UpObject(platformsGeo[1], material, 4, 1);
+		else if (y < 150)
+			platform = new UpObject(platformsGeo[2], material, 3, 1);
+		else if (y < 200)
+			platform = new UpObject(platformsGeo[3], material, 2, 1);
+		else if (y < 250)
+			platform = new UpObject(platformsGeo[4], material, 1, 1);
+		else
+			platform = new UpObject(platformsGeo[5], material, 0.5, 1);
+
+		platform.position.x = GetRandomInt(-5, 5);
+		if (y > 150 && Math.max(platform.position.x, objects[i-1].position.x) - Math.min(platform.position.x, objects[i-1].position.x) > 6)
+		{
+			if (platform.position.x > objects[i-1].position.x)
+				platform.position.x -= 6;
+			else
+				platform.position.x += 6;
+		}
+		platform.position.y = y;
+		y += 6;
+		objects.push(platform);
+		platform.render(upscene);
+	}
+	
+	let platformJSON = [];
+	for (let i = 1; i < objects.length; i++) // clone objects for player 2
+	{
+		objectsp2[i] = objects[i].clone();
+		objectsp2[i].height = objects[i].height;
+		objectsp2[i].width = objects[i].width;
+		objectsp2[i].position.x += 30;
+		objects[i].setHitbox();
+		objectsp2[i].setHitbox();
+		platformJSON.push(objects[i].serializePlatform());
+		objectsp2[i].render(upscene);
+	}
+	socket.sendInfo(JSON.stringify(platformJSON));
+	renderUp();
+}
+
 function onlineUpdate(side)
 {
-	
+	if (!currentSide)
+		currentSide = side;
 	requestId = undefined;
 	if (!requestId)
-	requestId = requestAnimationFrame(updateUpGame);
+	requestId = requestAnimationFrame(onlineUpdate);
 	printPerSecond();
 	if (stop)
 	{
@@ -136,44 +188,74 @@ function onlineUpdate(side)
 	// let elapsedTime = (performance.now() - lastTime) / 1000;
 	// lastTime = performance.now();
 	elapsedTime = 1/60.0;
-	
-	let i;
-	if (side == 'left')
-		i = 0;
-	else
-		i = 1;
 
-	playerController(i);
+	playerController(currentSide, elapsedTime);
 	renderUp();
 }
 
-function playerController(i, elapsedTime)
+function playerController(side, elapsedTime)
 {
-	players[i].nextPos.set(0, 0, 0);
+	if (side == 'left')
+	{
+		console.log("MOVE1");
+		players[0].nextPos.set(0, 0, 0);
+	
+		if (keys[65]) // a 
+		{
+			if (players[0].position.x > -7)
+				players[0].nextPos.x -= playerSpeed * elapsedTime;
+		}
+		if (keys[68]) // d 
+		{
+			if (players[0].position.x < 7)
+				players[0].nextPos.x += playerSpeed * elapsedTime;
+		}
+		if (keys[87] && players[0].isJumping == false && players[0].isFalling == false) // w
+		{
+			players[0].isFalling = true;
+			players[0].isJumping = true;
+			players[0].jumpSet = false;
+			jumpCount1 += 1;
+		}
+	}
+	else
+	{
+		console.log("MOVE2");
+		players[1].nextPos.set(0, 0, 0);
+	
+		if (keys[65]) // a 
+		{
+			if (players[1].position.x > -7)
+				players[1].nextPos.x -= playerSpeed * elapsedTime;
+		}
+		if (keys[68]) // d 
+		{
+			if (players[1].position.x < 7)
+				players[1].nextPos.x += playerSpeed * elapsedTime;
+		}
+		if (keys[87] && players[1].isJumping == false && players[1].isFalling == false) // w
+		{
+			players[1].isFalling = true;
+			players[1].isJumping = true;
+			players[1].jumpSet = false;
+			jumpCount1 += 1;
+		}
+	}
 
-	if (keys[65]) // a 
-	{
-		if (players[i].position.x > -7)
-			players[i].nextPos.x -= playerSpeed * elapsedTime;
-	}
-	if (keys[68]) // d 
-	{
-		if (players[i].position.x < 7)
-			players[i].nextPos.x += playerSpeed * elapsedTime;
-	}
-	if (keys[87] && players[i].isJumping == false && players[i].isFalling == false) // w
-	{
-		players[i].isFalling = true;
-		players[i].isJumping = true;
-		players[i].jumpSet = false;
-		jumpCount1 += 1;
-	}
-
-	jumpLogicOnline(i, elapsedTime);
+	jumpLogicOnline(side, elapsedTime);
+	checkCollisionOnline(side);
 }
 
-function jumpLogicOnline(i, elapsedTime)
+function jumpLogicOnline(side, elapsedTime)
 {
+	let i;
+	if (side == 'left')
+	{
+		i = 0;
+	}
+	else
+		i = 1;
+
 	if (players[i].isJumping)
 	{
 		players[i].isJumping = false;
@@ -202,9 +284,17 @@ function jumpLogicOnline(i, elapsedTime)
 	}
 }
 
-function checkCollisionOnline(i)
+function checkCollisionOnline(side)
 {
-	players[i].hitbox.setFromObject(players[i]);
+	let i;
+	if (side == 'left')
+	{
+		i = 0;
+	}
+	else
+		i = 1;
+
+	players[i].setHitbox();
 	players[i].hitbox.translate(players[i].nextPos);
 
 	let currentPlatform = Math.floor((players[i].position.y + 3) / 6);
@@ -238,5 +328,6 @@ function checkCollisionOnline(i)
 	}
 
 	players[i].updatePos();
+	socket.sendInfo(players[i].serialize());
 	updateStats();
 }

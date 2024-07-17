@@ -55,8 +55,13 @@ class upConsumer(AsyncWebsocketConsumer):
                     })
 
 
-            elif data['type'] == 'playerPos':
-                print ("lalala")
+            elif data['type'] == 'playerPosition':
+                await self.channel_layer.group_send(
+                    self.match_group_name,
+                    {
+                        'type': 'playerPosition',
+                        'side': self.side
+                    })
             elif data['type'] == 'gameReady':
                 await self.channel_layer.group_send(
                     data['group'],
@@ -77,6 +82,15 @@ class upConsumer(AsyncWebsocketConsumer):
             await self.send(text_data=json.dumps({
                     'type': 'platformSetUp',
                     'pos': data['pos'],
+                }
+            ))
+
+    async def playerPosition(self, data):
+        if (data['side'] != self.side):
+            await self.send(text_data=json.dumps({
+                    'type': 'playerPosition',
+                    'x': data['x'],
+					'y': data['y'],
                 }
             ))
 

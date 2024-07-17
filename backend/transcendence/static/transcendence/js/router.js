@@ -196,6 +196,12 @@ class UpSocket{
                     break;
                 case 'startosgamos':
                     gameReady();
+					break;
+				case 'playerPosition':
+					updatePosition(data);
+					break;
+				default: console.log("error: type unknown");
+
             }
         }
         catch (error){console.error(error)}
@@ -203,6 +209,14 @@ class UpSocket{
 
     updatePosition(data)
 	{
-		
+		console.log("UPDATING POSITION");
+		if (this.side == 'left')
+		{
+			players[1].deserialize(data);
+		}
+		else
+		{
+			players[0].deserialize(data);
+		}
 	}
 }
