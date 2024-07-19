@@ -93,11 +93,22 @@ function checkCollision()
 }
 
 function updateStats()
-{
+{		
 	if (players[0].position.y > distanceTravelled1)
-		distanceTravelled1 = players[0].position.y;
+		distanceTravelled1 = Math.floor(players[0].position.y);
 	if (players[1].position.y > distanceTravelled2)
-		distanceTravelled2 = players[1].position.y;
+		distanceTravelled2 = Math.floor(players[1].position.y);
+}
+
+function updateStatsOnline(side)
+{
+	if (side == 'left')
+		i = 0;
+	else
+		i = 1;
+
+	if (players[i].position.y > distanceTravelled1)
+		distanceTravelled1 = Math.floor(players[i].position.y);
 }
 
 function jumpLogic(elapsedTime)

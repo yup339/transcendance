@@ -202,7 +202,7 @@ function generateLevel()
 	}
 }
 
-function countdown() // TODO: make countdown for start of game
+function countdown()
 {
 	let currentTime = performance.now();
 	let countdown = Math.floor((currentTime - startTime) / 1000);
@@ -248,12 +248,16 @@ function UpGame()
 function upStop()
 {
 	stop = true;
-	uponline = false;
 	document.removeEventListener('keydown', onKeyDown);
 	document.removeEventListener('keyup', onKeyUp);
 	cancelAnimationFrame(requestId);
 	requestId = undefined;
-
+	
+	if (uponline)
+	{
+		// TODO: for online stats
+		uponline = false;
+	}
 
 	for (let i = 0; i < objects.length; i++)
 	{

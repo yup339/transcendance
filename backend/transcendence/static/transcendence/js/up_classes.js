@@ -8,13 +8,10 @@ class UpObject extends THREE.Mesh
 		this.nextPos = new THREE.Vector3(0, 0, 0);
 		this.hitbox = new THREE.Box3().setFromObject(this);
 		this.isRendered = false;
-		this.castShadow = true; //TODO: make sure renderer does shadows
 		this.jumpSpeed = -1;
 		this.isJumping = false;
 		this.isFalling = false;
 		this.jumpSet = false;
-		this.jumpTimer = 0;
-		this.jumpCount = 0;
 		this.geometry.computeBoundingBox();
 	}
 

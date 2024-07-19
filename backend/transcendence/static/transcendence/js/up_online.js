@@ -1,7 +1,7 @@
 function gameReady()
 {
-    document.addEventListener('keydown', onKeyDown, false);
-	document.addEventListener('keyup', onKeyUp, false);
+    // document.addEventListener('keydown', onKeyDown, false);
+	// document.addEventListener('keyup', onKeyUp, false);
     console.log("GAME READY");
     // updateUpGame();
 }
@@ -346,5 +346,5 @@ function checkCollisionOnline(side)
 		players[i].updatePos();
 		socket.sendInfo(players[i].serialize());
 	}
-	updateStats();
+	updateStatsOnline(side);
 }
