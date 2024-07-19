@@ -177,12 +177,12 @@ function generateLevel()
 			platform = new UpObject(platformsGeo[5], material, 0.5, 1);
 
 		platform.position.x = GetRandomInt(-5, 5);
-		if (y > 150 && Math.max(platform.position.x, objects[i-1].position.x) - Math.min(platform.position.x, objects[i-1].position.x) > 6)
+		if (y > 150 && Math.max(platform.position.x, objects[i-1].position.x) - Math.min(platform.position.x, objects[i-1].position.x) > 5)
 		{
 			if (platform.position.x > objects[i-1].position.x)
-				platform.position.x -= 6;
+				platform.position.x -= 5;
 			else
-				platform.position.x += 6;
+				platform.position.x += 5;
 		}
 		platform.position.y = y;
 		y += 6;
