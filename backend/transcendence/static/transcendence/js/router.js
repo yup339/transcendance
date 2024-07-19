@@ -173,7 +173,7 @@ class UpSocket{
 
     // use with serialize object
     sendInfo(info){
-        console.log(info);
+        // console.log(info);
         this.socket.send(info);
     };
     
@@ -182,7 +182,7 @@ class UpSocket{
     }
 
     handleMessage(event) {
-        console.log("receiving data");
+        // console.log("receiving data");
         try{
             const data = JSON.parse(event.data);
             switch (data.type){

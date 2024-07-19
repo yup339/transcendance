@@ -39,8 +39,7 @@ function updatePosition(data)
 		upStop();
 		return ;
 	}
-	console.log("UPDATING POSITION");
-	console.log("SIDE: ", data.side);
+
 	if (data.side == 'left')
 	{
 		players[0].deserialize(data);
@@ -60,12 +59,10 @@ function startUpOnline(data) // separation of 2 players
 	startTime = lastTime;
 	if (data.side == 'left')
 	{
-		console.log("SIDE: ", socket.side);
 		generateLevelOnline();
 		onlineUpdate(data.side)
 	}
 	else{
-		console.log("SIDE: ", socket.side);
 		onlineUpdate(data.side);
 	}
 }
@@ -73,9 +70,8 @@ function startUpOnline(data) // separation of 2 players
 function prepareOnline()
 {
 	uponline = true;
-
-	// prepareUpGame();
 	upcanvas = document.getElementById('UpCanvas');
+	
 	// set up cameras
 	for (let i = 0; i < views.length; ++i)
 	{

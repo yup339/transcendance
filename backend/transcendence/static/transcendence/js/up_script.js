@@ -202,10 +202,14 @@ function generateLevel()
 	}
 }
 
+function countdown() // TODO: make countdown for start of game
+{
+	
+}
+
 function GetRandomInt(min, max)
 {
 	return Math.floor(Math.random() * (max - min + 1) + min);
-
 }
 
 function UpGame()
