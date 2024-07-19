@@ -41,7 +41,7 @@ class upConsumer(AsyncWebsocketConsumer):
         try:
             data = json.loads(text_data)
             
-            if isinstance(data, list):
+            if isinstance(data, list) and data['type'] != 'playerPosition':
                 platform_positions = []
                 for object in data:
                     platform_positions.append(object)
