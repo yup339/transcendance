@@ -204,7 +204,20 @@ function generateLevel()
 
 function countdown() // TODO: make countdown for start of game
 {
+	let currentTime = performance.now();
+	let countdown = Math.floor((currentTime - startTime) / 1000);
 	
+	console.log(countdown);
+	while (countdown < 3)
+	{
+		currentTime = performance.now();
+		countdown = Math.floor((currentTime - startTime) / 1000);
+	}
+	console.log(countdown);
+
+	second = 0;
+	lastTime = performance.now();
+	startTime = lastTime;
 }
 
 function GetRandomInt(min, max)
