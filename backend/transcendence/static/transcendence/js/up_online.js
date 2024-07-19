@@ -32,6 +32,25 @@ function deserializePlatform(data)
 	renderUp();
 }
 
+function updatePosition(data)
+{
+	if (stop)
+	{
+		upStop();
+		return ;
+	}
+	console.log("UPDATING POSITION");
+	console.log("SIDE: ", data.side);
+	if (data.side == 'left')
+	{
+		players[0].deserialize(data);
+	}
+	else
+	{
+		players[1].deserialize(data);
+	}
+}
+
 function startUpOnline(data) // separation of 2 players
 {
 	document.addEventListener('keydown', onKeyDown, false);
@@ -323,7 +342,10 @@ function checkCollisionOnline(side)
 		}
 	}
 
-	players[i].updatePos();
-	socket.sendInfo(players[i].serialize());
+	if (players[i].nextPos != new THREE.Vector3(0, 0, 0))
+	{
+		players[i].updatePos();
+		socket.sendInfo(players[i].serialize());
+	}
 	updateStats();
 }

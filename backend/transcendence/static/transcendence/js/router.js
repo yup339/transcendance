@@ -206,17 +206,4 @@ class UpSocket{
         }
         catch (error){console.error(error)}
     }
-
-    updatePosition(data)
-	{
-		console.log("UPDATING POSITION");
-		if (this.side == 'left')
-		{
-			players[1].deserialize(data);
-		}
-		else
-		{
-			players[0].deserialize(data);
-		}
-	}
 }
