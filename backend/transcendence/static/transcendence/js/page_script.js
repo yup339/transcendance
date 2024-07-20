@@ -8,7 +8,7 @@ const pages = {
             <img src="/static/transcendence/asset/pong_img_button.png" class=" clickable shadow img-fluid image-button img-button-width rounded-5 hover-scale d-block m-auto" alt="Image 1" onclick="navigateTo('pong_choices')">
         </div>
         <div class="col-12 ">
-            <img src="/static/transcendence/asset/pong_img_button.png" class=" clickable shadow img-fluid image-button img-button-width rounded-5 hover-scale d-block m-auto" alt="Image 1" onclick="navigateTo('up_choices')">
+            <img src="/static/transcendence/asset/up-button.png" class=" clickable shadow img-fluid image-button img-button-width rounded-5 hover-scale d-block m-auto" alt="Image 1" onclick="navigateTo('up_choices')">
         </div>
         </div>
     </div>
