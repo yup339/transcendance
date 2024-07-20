@@ -40,15 +40,8 @@ const pages = {
 		<div class="col-12  text-center px-5">
 			<button  type="button" class="btn btn-color btn-lg w-75 p-3 text-white" onclick="navigateTo('up_dual')">Dual Player</button>
 		</div>
-		<div class="col-12  text-center px-5">
-			<button type="button" class="btn btn-color btn-lg w-75 p-3 text-white" onclick="navigateTo('up_ai')">AI Duel</button>
-		</div>
 		<div class="col-12  text-center px-5 ">
 			<button type="button" class="btn btn-color btn-lg  w-75 p-3 text-white" onclick="navigateTo('up_online')">Online</button>
-		</div>
-		<div class="col-12  text-center px-5 mb-3">
-			<button type="button" class="btn btn-color btn-lg  w-75 p-3 text-white"  onclick="navigateTo('up_tournament')">Tournament</button>
-			</div>
 		</div>
 	</div>`,
 	'pong': `<div class="container extra-top-padding mt-5"  >
