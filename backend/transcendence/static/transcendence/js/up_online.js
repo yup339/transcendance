@@ -55,6 +55,7 @@ function startUpOnline(data) // separation of 2 players
 	document.addEventListener('keydown', onKeyDown, false);
 	document.addEventListener('keyup', onKeyUp, false);
 	stop = false;
+	requestId = undefined;
 	lastTime = performance.now();
 	startTime = lastTime;
 	if (data.side == 'left')
@@ -190,7 +191,7 @@ function onlineUpdate(side)
 		currentSide = side;
 	requestId = undefined;
 	if (!requestId)
-	requestId = requestAnimationFrame(onlineUpdate);
+		requestId = requestAnimationFrame(onlineUpdate);
 	printPerSecond();
 	if (stop)
 	{
@@ -219,17 +220,17 @@ function playerController(side, elapsedTime)
 	{
 		players[0].nextPos.set(0, 0, 0);
 	
-		if (keys[65]) // a 
+		if (keys[65] || keys[37]) // a 
 		{
 			if (players[0].position.x > -7)
 				players[0].nextPos.x -= playerSpeed * elapsedTime;
 		}
-		if (keys[68]) // d 
+		if (keys[68] || keys[39]) // d 
 		{
 			if (players[0].position.x < 7)
 				players[0].nextPos.x += playerSpeed * elapsedTime;
 		}
-		if (keys[87] && players[0].isJumping == false && players[0].isFalling == false) // w
+		if ((keys[87] || keys[38]) && players[0].isJumping == false && players[0].isFalling == false) // w
 		{
 			players[0].isFalling = true;
 			players[0].isJumping = true;

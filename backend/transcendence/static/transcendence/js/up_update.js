@@ -212,9 +212,11 @@ function printPerSecond() // handles time events in the update loop
 	
 	let currentTime = performance.now();
 	let showTime = Math.floor((currentTime - startTime) / 1000);
-
+	
 	if (showTime != second)
 	{
+		upcountdown -= 1;
+		console.log(Math.floor(upcountdown))
 		console.log(showTime);
 		second = showTime;
 	}

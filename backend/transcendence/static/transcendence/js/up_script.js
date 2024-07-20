@@ -6,6 +6,7 @@ let requestId; // to stop loop
 
 //time vars
 let uponline = false;
+let upcountdown;
 let stop;
 let lastTime;
 let startTime;
@@ -81,6 +82,7 @@ function setGlobals()
 	objects = []; // platforms for p1
 	objectsp2 = []; // platforms for p2
 	second = 0; // timer
+	upcountdown = 60;
 	distanceTravelled1 = 0; //stat
 	distanceTravelled2 = 0;
 	jumpCount1 = 0; //stat
@@ -204,20 +206,17 @@ function generateLevel()
 
 function countdown()
 {
-	let currentTime = performance.now();
-	let countdown = Math.floor((currentTime - startTime) / 1000);
-	
-	console.log(countdown);
-	while (countdown < 3)
-	{
-		currentTime = performance.now();
-		countdown = Math.floor((currentTime - startTime) / 1000);
-	}
-	console.log(countdown);
+	// if (!requestId)
+	// {
+	// 	startTime = performance.now();
+	// 	let countdown = 0;
+	// 	let count = 3;
 
-	second = 0;
-	lastTime = performance.now();
-	startTime = lastTime;
+	// 	requestId = requestAnimationFrame(countdown());
+	// }
+
+	// lastTime = performance.now();
+	// startTime = lastTime;
 }
 
 function GetRandomInt(min, max)
