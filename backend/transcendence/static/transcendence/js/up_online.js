@@ -1,9 +1,39 @@
+var start = true;     // flags that you want the countdown to start
+var stopIn = 3000;    // how long the timer should run
+var stopTime = 0;     // used to hold the stop time
+var upstop = false;     // flag to indicate that stop time has been reached
+var timeTillStop = 0; // holds the display time
+
 function gameReady()
 {
     // document.addEventListener('keydown', onKeyDown, false);
 	// document.addEventListener('keyup', onKeyUp, false);
     console.log("GAME READY");
-    // updateUpGame();
+	// countdown();
+	
+	
+	requestAnimationFrame(timeoutFunc);  // start the animation
+	onlineUpdate(currentSide);
+}
+
+// main update function
+function timeoutFunc(timer)
+{
+	if(start){  // do we need to start the timer
+		stopTime = timer + stopIn; // yes the set the stoptime
+		start = false;             // clear the start flag
+	}else{                         // waiting for stop
+		if(timer >= stopTime){     // has stop time been reached?
+			upstop = true;           // yes the flag to stop
+		}
+	}
+
+	timeTillStop = stopTime - timer;      // for display of time till stop
+	console.log(Math.floor(timeTillStop) );  // to display
+
+	if(!upstop){
+		requestAnimationFrame(timeoutFunc); // continue animation until stop 
+	}
 }
 
 function deserializePlatform(data)
@@ -36,7 +66,7 @@ function updatePosition(data)
 {
 	if (stop)
 	{
-		upStop();
+		// upStop();
 		return ;
 	}
 
@@ -58,16 +88,16 @@ function startUpOnline(data) // separation of 2 players
 	requestId = undefined;
 	lastTime = performance.now();
 	startTime = lastTime;
+	currentSide = data.side;
 	if (data.side == 'left')
 	{
+		console.log("Generating level...");
 		generateLevelOnline();
-		countdown();
-		onlineUpdate(data.side)
+		// onlineUpdate(data.side)
 	}
 	else
 	{
-		countdown();
-		onlineUpdate(data.side);
+		// onlineUpdate(data.side);
 	}
 }
 
@@ -139,7 +169,7 @@ function generateLevelOnline()
 {
 	let platform;
 	let material = new THREE.MeshStandardMaterial( { color: 0x7377ff } );
-	let y = 5; //ok compliquer pour rien de faire des calcul qui sont toujours = a 5 donc ca vas etre ca ici vus que la platform de depart de toute facons est declarer dans une autre fonction pour le online si jamais tu as un problem avec ca deal with it ceci mets donc fin a ce long commentaire constructif
+	let y = 5; 
 	for (let i = 0; i < 100; i++)
 	{
 		if (y < 50)
@@ -199,7 +229,7 @@ function onlineUpdate(side)
 		return ;
 	}
 
-	if (second >= 60)
+	if (second >= 10)
 	{
 		stop = true;
 		console.log("Game Over");
@@ -342,9 +372,9 @@ function checkCollisionOnline(side)
 		}
 	}
 
+	players[i].updatePos();
 	if (players[i].nextPos != new THREE.Vector3(0, 0, 0))
 	{
-		players[i].updatePos();
 		socket.sendInfo(players[i].serialize());
 	}
 	updateStatsOnline(side);

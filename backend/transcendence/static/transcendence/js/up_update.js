@@ -22,12 +22,6 @@ function keysEvent(elapsedTime)
 		jumpCount1 += 1;
 	}
 
-	//TODO: REMOVE
-	if (keys[32]) // space
-	{
-		players[0].position.y = 250
-	}
-
 	// player 2 movement
 	if (keys[37]) // left
 	{
@@ -103,12 +97,19 @@ function updateStats()
 function updateStatsOnline(side)
 {
 	if (side == 'left')
-		i = 0;
+	{
+		if (players[1].position.y > distanceTravelled1)
+			distanceTravelled1 = Math.floor(players[1].position.y);
+		else if (players[0].position.y > distanceTravelled2)
+			distanceTravelled2 = Math.floor(players[0].position.y);
+	}
 	else
-		i = 1;
-
-	if (players[i].position.y > distanceTravelled1)
-		distanceTravelled1 = Math.floor(players[i].position.y);
+	{
+		if (players[0].position.y > distanceTravelled1)
+			distanceTravelled1 = Math.floor(players[0].position.y);
+		else if (players[1].position.y > distanceTravelled2)
+			distanceTravelled2 = Math.floor(players[1].position.y);
+	}
 }
 
 function jumpLogic(elapsedTime)
@@ -190,7 +191,7 @@ function updateUpGame()
 		return ;
 	}
 
-	if (second >= 60)
+	if (second >= 10)
 	{
 		stop = true;
 		console.log("Game Over");

@@ -1,5 +1,3 @@
-const COTOYE = 50;
-
 //html stuff
 let upcanvas;
 let requestId; // to stop loop
@@ -10,6 +8,7 @@ let upcountdown;
 let stop;
 let lastTime;
 let startTime;
+let count;
 
 //scene
 let upscene;
@@ -87,6 +86,7 @@ function setGlobals()
 	distanceTravelled2 = 0;
 	jumpCount1 = 0; //stat
 	jumpCount2 = 0;
+	count = 3000;
 	let currentSide = undefined;
 
 }
@@ -206,17 +206,32 @@ function generateLevel()
 
 function countdown()
 {
-	// if (!requestId)
-	// {
-	// 	startTime = performance.now();
-	// 	let countdown = 0;
-	// 	let count = 3;
+	if (!requestId && count > 0)
+	{
+		requestId = requestAnimationFrame(countdown());
+	}
+	else
+	{
+		second = 0;
+		count = 3;
+		cancelAnimationFrame(requestId);
+		return;
+	}
+	lastTime = performance.now();
+	requestId = undefined;
 
-	// 	requestId = requestAnimationFrame(countdown());
-	// }
-
-	// lastTime = performance.now();
-	// startTime = lastTime;
+	let currentTime = performance.now();
+	let showTime = Math.floor((currentTime - startTime) / 1000);
+	
+	if (showTime != second)
+	{
+		count -= 1;
+		console.log(Math.floor(count))
+		console.log(showTime);
+		second = showTime;
+	}
+	
+	startTime = lastTime;
 }
 
 function GetRandomInt(min, max)
@@ -286,4 +301,8 @@ function upStop()
 
 	if (uprenderer)
 		uprenderer.dispose();
+
+	//TODO: remove
+	// console.log("Player 1 Distance: ", distanceTravelled1);
+	// console.log("Player 2 Distance: ", distanceTravelled2);
 }
