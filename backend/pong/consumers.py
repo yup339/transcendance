@@ -130,6 +130,9 @@ class PongConsumer(AsyncWebsocketConsumer):
             await self.create_match(player1, player2, self.match_group_name)
 
     async def disconnect(self, close_code):
+        if self in pong_queue :
+            print ("removing self from queue")
+            pong_queue.remove(self)
         if hasattr(self, 'match_group_name'):
             players = active_matches.get(self.match_group_name, [])
             if self in players:
@@ -141,18 +144,14 @@ class PongConsumer(AsyncWebsocketConsumer):
                     self.channel_name
                 )
                 print(f"Player disconnected: {self.channel_name}")
-        else:
-            queue_lock.acquire()
-            pong_queue.remove(self)
-            queue_lock.release()
-            print(f"Player disconnected from queue: {self.channel_name}")
+        print(pong_queue)
 
     async def receive(self, text_data):
         try:
             data = json.loads(text_data)
             
             if data['type'] == 'ballPosition':
-               await self.channel_layer.group_send(
+                await self.channel_layer.group_send(
                 data['group'],
                 {
                     'type': 'ballPositionSync',
@@ -164,7 +163,7 @@ class PongConsumer(AsyncWebsocketConsumer):
         )
 
             elif data['type'] == 'paddlePosition':
-               await self.channel_layer.group_send(
+                await self.channel_layer.group_send(
                 data['group'],
                 {
                     'type': 'paddlePositionSync',
