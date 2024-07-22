@@ -100,14 +100,14 @@ function updateStatsOnline(side)
 	{
 		if (players[1].position.y > distanceTravelled1)
 			distanceTravelled1 = Math.floor(players[1].position.y);
-		else if (players[0].position.y > distanceTravelled2)
+		if (players[0].position.y > distanceTravelled2)
 			distanceTravelled2 = Math.floor(players[0].position.y);
 	}
 	else
 	{
 		if (players[0].position.y > distanceTravelled1)
 			distanceTravelled1 = Math.floor(players[0].position.y);
-		else if (players[1].position.y > distanceTravelled2)
+		if (players[1].position.y > distanceTravelled2)
 			distanceTravelled2 = Math.floor(players[1].position.y);
 	}
 }
@@ -185,16 +185,17 @@ function updateUpGame()
 	if (!requestId)
 		requestId = requestAnimationFrame(updateUpGame);
 	printPerSecond();
-	if (stop)
-	{
-		upStop();
-		return ;
-	}
-
+	
 	if (second >= 10)
 	{
 		stop = true;
 		console.log("Game Over");
+	}
+
+	if (stop)
+	{
+		upStop();
+		return ;
 	}
 	
 	// delta time
@@ -202,8 +203,7 @@ function updateUpGame()
 	// lastTime = performance.now();
 	elapsedTime = 1/60.0;
 
-	if (!uponline)
-		keysEvent(elapsedTime);
+	keysEvent(elapsedTime);
 	renderUp();
 }
 

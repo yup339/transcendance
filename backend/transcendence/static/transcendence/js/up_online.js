@@ -1,23 +1,27 @@
 function gameReady()
 {
-    // document.addEventListener('keydown', onKeyDown, false);
-	// document.addEventListener('keyup', onKeyUp, false);
-    console.log("GAME READY");
+    document.addEventListener('keydown', onKeyDown, false);
+	document.addEventListener('keyup', onKeyUp, false);
+	stop = false;
+	startTime = performance.now();
+    console.log("GAME READY FOR BOTH PLAYER");
 	countdown();
-	onlineUpdate(currentSide);
 }
 
 function countdown()
 {
 	requestId = undefined;
-	if (!requestId && count > 0)
+	if (!requestId)
 	{
 		requestId = requestAnimationFrame(countdown);
 	}
-	if (second > 3)
+	if (count < 0)
 	{
-		second = 0;
+		console.log("countdown over");
 		cancelAnimationFrame(requestId);
+		second = 0;
+		startTime = performance.now();
+		onlineUpdate(currentSide);
 		return;
 	}
 
@@ -26,9 +30,8 @@ function countdown()
 	
 	if (showTime != second)
 	{
+		console.log(count);
 		count -= 1;
-		console.log(Math.floor(count))
-		console.log(showTime);
 		second = showTime;
 	}
 }
@@ -63,7 +66,7 @@ function updatePosition(data)
 {
 	if (stop)
 	{
-		// upStop();
+		upStop();
 		return ;
 	}
 
@@ -79,22 +82,11 @@ function updatePosition(data)
 
 function startUpOnline(data) // separation of 2 players
 {
-	document.addEventListener('keydown', onKeyDown, false);
-	document.addEventListener('keyup', onKeyUp, false);
-	stop = false;
-	requestId = undefined;
-	lastTime = performance.now();
-	startTime = lastTime;
 	currentSide = data.side;
 	if (data.side == 'left')
 	{
 		console.log("Generating level...");
 		generateLevelOnline();
-		// onlineUpdate(data.side)
-	}
-	else
-	{
-		// onlineUpdate(data.side);
 	}
 }
 

@@ -6,7 +6,6 @@ let requestId; // to stop loop
 let uponline = false;
 let upcountdown;
 let stop;
-let lastTime;
 let startTime;
 let count;
 
@@ -140,8 +139,7 @@ function prepareUpGame()
 
 	stop = false;
 	// requestId = undefined;
-	lastTime = performance.now();
-	startTime = lastTime;
+	startTime = performance.now();
 	document.addEventListener('keydown', onKeyDown, false);
 	document.addEventListener('keyup', onKeyUp, false);
 	updateUpGame();
@@ -273,6 +271,6 @@ function upStop()
 		uprenderer.dispose();
 
 	//TODO: remove
-	// console.log("Player 1 Distance: ", distanceTravelled1);
-	// console.log("Player 2 Distance: ", distanceTravelled2);
+	console.log("Player 1 Distance: ", distanceTravelled1);
+	console.log("Player 2 Distance: ", distanceTravelled2);
 }
