@@ -1,4 +1,11 @@
 //for user
+
+window.addEventListener('beforeunload', function (event) {
+    if (socket)
+        socket.disconnect();
+    // You can add custom message or actions if needed
+});
+
 class UserSocket{
 
     loggedIn = false;
@@ -105,6 +112,13 @@ class GameSocket{
         }
     }
 
+    disconnect() {
+        console.log("disconnect pong socket");
+        if (this.socket.readyState === WebSocket.OPEN) {
+            this.socket.close();
+        }
+    }
+
     handleOpen(event) {
         console.log('WebSocket connection opened.');
     }
@@ -167,6 +181,14 @@ class UpSocket{
             console.error('WebSocket connection error:', error);
         }
     }
+
+    disconnect() {
+        console.log("disconnect up socket");
+        if (this.socket.readyState === WebSocket.OPEN) {
+            this.socket.close();
+        }
+    }
+
     handleOpen(event) {
         console.log('WebSocket connection opened.');
     }

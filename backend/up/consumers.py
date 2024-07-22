@@ -25,6 +25,9 @@ class upConsumer(AsyncWebsocketConsumer):
             await self.create_match(player1, player2, self.match_group_name)
 
     async def disconnect(self, close_code):
+        if self in up_queue :
+            up_queue.remove(self)
+
         if hasattr(self, 'match_group_name'):
             players = active_matches.get(self.match_group_name, [])
             if self in players:

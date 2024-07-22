@@ -333,7 +333,8 @@ function displayPage(pageName)
 
 function navigateTo(pageName)
 {
-
+    if (socket)
+        socket.disconnect();
     if (history.state !== pageName) 
         history.pushState(pageName, null, pageName);
     
