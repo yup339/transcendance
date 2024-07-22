@@ -112,7 +112,7 @@ const pages = {
 	</div>`,
 'signup':`
 <div class="container extra-top-padding mt-5">
-<form>
+<form id="myForm">
 	<div class="row w-50 m-auto gy-5 gx-5">
 	   <div class="col-12 mb-3">
 		<h1 class="text-white text-center">Sign Up</h1>
@@ -131,7 +131,7 @@ const pages = {
 </div>`,
 'login':`
 <div class="container extra-top-padding  mt-5">
-<form>
+<form id="myForm">
 	<div class="row w-50 m-auto gy-5 gx-5">
 	   <div class="col-12 mb-3">
 		<h1 class="text-white text-center">Log in</h1>
@@ -283,9 +283,13 @@ function login_user()
 
 function logout_user()
 {
+	const navid = document.getElementById('navid');
     localStorage.removeItem('token');
     user.sendInfo(JSON.stringify({type: 'logout'}));
+	user.loggedIn = false;
     navigateTo('game_choice');
+	navid.innerHTML = `  <a class="nav-item nav-link active clickable" onclick="navigateTo('signup')">Sign Up</a>
+                    <a class="nav-item nav-link active clickable" onclick="navigateTo('login')">Log in</a>`;
 }
 
 function displayPage(pageName) 
@@ -304,6 +308,12 @@ function displayPage(pageName)
         pageName = 'up';
     }
 	
+	if(pageName == 'stats' && !user.loggedIn){
+		navigateTo('game_choice');
+		return ;
+	}
+	
+
     if (pages.hasOwnProperty(pageName)) 
     {
 		
@@ -359,3 +369,5 @@ window.addEventListener('pageshow', function(event) {
         window.location.reload();
     }
 });
+
+
