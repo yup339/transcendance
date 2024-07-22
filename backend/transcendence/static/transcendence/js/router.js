@@ -16,6 +16,12 @@ class UserSocket{
     }
     handleOpen(event) {
         console.log('WebSocket connection opened.');
+        if (this.loggedIn == false && localStorage.getItem('token') !== null)
+        {
+            console.log("Token found: " + localStorage.getItem('token'));
+            console.log("Attempting to log in with token");
+            this.sendInfo(JSON.stringify({type: 'token_login', token: localStorage.getItem('token')}));
+        }
     }
 
     // use with serialize object
@@ -54,6 +60,7 @@ class UserSocket{
         this.loggedIn = true;
         try{
             console.log("Successfully logged in " + data.username);
+            localStorage.setItem('token', data.token);
             navigateTo('game_choice');
         }
         catch (error){

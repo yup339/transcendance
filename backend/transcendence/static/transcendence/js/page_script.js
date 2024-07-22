@@ -281,6 +281,13 @@ function login_user()
     user.sendInfo(JSON.stringify(data));
 }
 
+function logout_user()
+{
+    localStorage.removeItem('token');
+    user.sendInfo(JSON.stringify({type: 'logout'}));
+    navigateTo('game_choice');
+}
+
 function displayPage(pageName) 
 {
     const content = document.getElementById('content');
