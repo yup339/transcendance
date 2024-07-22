@@ -191,7 +191,7 @@ function updateUpGame()
 		return ;
 	}
 
-	if (second >= 5)
+	if (second >= 60)
 	{
 		stop = true;
 		console.log("Game Over");
