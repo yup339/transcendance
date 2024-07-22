@@ -86,7 +86,7 @@ function setGlobals()
 	distanceTravelled2 = 0;
 	jumpCount1 = 0; //stat
 	jumpCount2 = 0;
-	count = 3000;
+	count = 3;
 	let currentSide = undefined;
 
 }
@@ -202,36 +202,6 @@ function generateLevel()
 		objectsp2[i].setHitbox();
 		upscene.add(objectsp2[i]);
 	}
-}
-
-function countdown()
-{
-	if (!requestId && count > 0)
-	{
-		requestId = requestAnimationFrame(countdown());
-	}
-	else
-	{
-		second = 0;
-		count = 3;
-		cancelAnimationFrame(requestId);
-		return;
-	}
-	lastTime = performance.now();
-	requestId = undefined;
-
-	let currentTime = performance.now();
-	let showTime = Math.floor((currentTime - startTime) / 1000);
-	
-	if (showTime != second)
-	{
-		count -= 1;
-		console.log(Math.floor(count))
-		console.log(showTime);
-		second = showTime;
-	}
-	
-	startTime = lastTime;
 }
 
 function GetRandomInt(min, max)

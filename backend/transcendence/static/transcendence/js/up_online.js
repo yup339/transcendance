@@ -1,38 +1,35 @@
-var start = true;     // flags that you want the countdown to start
-var stopIn = 3000;    // how long the timer should run
-var stopTime = 0;     // used to hold the stop time
-var upstop = false;     // flag to indicate that stop time has been reached
-var timeTillStop = 0; // holds the display time
-
 function gameReady()
 {
     // document.addEventListener('keydown', onKeyDown, false);
 	// document.addEventListener('keyup', onKeyUp, false);
     console.log("GAME READY");
-	// countdown();
-	
-	
-	requestAnimationFrame(timeoutFunc);  // start the animation
+	countdown();
 	onlineUpdate(currentSide);
 }
 
-// main update function
-function timeoutFunc(timer)
+function countdown()
 {
-	if(start){  // do we need to start the timer
-		stopTime = timer + stopIn; // yes the set the stoptime
-		start = false;             // clear the start flag
-	}else{                         // waiting for stop
-		if(timer >= stopTime){     // has stop time been reached?
-			upstop = true;           // yes the flag to stop
-		}
+	requestId = undefined;
+	if (!requestId && count > 0)
+	{
+		requestId = requestAnimationFrame(countdown);
+	}
+	if (second > 3)
+	{
+		second = 0;
+		cancelAnimationFrame(requestId);
+		return;
 	}
 
-	timeTillStop = stopTime - timer;      // for display of time till stop
-	console.log(Math.floor(timeTillStop) );  // to display
-
-	if(!upstop){
-		requestAnimationFrame(timeoutFunc); // continue animation until stop 
+	let currentTime = performance.now();
+	let showTime = Math.floor((currentTime - startTime) / 1000);
+	
+	if (showTime != second)
+	{
+		count -= 1;
+		console.log(Math.floor(count))
+		console.log(showTime);
+		second = showTime;
 	}
 }
 
