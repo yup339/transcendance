@@ -1,8 +1,12 @@
+const COTOYE = 50;
+
 //html stuff
 let upcanvas;
 let requestId; // to stop loop
 
 //time vars
+let uponline = false;
+let upcountdown;
 let stop;
 let lastTime;
 let startTime;
@@ -23,6 +27,9 @@ let second; // timer for current round
 // player and player variables
 let players = [];
 let playerSpeed = 10;
+
+// online
+let currentSide;
 
 // objects
 let light1;
@@ -71,20 +78,23 @@ function setGlobals()
 		new THREE.BoxGeometry(1, 1, 5),
 		new THREE.BoxGeometry(0.5, 1, 5)];
 
-	players = [];
-	objects = [];
-	objectsp2 = [];
-	second = 0;
-	distanceTravelled1 = 0;
+	players = []; // players
+	objects = []; // platforms for p1
+	objectsp2 = []; // platforms for p2
+	second = 0; // timer
+	upcountdown = 60;
+	distanceTravelled1 = 0; //stat
 	distanceTravelled2 = 0;
-	jumpCount1 = 0;
+	jumpCount1 = 0; //stat
 	jumpCount2 = 0;
+	let currentSide = undefined;
 
 }
 
 function prepareUpGame()
 {
 	upcanvas = document.getElementById('UpCanvas');
+	uponline = false;
 	// set up cameras
 	for (let i = 0; i < views.length; ++i)
 	{
@@ -104,16 +114,16 @@ function prepareUpGame()
 	let geometry = new THREE.BoxGeometry(1, 1, 1);
 	let material = new THREE.MeshStandardMaterial({color: 0xF8B7EE});
 	players[0] = new UpObject(geometry, material, 1, 1);
-	players[0].position.set(0, 0, 0);
+	players[0].position.set(0, 0.2, 0);
 	distanceTravelled1
 	upscene.add(players[0]);
 	
 	let material2 = new THREE.MeshStandardMaterial({color: 0xC1F7B0});
 	players[1] = new UpObject(geometry, material2, 1, 1);
-	players[1].position.set(30, 0, 0);
+	players[1].position.set(30, 0.2, 0);
 	upscene.add(players[1]);
 	
-	//light and its helper
+	//light
 	let geo = new THREE.SphereGeometry(1, 32, 16);
 	let mat = new THREE.MeshBasicMaterial({color: 0x404040});
 	light1 = new THREE.PointLight(0x404040, 10, 50);
@@ -137,15 +147,10 @@ function prepareUpGame()
 	updateUpGame();
 }
 
-function countdown()
-{
-	
-}
-
 function generateLevel()
 {
 	// generate starting platforms
-	let geometry = new THREE.BoxGeometry(15, 1, 5); // starting platforms
+	let geometry = new THREE.BoxGeometry(15, 1, 5);
 	let material = new THREE.MeshStandardMaterial( { color: 0x7377ff } );
 	let startPlat = new UpObject(geometry, material);
 	let startPlat2 = new UpObject(geometry, material);
@@ -154,11 +159,11 @@ function generateLevel()
 	startPlat.render(upscene);
 	startPlat2.render(upscene);
 	objects.push(startPlat);
-	objects.push(startPlat2);
+	objectsp2.push(startPlat2);
 
 	let platform;
 	let y = startPlat.position.y + 6;
-	for (let i = 0; i < 100; i++) // TODO: make it so that x values are  not too far apart
+	for (let i = 0; i < 100; i++)
 	{
 		if (y < 50)
 			platform = new UpObject(platformsGeo[0], material, 5, 1);
@@ -174,12 +179,12 @@ function generateLevel()
 			platform = new UpObject(platformsGeo[5], material, 0.5, 1);
 
 		platform.position.x = GetRandomInt(-5, 5);
-		if (y > 199 && Math.max(platform.position.x, objects[i-1].position.x) - Math.min(platform.position.x, objects[i-1].position.x) > 6)
+		if (y > 150 && Math.max(platform.position.x, objects[i-1].position.x) - Math.min(platform.position.x, objects[i-1].position.x) > 5)
 		{
 			if (platform.position.x > objects[i-1].position.x)
-				platform.position.x -= 6;
+				platform.position.x -= 5;
 			else
-				platform.position.x += 6;
+				platform.position.x += 5;
 		}
 		platform.position.y = y;
 		y += 6;
@@ -190,25 +195,40 @@ function generateLevel()
 	for (let i = 0; i < objects.length; i++) // clone objects for player 2
 	{
 		objectsp2[i] = objects[i].clone();
+		objectsp2[i].height = objects[i].height;
+		objectsp2[i].width = objects[i].width;
 		objectsp2[i].position.x += 30;
 		objects[i].setHitbox();
 		objectsp2[i].setHitbox();
 		upscene.add(objectsp2[i]);
 	}
-	
+}
+
+function countdown()
+{
+	// if (!requestId)
+	// {
+	// 	startTime = performance.now();
+	// 	let countdown = 0;
+	// 	let count = 3;
+
+	// 	requestId = requestAnimationFrame(countdown());
+	// }
+
+	// lastTime = performance.now();
+	// startTime = lastTime;
 }
 
 function GetRandomInt(min, max)
 {
 	return Math.floor(Math.random() * (max - min + 1) + min);
-
 }
 
 function UpGame()
 {
 	stop = false;
-	game_mode = 'up_dual';
-
+	uponline = false;
+	
 	if(game_mode == 'up_dual')
 	{
 		playerLeft = 'Left player';
@@ -231,7 +251,12 @@ function upStop()
 	document.removeEventListener('keyup', onKeyUp);
 	cancelAnimationFrame(requestId);
 	requestId = undefined;
-
+	
+	if (uponline)
+	{
+		// TODO: for online stats
+		uponline = false;
+	}
 
 	for (let i = 0; i < objects.length; i++)
 	{

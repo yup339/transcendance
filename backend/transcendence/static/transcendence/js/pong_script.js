@@ -159,6 +159,25 @@ function handleColorPicked(event) {
 	}
 }
 
+function rightKeyDownHandler(event) {
+	if (event.key === 'w' || event.key === 'W' ) {
+		rightPaddle.down = true;
+    }
+	if (event.key === 's' || event.key === 'S') {
+		rightPaddle.up = true;
+    }
+	
+}
+
+function rightKeyUpHandler(event) {
+	if (event.key === 'w' || event.key === 'W' ) {
+		rightPaddle.down = false;
+    }
+	if (event.key === 's' || event.key === 'S') {
+		rightPaddle.up = false;
+    }
+}
+
 function keyDownHandler(event) {
 	if (event.key === 'w' || event.key === 'W' ) {
 		leftPaddle.down = true;

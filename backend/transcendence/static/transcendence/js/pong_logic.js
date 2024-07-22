@@ -267,7 +267,7 @@ function stopGame()
 	if(rightPaddle)
 		rightPaddle.deactivateAI();
 	if(socket)
-		socket.disconect();
+		delete socket;
 }
 
 function restartGame()
