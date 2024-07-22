@@ -26,6 +26,7 @@ function keysEvent(elapsedTime)
 	if (keys[32]) // space
 	{
 		players[0].position.y = 250
+		// stop = true;
 	}
 
 	// player 2 movement
@@ -190,7 +191,7 @@ function updateUpGame()
 		return ;
 	}
 
-	if (second >= 60)
+	if (second >= 5)
 	{
 		stop = true;
 		console.log("Game Over");
