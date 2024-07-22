@@ -119,7 +119,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
         await self.accept()
-        queue_lock.acquire()
         self.side = 'no side yet'
         pong_queue.append(self)
         print("connection to the pong server")
@@ -147,6 +146,7 @@ class PongConsumer(AsyncWebsocketConsumer):
         print(pong_queue)
 
     async def receive(self, text_data):
+        print("receiving data")
         try:
             data = json.loads(text_data)
             

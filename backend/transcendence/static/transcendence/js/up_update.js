@@ -20,11 +20,6 @@ function keysEvent(elapsedTime)
 		players[0].isJumping = true;
 		players[0].jumpSet = false;
 		jumpCount1 += 1;
-		// players[0].nextPos.y += playerSpeed * elapsedTime;
-	}
-	if (keys[83]) // s
-	{
-		players[0].nextPos.y -= playerSpeed * elapsedTime;
 	}
 
 	//TODO: REMOVE
@@ -50,11 +45,6 @@ function keysEvent(elapsedTime)
 		players[1].isJumping = true;
 		players[1].jumpSet = false;
 		jumpCount2 += 1;
-		// players[1].nextPos.y += playerSpeed * elapsedTime;
-	}
-	if (keys[40]) // down
-	{
-		players[1].nextPos.y -= playerSpeed * elapsedTime;
 	}
 
 	jumpLogic(elapsedTime);
@@ -63,68 +53,62 @@ function keysEvent(elapsedTime)
 
 function checkCollision()
 {
-	let hit = false;
-	let hit2 = false;
 
 	players[0].hitbox.setFromObject(players[0]);
 	players[0].hitbox.translate(players[0].nextPos);
 	players[1].hitbox.setFromObject(players[1]);
 	players[1].hitbox.translate(players[1].nextPos);
-	
-	for (let i = 0; i < objects.length; i++)
+
+	let currentPlatform = Math.floor((players[0].position.y + 3) / 6);
+
+	if (players[0].checkCollision(objects[currentPlatform].hitbox))
 	{
-		if (players[0].checkCollision(objects[i].hitbox))
-		{
-			players[0].collisionResolution(objects[i])
-			// console.log("player 1 hit");
-			hit = true;
-			break;
-		}
+		players[0].collisionResolution(objects[currentPlatform]);
+		// console.log("player 1 hit");
 	}
-	for (let i = 0; i < objectsp2.length; i++)
+	if (players[0].position.x - 0.5 > objects[currentPlatform].position.x + objects[currentPlatform].width/2 ||
+		players[0].position.x + 0.5 < objects[currentPlatform].position.x - objects[currentPlatform].width/2)
 	{
-		if (players[1].checkCollision(objectsp2[i].hitbox))
-		{
-			players[1].collisionResolution(objectsp2[i])
-			// console.log("player 2 hit");
-			hit2 = true;
-			break;
-		}
-	}
-	
-	if (!hit)
-	{
-		players[0].updatePos();
-	}
-	if (!hit2)
-	{
-		players[1].updatePos();
-	}
-	
-	players[0].raycaster.ray.origin.copy(players[0].position);
-	let intersections = players[0].raycaster.intersectObjects(objects);
-	if (intersections.length <= 0)
-	{
-		if (!hit)
-			players[0].isFalling = true;
-	}
-	players[1].raycaster.ray.origin.copy(players[1].position);
-	intersections = players[1].raycaster.intersectObjects(objectsp2);
-	if (intersections.length <= 0)
-	{
-		if (!hit2)
-			players[1].isFalling = true;
+		players[0].jumpTime = performance.now();
+		players[0].isFalling = true;
 	}
 
+	currentPlatform = Math.floor((players[1].position.y + 3) / 6);	
+
+	if (players[1].checkCollision(objectsp2[currentPlatform].hitbox))
+	{
+		players[1].collisionResolution(objectsp2[currentPlatform]);
+		// console.log("player 2 hit");
+	}
+	if (players[1].position.x - 0.5 > objectsp2[currentPlatform].position.x + objectsp2[currentPlatform].width/2 ||
+		players[1].position.x + 0.5 < objectsp2[currentPlatform].position.x - objectsp2[currentPlatform].width/2)
+	{
+		players[1].jumpTime = performance.now();
+		players[1].isFalling = true;
+	}
+	
+	players[0].updatePos();
+	players[1].updatePos();
 	updateStats();
 }
 
 function updateStats()
-{
+{		
 	if (players[0].position.y > distanceTravelled1)
-		distanceTravelled1 = players[0].position.y;
+		distanceTravelled1 = Math.floor(players[0].position.y);
 	if (players[1].position.y > distanceTravelled2)
-		distanceTravelled2 = players[1].position.y;
+		distanceTravelled2 = Math.floor(players[1].position.y);
+}
+
+function updateStatsOnline(side)
+{
+	if (side == 'left')
+		i = 0;
+	else
+		i = 1;
+
+	if (players[i].position.y > distanceTravelled1)
+		distanceTravelled1 = Math.floor(players[i].position.y);
 }
 
 function jumpLogic(elapsedTime)
@@ -133,7 +117,7 @@ function jumpLogic(elapsedTime)
 
 	for (let i = 0; i < 2; i++)
 	{
-		if(players[i].isJumping)
+		if (players[i].isJumping)
 		{
 			players[i].isJumping = false;
 			if (!players[i].jumpSet)
@@ -201,7 +185,10 @@ function updateUpGame()
 		requestId = requestAnimationFrame(updateUpGame);
 	printPerSecond();
 	if (stop)
+	{
+		upStop();
 		return ;
+	}
 
 	if (second >= 60)
 	{
@@ -210,10 +197,12 @@ function updateUpGame()
 	}
 	
 	// delta time
-	let elapsedTime = (performance.now() - lastTime) / 1000;
-	lastTime = performance.now();
+	// let elapsedTime = (performance.now() - lastTime) / 1000;
+	// lastTime = performance.now();
+	elapsedTime = 1/60.0;
 
-	keysEvent(elapsedTime);
+	if (!uponline)
+		keysEvent(elapsedTime);
 	renderUp();
 }
 
@@ -223,12 +212,12 @@ function printPerSecond() // handles time events in the update loop
 	
 	let currentTime = performance.now();
 	let showTime = Math.floor((currentTime - startTime) / 1000);
-
+	
 	if (showTime != second)
 	{
+		upcountdown -= 1;
+		console.log(Math.floor(upcountdown))
 		console.log(showTime);
 		second = showTime;
 	}
-	// if (second == 50)
-	// 	stop = true;
 }

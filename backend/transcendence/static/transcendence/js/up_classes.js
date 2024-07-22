@@ -8,13 +8,10 @@ class UpObject extends THREE.Mesh
 		this.nextPos = new THREE.Vector3(0, 0, 0);
 		this.hitbox = new THREE.Box3().setFromObject(this);
 		this.isRendered = false;
-		this.castShadow = true; //TODO: make sure renderer does shadows
 		this.jumpSpeed = -1;
 		this.isJumping = false;
 		this.isFalling = false;
 		this.jumpSet = false;
-		this.jumpTimer = 0;
-		this.raycaster = new THREE.Raycaster(this.position, new THREE.Vector3(0, -1, 0), 0, 1);
 		this.geometry.computeBoundingBox();
 	}
 
@@ -78,7 +75,7 @@ class UpObject extends THREE.Mesh
 			if (this.nextPos.y < 0)
 			{
 				this.isFalling = false;
-				this.jumpSpeed = 0;
+				this.jumpSpeed = -5;
 			}
 			else
 			{
@@ -94,5 +91,29 @@ class UpObject extends THREE.Mesh
 			this.nextPos.y = 0;
 			return;
 		}
+	}
+
+	serialize() {
+		return JSON.stringify({
+			type: 'playerPosition',
+			x: this.position.x,
+			y: this.position.y,
+			side: socket.side
+		});
+	}
+	
+	deserialize(data) {
+		this.position.x = data.x;
+		this.position.y = data.y;
+	}
+
+	serializePlatform()
+	{
+		return ({
+			type: 'platformPosition',
+			x: this.position.x,
+			y: this.position.y,
+			width: this.width
+		});
 	}
 }

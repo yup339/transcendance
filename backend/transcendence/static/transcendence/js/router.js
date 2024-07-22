@@ -153,13 +153,57 @@ class GameSocket{
             leftPaddle.deserialize(data);
         }
     }
+}
 
-    disconect(){
-        if (this.socket.readyState === WebSocket.OPEN) {
-            this.socket.close();
-            console.log("WebSocket connection closed manually.");
-        } else {
-            console.log("WebSocket is not open.");
+// for up
+class UpSocket{
+    constructor() {
+        try {
+            this.socket = new WebSocket(`wss://${window.location.host}/ws/up`);
+            this.socket.onopen = this.handleOpen.bind(this);
+            this.socket.onmessage = this.handleMessage.bind(this);
+            this.socket.onclose = this.handleClose.bind(this);
+        } catch (error) {
+            console.error('WebSocket connection error:', error);
         }
     }
+    handleOpen(event) {
+        console.log('WebSocket connection opened.');
     }
+
+    // use with serialize object
+    sendInfo(info){
+        // console.log(info);
+        this.socket.send(info);
+    };
+    
+    handleClose(event) {
+        console.log('WebSocket connection closed.');
+    }
+
+    handleMessage(event) {
+        // console.log("receiving data");
+        try{
+            const data = JSON.parse(event.data);
+            switch (data.type){
+                case 'matchFound':
+                    this.side = data.side;
+                    console.log(this.side);
+                    startUpOnline(data);
+                    break;
+                case 'platformSetUp':
+                    deserializePlatform(data);
+                    break;
+                case 'startosgamos':
+                    gameReady();
+					break;
+				case 'playerPosition':
+					updatePosition(data);
+					break;
+				default: console.log("error: type unknown");
+
+            }
+        }
+        catch (error){console.error(error)}
+    }
+}
