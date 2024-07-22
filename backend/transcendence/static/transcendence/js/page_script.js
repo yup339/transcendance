@@ -148,95 +148,84 @@ const pages = {
 	</div>
 </form>
 </div>`,
-'stats_pong':`
+'stats':`
 <div class="container extra-top-padding mt-5">
-        <div class="row w-50 m-auto gy-5 gx-5">
-            <div class="col-12 mb-3">
-                <h1 class="text-white text-center">Pong Game Statistics</h1>
-            </div>
-            <div class="col-12 form-group">
-                <label for="total-games" class="text-white">Total Games Played:</label>
-                <input id="total-games" type="text" class="form-control mt-2" placeholder="win + losses" readonly>
-            </div>
-             <div class="col-12 form-group">
-                <label for="wins" class="text-white">Wins:</label>
-                <input id="wins" type="text" class="form-control mt-2" placeholder="21" readonly>
-            </div>
-             <div class="col-12 form-group">
-                <label for="losses" class="text-white">Losses:</label>
-                <input id="losses" type="text" class="form-control mt-2" placeholder="21" readonly>
-            </div>
-            <div class="col-12 form-group">
-                <label for="win-rate" class="text-white">Win Rate:</label>
-                <input id="win-rate" type="text" class="form-control mt-2" placeholder="75%" readonly>
-            </div>
-            <div class="col-12 form-group">
-                <label for="online-games" class="text-white">Online games played:</label>
-                <input id="online-games" type="text" class="form-control mt-2" placeholder="21" readonly>
-            </div>
-            <div class="col-12 form-group">
-                <label for="offline-games" class="text-white">Offline games played:</label>
-                <input id="offline-games" type="text" class="form-control mt-2" placeholder="21" readonly>
-            </div>
-            <div class="col-12 form-group">
-                <label for="highest-score" class="text-white">Highest Score:</label>
-                <input id="highest-score" type="text" class="form-control mt-2" placeholder="21" readonly>
-            </div>
-            <div class="col-12 form-group">
-                <label for="paddle-hit" class="text-white">Times the ball hit the paddle:</label>
-                <input id="paddle-hit" type="text" class="form-control mt-2" placeholder="21" readonly>
-            </div>
-            <div class="col-12">
-                <button type="button" class="btn btn-color text-white w-50 d-block m-auto mt-4 py-3" onclick="refreshStats()">Refresh Stats</button>
-            </div>
-        </div>
-</div>`,
-'stats_up':`
-<div class="container extra-top-padding mt-5">
-        <div class="row w-50 m-auto gy-5 gx-5">
-            <div class="col-12 mb-3">
-                <h1 class="text-white text-center">Up Game Statistics</h1>
-            </div>
-            <div class="col-12 form-group">
-                <label for="total-games" class="text-white">Total Games Played:</label>
-                <input id="total-games" type="text" class="form-control mt-2" placeholder="wins + losses" readonly>
-            </div>
-            <div class="col-12 form-group">
-                <label for="win-rate" class="text-white">Win Rate:</label>
-                <input id="win-rate" type="text" class="form-control mt-2" placeholder="75%" readonly>
-            </div>
-			<div class="col-12 form-group">
-                <label for="wins" class="text-white">Number of wins:</label>
-                <input id="wins" type="text" class="form-control mt-2" placeholder="21" readonly>
-            </div>
-			<div class="col-12 form-group">
-                <label for="losses" class="text-white">Number of losses:</label>
-                <input id="losses" type="text" class="form-control mt-2" placeholder="21" readonly>
-            </div>
-            <div class="col-12 form-group">
-                <label for="online-games" class="text-white">Onlines games played:</label>
-                <input id="online-games" type="text" class="form-control mt-2" placeholder="21" readonly>
-            </div>
-            <div class="col-12 form-group">
-                <label for="offline-games" class="text-white">Offline games played:</label>
-                <input id="offline-games" type="text" class="form-control mt-2" placeholder="21" readonly>
-            </div>
-            <div class="col-12 form-group">
-                <label for="highest-score" class="text-white">Highest Score:</label>
-                <input id="highest-score" type="text" class="form-control mt-2" placeholder="21" readonly>
-            </div>
-			<div class="col-12 form-group">
-                <label for="jumps" class="text-white">Number Of Jumps:</label>
-                <input id="jumps" type="text" class="form-control mt-2" placeholder="27" readonly>
-            </div>
-			<div class="col-12 form-group">
-                <label for="distance" class="text-white">Total distance:</label>
-                <input id="distance" type="text" class="form-control mt-2" placeholder="21" readonly>
-            </div>
-            <div class="col-12">
-                <button type="button" class="btn btn-color text-white w-50 d-block m-auto mt-4 py-3" onclick="refreshStats()">Refresh Stats</button>
-            </div>
-        </div>
+        <div class="row m-auto gy-5 gx-5 gap-5 mb-5">
+			<div class="row col-xl-6 col-12">
+				<div class="col-12 mb-3 py-3">
+					<h1 class="text-white text-center ">Pong Game Stats</h1>
+				</div>
+				<div class="col-6 py-3">
+					<label  class="text-white text-center d-block m-auto ">Total Games Played:</label>
+					<p id="pong-total-games" class=" mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5"> 456347658 </p>
+				</div>
+				<div class="col-6 py-3">
+					<label  class="text-white text-center d-block m-auto ">Wins:</label>
+					<p id="pong-wins" class=" mt-2 m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5"> 456347658 </p>
+				</div>
+				<div class="col-6 py-3">
+					<label  class="text-white text-center d-block m-auto ">Losses:</label>
+					<p id="pong-losses" class=" mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5"> 456347658 </p>
+				</div>
+				<div class="col-6 py-3">
+				<label  class="text-white text-center d-block m-auto ">Win Rate:</label>
+				<p id="pong-win-rate" class=" mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5"> 456347658 </p>
+				</div>
+				<div class="col-6 py-3">
+				<label  class="text-white text-center d-block m-auto ">Online games played:</label>
+				<p id="pong-online-games" class=" mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5"> 456347658 </p>
+				</div>
+				<div class="col-6 py-3">
+					<label  class="text-white text-center d-block m-auto ">Offline games played:</label>
+					<p id="pong-offline-games" class=" mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5"> 456347658 </p>
+					</div>
+				<div class="col-6 py-3">
+					<label  class="text-white text-center d-block m-auto ">Highest score:</label>
+					<p id="pong-highest-score" class=" mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5"> 456347658 </p>
+				</div>
+				<div class="col-6 py-3">
+					<label  class="text-white text-center d-block m-auto ">Paddle hits:</label>
+					<p id="pong-paddle-hits" class=" mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5"> 0 </p>
+				</div>
+			</div>
+			<div class="row col-xl-6 col-12 ">
+				<div class="col-12 mb-3 py-3">
+					<h1 class="text-white text-center ">Up Game Stats</h1>
+				</div>
+				<div class="col-6 py-3">
+					<label  class="text-white text-center d-block m-auto ">Total Games Played:</label>
+					<p id="up-total-games" class=" mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5"> 456347658 </p>
+				</div>
+				<div class="col-6 py-3">
+					<label  class="text-white text-center d-block m-auto ">Win Rate:</label>
+					<p id="up-win-rate" class=" mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5"> 456347658 </p>
+				</div>
+				<div class="col-6 py-3">
+					<label  class="text-white text-center d-block m-auto ">Number of wins:</label>
+					<p id="up-wins" class=" mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5"> 456347658 </p>
+				</div>
+				<div class="col-6 py-3">
+					<label  class="text-white text-center d-block m-auto ">Number of losses:</label>
+					<p id="up-losses" class=" mt-2 m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5"> 456347658 </p>
+				</div>
+				<div class="col-6 py-3">
+					<label  class="text-white text-center d-block m-auto ">Online games played:</label>
+					<p id="up-online-games" class=" mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5"> 456347658 </p>
+				</div>
+				<div class="col-6 py-3">
+					<label  class="text-white text-center d-block m-auto ">Offline games played:</label>
+					<p id="up-offline-games" class=" mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5"> 456347658 </p>
+				</div>
+				<div class="col-6 py-3">
+					<label  class="text-white text-center d-block m-auto ">Number of jumps:</label>
+					<p id="up-jumps" class=" mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5"> 456347658 </p>
+				</div>
+				<div class="col-6 py-3">
+					<label  class="text-white text-center d-block m-auto ">Total distance:</label>
+					<p id="up-distance" class=" mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5"> 456347658 </p>
+				</div>
+			</div>
+		</div>
 </div>`
 
 }
