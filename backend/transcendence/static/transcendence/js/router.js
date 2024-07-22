@@ -6,6 +6,7 @@ window.addEventListener('beforeunload', function (event) {
     // You can add custom message or actions if needed
 });
 
+
 class UserSocket{
 
     loggedIn = false;
@@ -145,8 +146,13 @@ class GameSocket{
                 case 'disconect':
                     console.log("disconect TODO");
                     break;
+                case 'SCCCCOOOORRRREEEEE':
+                    console.log("i receive score");
+                    score(data.side);
+                    break;
                 case 'matchFound':
                     this.side = data.side;
+                    console.log(this.side);
                     this.group = data.group
                     startOnlineMatch(data);
                 break;
@@ -210,7 +216,6 @@ class UpSocket{
             switch (data.type){
                 case 'matchFound':
                     this.side = data.side;
-                    console.log(this.side);
                     startUpOnline(data);
                     break;
                 case 'platformSetUp':

@@ -15,11 +15,16 @@ function update(){
 	requestAnimationFrame(update);
 }
 
+
+
 function score(side){
-	if (side === "left")
+	if (side === "left"){
 		leftPlayerScore++;
+	}
 	else if (side === "right")
+	{
 		rightPlayerScore++;
+	}
 
 	document.getElementById('leftPlayerScore').textContent = leftPlayer + ': ' + leftPlayerScore;
 	document.getElementById('rightPlayerScore').textContent = rightPlayer + ': ' + rightPlayerScore;	

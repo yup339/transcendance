@@ -122,11 +122,13 @@ class PongConsumer(AsyncWebsocketConsumer):
         self.side = 'no side yet'
         pong_queue.append(self)
         print("connection to the pong server")
+        #queue_lock.acquire()
         if len(pong_queue) >= 2:
             player1 = pong_queue.pop(0)
             player2 = pong_queue.pop(0)
             self.match_group_name = generate_match_group_name()            
             await self.create_match(player1, player2, self.match_group_name)
+        #queue_lock.release()
 
     async def disconnect(self, close_code):
         if self in pong_queue :
@@ -146,7 +148,6 @@ class PongConsumer(AsyncWebsocketConsumer):
         print(pong_queue)
 
     async def receive(self, text_data):
-        print("receiving data")
         try:
             data = json.loads(text_data)
             
@@ -158,7 +159,8 @@ class PongConsumer(AsyncWebsocketConsumer):
                     'x': data['x'],
                     'y': data['y'],
                     'dx': data['dx'],
-                    'dy': data['dy']
+                    'dy': data['dy'],
+                    'side': self.side
                 }
         )
 
@@ -175,6 +177,16 @@ class PongConsumer(AsyncWebsocketConsumer):
                 }
         )
 
+            elif data['type'] == 'scorePoint':
+                await self.channel_layer.group_send(
+                data['group'],
+                {
+                    'type': 'scorePoint',
+                    'side': self.side,
+                    'scoringSide': data['side']
+                }
+            )
+
             else : 
                 print("unknown datatype")
                 
@@ -183,6 +195,14 @@ class PongConsumer(AsyncWebsocketConsumer):
             print(f"JSON decoding error: {str(e)}")
         except KeyError as e:
             print(f"KeyError: Missing key {str(e)} in received data.")
+
+    async def scorePoint(self, data):
+        if (data['side'] != self.side): 
+            await self.send(text_data=json.dumps({
+                    'type': 'SCCCCOOOORRRREEEEE',
+                    'side': data['scoringSide']
+                }
+            ))
 
     async def create_match(self, player1, player2, group_name):
         player1.match_group_name = group_name
@@ -213,16 +233,16 @@ class PongConsumer(AsyncWebsocketConsumer):
         print(f"Match created: {group_name} with players {player1.channel_name} and {player2.channel_name}")
 
     async def ballPositionSync(self, data):
-        print("sending ball position")
-        await self.send(text_data=json.dumps({
-                'type': 'ballPositionSync',
-                'x': data['x'],
-                'y': data['y'],
-                'dx': data['dx'],
-                'dy': data['dy']
-            }
-        ))
-
+        if (data['side'] != self.side): 
+            await self.send(text_data=json.dumps({
+                    'type': 'ballPositionSync',
+                    'x': data['x'],
+                    'y': data['y'],
+                    'dx': data['dx'],
+                    'dy': data['dy']
+                }
+            ))
+            
     async def paddlePositionSync(self, data):
         if (data['side'] != self.side):  #dont send to ourself
             await self.send(text_data=json.dumps({

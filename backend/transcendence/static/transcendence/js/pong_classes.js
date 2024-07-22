@@ -30,6 +30,7 @@ class game_event {
 		}
 	}
 }
+
 class Ball {
 	constructor(x, y , dx, dy, color) {
 		this.x = x;
@@ -50,6 +51,18 @@ class Ball {
 		this.updateSpeed();
 		this.HitBox = new HitBox(this.x, this.y ,this.radius * 2,this.radius * 2, this.radius * 2);
 		this.online = false;
+	}
+
+	snap(x, y){
+
+		if (y == -1){
+			this.HitBox.snapX(x, this.vec);
+		}
+		else {
+			this.HitBox.snapY(y, this.vec);
+		}
+		this.y = this.HitBox.y;
+		this.x = this.HitBox.x;
 	}
 
 	cleanup() {
@@ -83,43 +96,52 @@ class Ball {
 			return ;
 		}
 		
-		if (this.HitBox.doesCollide(leftPaddle.HitBox)){
+		if (this.HitBox.doesCollide(leftPaddle.HitBox, magnitude)){
 			this.vec.y =  leftPaddle.getImpactVector(this.y);
 			this.vec.x *= -1;
-			this.updateSpeed()
+			this.updateSpeed();
+			this.snap((leftPaddle.HitBox.x + (leftPaddle.HitBox.width / 2 + this.radius)), -1);
 			this.HitBox.disable();
 			leftPaddle.disableHitbox();
-			if (this.online && socket.side === 'left')
+			if (this.online && socket.side === 'left') 
 				socket.sendInfo(this.serialize());
 		}
-		if(this.HitBox.doesCollide(rightPaddle.HitBox)){
+		if(this.HitBox.doesCollide(rightPaddle.HitBox, magnitude)){
 			this.vec.y =  rightPaddle.getImpactVector(this.y);
 			this.vec.x *= -1;
 			this.updateSpeed()
+			this.snap(rightPaddle.HitBox.x - (rightPaddle.HitBox.width / 2 + this.radius), -1);			
 			this.HitBox.disable();
 			rightPaddle.disableHitbox();
 			if (this.online && socket.side === 'right')
 				socket.sendInfo(this.serialize());
 		}
-		if (this.HitBox.doesCollide(roof) || this.HitBox.doesCollide(floor)){
+		if (this.HitBox.doesCollide(roof, magnitude)){
 			this.vec.y *= -1;
+			this.snap(-1, roof.y - ((roof.length / 2) + this.radius));			
 		}
+		if (this.HitBox.doesCollide(floor, magnitude)){
+			this.vec.y *= -1;
+			this.snap(-1, floor.y + ((floor.length / 2) + this.radius));
+		}
+
 			//this.velocityY *= -1;
-		if (this.HitBox.doesCollide(leftGoal)){
-			score("right");
-			//this.velocityX *= -1;
-			this.vec.x *= -1;
-			this.reset(1);
-			if (this.online && socket.side === 'right')
-				socket.sendInfo(this.serialize());
+		if (this.HitBox.doesCollide(leftGoal, magnitude)){
+				score("right");
+				this.vec.x *= -1;
+				this.reset(1);
+
+			if (this.online && socket.side === 'left'){
+				socket.sendInfo(JSON.stringify({"type" : "scorePoint", "group" : socket.group, "side" : "right"}));
+				socket.sendInfo(this.serialize());}
 			return;
-		} else if (this.HitBox.doesCollide(rightGoal)){
-			score("left");
-			//this.velocityX *= -1;
-			this.vec.x *= -1;
-			this.reset(-1);
-			if (this.online && socket.side === 'left')
-				socket.sendInfo(this.serialize());
+		} else if (this.HitBox.doesCollide(rightGoal, magnitude)){
+				score("left");
+				this.vec.x *= -1;
+				this.reset(-1);
+			if (this.online && socket.side == 'right'){
+				socket.sendInfo(JSON.stringify({"type" : "scorePoint", "group" : socket.group, "side" : "left"}));
+				socket.sendInfo(this.serialize());}
 			return;
 		}
 			
@@ -193,7 +215,31 @@ class HitBox{
         this.isAble = true;
 	}
 
-    doesCollide(hitBox) {
+	snapX(newX, directionVector) {
+		const slope = directionVector.y / directionVector.x;
+	
+		this.y = slope * (newX - this.x) + this.y;
+	
+		this.x = newX;
+	
+		this.model.position.set(this.x, this.y, 1);
+	}
+
+	snapY(newY, directionVector) {
+		// Calculate the direction vector's slope (dx/dy)
+		const slope = directionVector.x / directionVector.y;
+	
+		// Calculate the new X position based on the slope and the new Y position
+		this.x = slope * (newY - this.y) + this.x;
+	
+		// Update the Y position
+		this.y = newY;
+	
+		// Update the model's position in the scene
+		this.model.position.set(this.x, this.y, 1);
+	}
+
+    doesCollide(hitBox, magnitude) {
         // Calculate boundaries of each hitbox
         if (!this.isAble && !hitBox.isAble)
             return ;
@@ -373,11 +419,11 @@ class Paddle {
 		if (this.aiActive)
 			this.ai.update();
 		if(this.up && !this.down){
-			if (!this.HitBox.doesCollide(floor))
+			if (!this.HitBox.doesCollide(floor, magnitude))
 				this.y -= this.speed * magnitude;
 		}
 		if(this.down && !this.up){
-			if (!this.HitBox.doesCollide(roof))
+			if (!this.HitBox.doesCollide(roof, magnitude))
 				this.y += this.speed * magnitude;
 		}
 		this.HitBox.setPosition(this.x,this.y)
