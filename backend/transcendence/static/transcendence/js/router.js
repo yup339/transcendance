@@ -86,6 +86,7 @@ class UserSocket{
     loginError(data){
         try{
             console.log("Login error: " + data.message);
+            alert("Invalid username or password");
             navigateTo('login');
         }
         catch (error){

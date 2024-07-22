@@ -306,11 +306,19 @@ function displayPage(pageName)
     {
 		game_mode = pageName;
         pageName = 'up';
-    }
-	
-	if(pageName == 'stats' && !user.loggedIn){
+	}
+	else if(pageName == 'stats' && !user.loggedIn){
 		navigateTo('game_choice');
 		return ;
+	}
+	else if (pageName == 'login' || pageName == 'signup')
+	{
+		if(user.loggedIn)
+		{
+			console.log("How the hell did you even get here?");
+			navigateTo('game_choice');
+			return;
+		}
 	}
 	
 
@@ -354,6 +362,15 @@ function initializePage()
 	const pathname = window.location.pathname;
 	const route = pathname.substring(1);
     user = new UserSocket();
+	$(document).keypress(function(e) {
+		if(e.which == 13) {
+			page = window.location.pathname.substring(1);
+			if(page == 'signup')
+				register_user();
+			else if (page== 'login')
+				login_user();
+		}
+	});
     if(route)
 		navigateTo(route);
     else

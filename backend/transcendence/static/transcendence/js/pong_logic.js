@@ -90,6 +90,12 @@ function PongGame()
 		prepare_tournament();
 	}
 	else if(game_mode == 'pong_online'){
+		if (!user.logged_in)
+			{
+				alert("You need to be logged in to play online");
+				navigateTo('login');
+				return;
+			}
 		socket = new GameSocket();
 		prepare_online_Game();
 	}
