@@ -1,0 +1,32 @@
+la/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" "-"
+django  | data received : ballPosition
+django  | 2024-06-27 19:35:33,703 ERROR    Exception inside application: No handler for message type ballPosition
+django  | Traceback (most recent call last):
+django  |   File "/usr/local/lib/python3.10/site-packages/channels/routing.py", line 62, in __call__
+django  |     return await application(scope, receive, send)
+django  |   File "/usr/local/lib/python3.10/site-packages/channels/routing.py", line 132, in __call__
+django  |     return await application(
+django  |   File "/usr/local/lib/python3.10/site-packages/channels/consumer.py", line 94, in app
+django  |     return await consumer(scope, receive, send)
+django  |   File "/usr/local/lib/python3.10/site-packages/channels/consumer.py", line 58, in __call__
+django  |     await await_many_dispatch(
+django  |   File "/usr/local/lib/python3.10/site-packages/channels/utils.py", line 50, in await_many_dispatch
+django  |     await dispatch(result)
+django  |   File "/usr/local/lib/python3.10/site-packages/channels/consumer.py", line 75, in dispatch
+django  |     raise ValueError("No handler for message type %s" % message["type"])
+django  | ValueError: No handler for message type ballPosition
+django  | 2024-06-27 19:35:33,704 ERROR    Exception inside application: No handler for message type ballPosition
+django  | Traceback (most recent call last):
+django  |   File "/usr/local/lib/python3.10/site-packages/channels/routing.py", line 62, in __call__
+django  |     return await application(scope, receive, send)
+django  |   File "/usr/local/lib/python3.10/site-packages/channels/routing.py", line 132, in __call__
+django  |     return await application(
+django  |   File "/usr/local/lib/python3.10/site-packages/channels/consumer.py", line 94, in app
+django  |     return await consumer(scope, receive, send)
+django  |   File "/usr/local/lib/python3.10/site-packages/channels/consumer.py", line 58, in __call__
+django  |     await await_many_dispatch(
+django  |   File "/usr/local/lib/python3.10/site-packages/channels/utils.py", line 50, in await_many_dispatch
+django  |     await dispatch(result)
+django  |   File "/usr/local/lib/python3.10/site-packages/channels/consumer.py", line 75, in dispatch
+django  |     raise ValueError("No handler for message type %s" % message["type"])
+django  | ValueError: No handler for message type ballPosition

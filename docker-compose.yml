@@ -1,42 +1,52 @@
 version: '3'
   
 networks:
-  ft_transcendence:
+  transcendance:
     driver: bridge
 
 services: 
+
+  django:
+    container_name: django
+    volumes: 
+      - ./backend:/code
+      - ./backend/transcendence/static/:/static/
+    build: ./backend
+    networks:
+      - transcendance
+    ports:
+      - 8000:8000
+      - 8001:8001
+    env_file:
+      - .env
+    depends_on:
+      - database
+
   nginx:
     container_name: nginx
     volumes: 
-      - ./pong:/etc/frontend
-    build: ./pong
+      - ./backend/transcendence/static/:/static/
+    build: ./nginx
     networks:
-      - ft_transcendence
+      - transcendance
     ports:
       - "443:443"
-  postgresql:
-    container_name: postgresql
-    volumes:
-      - psql_vol:/var/lib/postgresql/data
-    build: ./backend/database
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    networks:
-      - ft_transcendence
+    depends_on:
+      - django
 
-    #django:
-    #  container_name: django
-    #volumes: 
-    #  - django_vol:/var/www/html
-    #build: ./pong
-    #networks:
-    #  - inception
-    #ports:
-    #  - "8000"
+  database:
+    container_name: database
+    build: ./backend/database
+    networks:
+      - transcendance
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    env_file:
+      - .env
 
 volumes:
-  nginx_vol:
-  psql_vol:
-#  django_vol:
+  static:
+  db_data:
+

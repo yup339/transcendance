@@ -1,11 +1,16 @@
 function update(){
 	if(game_stop)
 		return ;
+
+	let elapsedTime = (performance.now() - previousTimePong);
+	previousTimePong = performance.now();
+	let magnitude = elapsedTime / (1000 / 60) // have game logic be 60 fps
+
 	for (let i = 0; i < balls.length; i++) {
-		balls[i].update();
+		balls[i].update(magnitude);
 	}
-	leftPaddle.update();
-	rightPaddle.update();
+	leftPaddle.update(magnitude);
+	rightPaddle.update(magnitude);
 	renderer.render(scene, camera)
 	requestAnimationFrame(update);
 }
@@ -84,9 +89,13 @@ function PongGame()
 	{
 		prepare_tournament();
 	}
+	else if(game_mode == 'pong_online'){
+		socket = new GameSocket();
+		prepare_online_Game();
+	}
 }
 
-function prepareGame()
+function prepare_online_Game()
 {
 	document.getElementById('leftPlayerScore').textContent = leftPlayer + ': ' + leftPlayerScore;
 	document.getElementById('rightPlayerScore').textContent = rightPlayer + ': ' + rightPlayerScore;	
@@ -108,6 +117,62 @@ function prepareGame()
 	background.position.z = -BOUND_DEPTH / 2;
 	renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true, alpha: true, pixelRatio: window.devicePixelRatio });
 	camera = new THREE.PerspectiveCamera( 90, canvas.width / canvas.height, 0.1, 1000 );
+	light = new THREE.AmbientLight( 0x404040 ); // soft white light
+	scene.add(light);
+	scene.background = new THREE.Color(0x000000);
+	scene.add(light);
+	scene.background = new THREE.Color(0x000000);
+	scene.add(background);
+ 	floor = new HitBox(0, -GAME_HEIGHT , GAME_WIDTH * 2, 1, BOUND_DEPTH);
+ 	roof = new HitBox(0, GAME_HEIGHT, GAME_WIDTH * 2, 1, BOUND_DEPTH);
+ 	leftGoal = new HitBox(-GAME_WIDTH , 0, 1, GAME_HEIGHT * 2, BOUND_DEPTH);
+	rightGoal = new HitBox(GAME_WIDTH, 0, 1, GAME_HEIGHT * 2, BOUND_DEPTH); 
+	leftPaddle = new Paddle(-GAME_WIDTH + PADDLE_DISTANCE_FROM_GOAL , 0, randomColor());
+	rightPaddle = new Paddle(GAME_WIDTH - PADDLE_DISTANCE_FROM_GOAL, 0, randomColor());
+	speedOutput.innerHTML = speedSlider.value;
+	BALL_SPEED = speedSlider.value;
+	ball_color = randomColor();
+	extra_ball_number = 0;
+	scoreToWin = scoreSlider.value;
+	leftGoal.draw();
+	rightGoal.draw();
+	roof.draw();
+	floor.draw();
+	previousTimePong = performance.now()
+	setUpScene();
+	ballSliderOutput.innerHTML = ballSlider.value;
+	scoreOutput.innerHTML = scoreSlider.value;
+	update();
+	
+	//ball for presentation
+	balls.push(new Ball(0,0,0, 0, ball_color));
+}
+
+
+
+
+function prepareGame()
+{
+	document.getElementById('leftPlayerScore').textContent = leftPlayer + ': ' + leftPlayerScore;
+	document.getElementById('rightPlayerScore').textContent = rightPlayer + ': ' + rightPlayerScore;	
+
+	colorPicker = document.getElementById('colorPicker'); // assuming you have an input element with id 'colorPicker'
+    colorBox = document.getElementById('colorBox'); // assuming you have a div element with id 'colorBox'
+    upcanvas = document.getElementById("pongCanvas");
+    ballSlider = document.getElementById("ballSlider");
+	scoreSlider = document.getElementById("scoreSlider");
+    ballSliderOutput = document.getElementById("ballSliderValue");
+    speedSlider = document.getElementById("speedSlider");
+    speedOutput = document.getElementById("speedSliderValue");
+	scoreOutput = document.getElementById("scoreSliderValue");
+	scene = new THREE.Scene();
+	
+	backgroundGeometry = new THREE.BoxGeometry(GAME_WIDTH * 2, GAME_HEIGHT * 2 ,1)
+	backgroud_materail = new THREE.MeshStandardMaterial({color: 0x444444});
+	background = new THREE.Mesh( backgroundGeometry, backgroud_materail);
+	background.position.z = -BOUND_DEPTH / 2;
+	renderer = new THREE.WebGLRenderer({canvas: upcanvas, antialias: true, alpha: true, pixelRatio: window.devicePixelRatio });
+	camera = new THREE.PerspectiveCamera( 90, upcanvas.width / upcanvas.height, 0.1, 1000 );
 	light = new THREE.AmbientLight( 0x404040 ); // soft white light
 	scene.add(light);
 	scene.background = new THREE.Color(0x000000);
@@ -201,6 +266,8 @@ function stopGame()
 	game_stop = true;
 	if(rightPaddle)
 		rightPaddle.deactivateAI();
+	if(socket)
+		delete socket;
 }
 
 function restartGame()
@@ -230,3 +297,31 @@ function restartGame()
 	setBall(extra_ball_number);
 	update();
 }
+
+function startOnlineMatch(data){
+	console.log("starting online match");
+	document.getElementById("play-link").style.visibility = 'hidden';
+	
+	//delete the presentation ball
+	balls[0].cleanup();
+	balls = [];
+
+	//first ball
+	balls.push(new Ball(0,0,BALL_SPEED, randomValue(), ball_color))
+	balls[0].setOnline(true);
+
+	document.getElementById("customs").remove();
+	
+	if (data.side === 'left'){
+		document.addEventListener('keydown', keyDownHandler);
+		document.addEventListener('keyup', keyUpHandler);
+		leftPaddle.setOnline(true);
+		socket.sendInfo(balls[0].serialize());
+	}
+	else {
+		document.addEventListener('keydown', rightKeyDownHandler);
+		document.addEventListener('keyup', rightKeyUpHandler);
+		rightPaddle.setOnline(true);
+	}
+}
+
