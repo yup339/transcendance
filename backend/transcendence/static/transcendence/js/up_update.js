@@ -94,24 +94,6 @@ function updateStats()
 		distanceTravelled2 = Math.floor(players[1].position.y);
 }
 
-function updateStatsOnline(side)
-{
-	if (side == 'left')
-	{
-		if (players[1].position.y > distanceTravelled1)
-			distanceTravelled1 = Math.floor(players[1].position.y);
-		if (players[0].position.y > distanceTravelled2)
-			distanceTravelled2 = Math.floor(players[0].position.y);
-	}
-	else
-	{
-		if (players[0].position.y > distanceTravelled1)
-			distanceTravelled1 = Math.floor(players[0].position.y);
-		if (players[1].position.y > distanceTravelled2)
-			distanceTravelled2 = Math.floor(players[1].position.y);
-	}
-}
-
 function jumpLogic(elapsedTime)
 {
 	// jump logic

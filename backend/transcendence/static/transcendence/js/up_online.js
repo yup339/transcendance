@@ -368,3 +368,11 @@ function checkCollisionOnline(side)
 	}
 	updateStatsOnline(side);
 }
+
+function updateStatsOnline(side)
+{
+	if (players[0].position.y > distanceTravelled1)
+		distanceTravelled1 = Math.floor(players[0].position.y);
+	if (players[1].position.y > distanceTravelled2)
+		distanceTravelled2 = Math.floor(players[1].position.y);
+}
