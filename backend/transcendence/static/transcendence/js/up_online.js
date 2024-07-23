@@ -94,7 +94,6 @@ function startUpOnline(data) // separation of 2 players
 
 function prepareOnline()
 {
-	uponline = true;
 	upcanvas = document.getElementById('UpCanvas');
 	
 	// set up cameras
@@ -124,15 +123,13 @@ function prepareOnline()
 	players[1].position.set(30, 0.2, 0);
 	upscene.add(players[1]);
 	
-	//light
+	//lights
 	let geo = new THREE.SphereGeometry(1, 32, 16);
 	let mat = new THREE.MeshBasicMaterial({color: 0x404040});
 	light1 = new THREE.PointLight(0x404040, 10, 50);
 	light1.position.set( 0, 14, 5 );
 	upscene.add(light1);
 	
-	
-	//light for player 2
 	light2 = new THREE.PointLight(0x404040, 10, 50);
 	light2.position.set( 30, 14, 5 );
 	upscene.add(light2);
@@ -223,17 +220,16 @@ function onlineUpdate(side)
 	if (!requestId)
 		requestId = requestAnimationFrame(onlineUpdate);
 	printPerSecond();
-
-	if (stop)
-	{
-		upStop();
-		return ;
-	}
-
+	
 	if (second >= 60)
 	{
 		stop = true;
 		console.log("Game Over");
+	}
+	if (stop)
+	{
+		upStop();
+		return ;
 	}
 
 	// delta time
@@ -289,7 +285,7 @@ function playerController(side, elapsedTime)
 			players[1].isFalling = true;
 			players[1].isJumping = true;
 			players[1].jumpSet = false;
-			jumpCount1 += 1;
+			jumpCount2 += 1;
 		}
 	}
 
