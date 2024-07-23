@@ -218,11 +218,11 @@ class PongConsumer(AsyncWebsocketConsumer):
         if (data['side'] != self.side):
             self.score += 1
             print("score for {} is {}".format(self.side, self.score))
-            await self.send(text_data=json.dumps({
-                    'type': 'SCCCCOOOORRRREEEEE',
-                    'side': data['scoringSide']
-                }
-            ))
+        await self.send(text_data=json.dumps({
+                'type': 'SCCCCOOOORRRREEEEE',
+                'side': data['scoringSide']
+            }
+        ))
 
     async def create_match(self, player1, player2, group_name):
         player1.match_group_name = group_name
@@ -253,15 +253,14 @@ class PongConsumer(AsyncWebsocketConsumer):
         print(f"Match created: {group_name} with players {player1.channel_name} and {player2.channel_name}")
 
     async def ballPositionSync(self, data):
-        if (data['side'] != self.side): 
-            await self.send(text_data=json.dumps({
-                    'type': 'ballPositionSync',
-                    'x': data['x'],
-                    'y': data['y'],
-                    'dx': data['dx'],
-                    'dy': data['dy']
-                }
-            ))
+        await self.send(text_data=json.dumps({
+                'type': 'ballPositionSync',
+                'x': data['x'],
+                'y': data['y'],
+                'dx': data['dx'],
+                'dy': data['dy']
+            }
+        ))
             
     async def paddlePositionSync(self, data):
         if (data['side'] != self.side):  #dont send to ourself

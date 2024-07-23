@@ -51,6 +51,7 @@ class Ball {
 		this.updateSpeed();
 		this.HitBox = new HitBox(this.x, this.y ,this.radius * 2,this.radius * 2, this.radius * 2);
 		this.online = false;
+		this.timeout = false;
 	}
 
 	snap(x, y){
@@ -127,10 +128,14 @@ class Ball {
 
 			//this.velocityY *= -1;
 		if (this.HitBox.doesCollide(leftGoal, magnitude)){
+			leftGoal.disable();
+			this.HitBox.disable();
 			this.rightScore();
 			return;
 
 		} else if (this.HitBox.doesCollide(rightGoal, magnitude)){
+			rightGoal.disable();
+			this.HitBox.disable();
 			this.leftScore();
 			return;
 		}
@@ -146,26 +151,27 @@ class Ball {
 	}
 
 	leftScore(){
-		if (!this.online || socket.side == 'right')
+		if (!this.online){
 			score("left");
-		this.vec.x *= -1;
-		this.reset(-1);
+			this.vec.x *= -1;
+			this.reset(-1);
+		}
 
-		if (this.online && socket.side == 'right'){
+		if (this.online && socket.side == 'left'){
 			socket.sendInfo(JSON.stringify({"type" : "scorePoint", "group" : socket.group, "side" : "left"}));
-			socket.sendInfo(this.serialize());
 		}
 	}
 
 	rightScore(){
-		if (!this.online || socket.side == 'left')
-			score("right");
-		this.vec.x *= -1;
-		this.reset(1);
 
-		if (this.online && socket.side === 'left'){
+		if (!this.online){
+			score("right");
+			this.vec.x *= -1;
+			this.reset(1);
+		}
+
+		if (this.online && socket.side === 'right'){
 			socket.sendInfo(JSON.stringify({"type" : "scorePoint", "group" : socket.group, "side" : "right"}));
-			socket.sendInfo(this.serialize());
 		}
 	}
 

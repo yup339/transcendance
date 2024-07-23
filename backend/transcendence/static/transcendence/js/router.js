@@ -146,8 +146,16 @@ class GameSocket{
                     console.log("disconect TODO");
                     break;
                 case 'SCCCCOOOORRRREEEEE':
-                    console.log("i receive score");
                     score(data.side);
+                    balls[0].reset(-1);
+                    let resetSide = 1;
+                    if (data.side == 'left')
+                        resetSide = -1
+                    if (data.side == this.side){
+                        balls[0].vec.x *= -1;
+                        balls[0].reset(resetSide);
+                        socket.sendInfo(balls[0].serialize());
+                    }
                     break;
                 case 'matchFound':
                     this.side = data.side;
@@ -166,6 +174,7 @@ class GameSocket{
     }
 
     updateBallPos(data){
+        console.log("got an update of ball")
         balls[0].deserialize(data);
     }
 
