@@ -312,7 +312,10 @@ const page404 = ` <div class="fullscreen"><h1 class="big-text text-white text-ce
 
 window.addEventListener('popstate', function (event) {
     const pageName = event.state;
-	
+    
+    if (socket)
+        socket.disconnect();
+
 	if ($('#winModal').hasClass('show')) 
 	{ 
 		$('#winModal').modal('hide');
@@ -399,7 +402,8 @@ function displayPage(pageName)
 
 function navigateTo(pageName)
 {
-
+    if (socket)
+        socket.disconnect();
     if (history.state !== pageName) 
         history.pushState(pageName, null, pageName);
     

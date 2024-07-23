@@ -15,17 +15,23 @@ function update(){
 	requestAnimationFrame(update);
 }
 
+
+
 function score(side){
-	if (side === "left")
+	if (side === "left"){
 		leftPlayerScore++;
+	}
 	else if (side === "right")
+	{
 		rightPlayerScore++;
+	}
 
 	document.getElementById('leftPlayerScore').textContent = leftPlayer + ': ' + leftPlayerScore;
 	document.getElementById('rightPlayerScore').textContent = rightPlayer + ': ' + rightPlayerScore;	
 
 	if(leftPlayerScore == scoreToWin || rightPlayerScore == scoreToWin)
 	{
+		gameIsOver = true;
 		let winner;
 		let loser;
 		
@@ -249,6 +255,15 @@ function startMatch()
     document.addEventListener('keyup', keyUpHandler);
 }
 
+function pongLeaver(){
+	if (gameIsOver == true)
+		return ;
+	gameIsOver = true;
+	alert("your stupid opponent left he is such a loser, you win !");
+	navigateTo('game_choice');
+	stopGame()
+}
+
 function stopGame() 
 {
 	if(colorPicker)
@@ -325,3 +340,13 @@ function startOnlineMatch(data){
 	}
 }
 
+
+
+
+function pongLeaver(){
+	if (gameIsOver == true)
+		return
+	stopGame()
+	alert("your stupid opponent left he is such a loser, you win !");
+	navigateTo('game_choice');
+}

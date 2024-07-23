@@ -27,13 +27,13 @@ class upConsumer(AsyncWebsocketConsumer):
     async def disconnect(self, close_code):
         if self in up_queue :
             up_queue.remove(self)
+
         if hasattr(self, 'match_group_name'):
             players = active_matches.get(self.match_group_name, [])
             if self in players:
                 players.remove(self)
                 if not players:
-                    del active_match
-                    es[self.match_group_name]
+                    del active_matches[self.match_group_name]
                 await self.channel_layer.group_discard(
                     self.match_group_name,
                     self.channel_name

@@ -1,4 +1,12 @@
 //for user
+
+window.addEventListener('beforeunload', function (event) {
+    if (socket)
+        socket.disconnect();
+    // You can add custom message or actions if needed
+});
+
+
 class UserSocket{
 
     loggedIn = false;
@@ -105,6 +113,12 @@ class GameSocket{
         }
     }
 
+    disconnect() {
+        if (this.socket.readyState === WebSocket.OPEN) {
+            this.socket.close();
+        }
+    }
+
     handleOpen(event) {
         console.log('WebSocket connection opened.');
     }
@@ -131,10 +145,20 @@ class GameSocket{
                 case 'disconect':
                     console.log("disconect TODO");
                     break;
+                case 'SCCCCOOOORRRREEEEE':
+                    console.log("i receive score");
+                    score(data.side);
+                    break;
                 case 'matchFound':
                     this.side = data.side;
+                    gameIsOver = false;
+                    console.log(this.side);
                     this.group = data.group
                     startOnlineMatch(data);
+                break;
+                case 'leaver':
+                    console.log("bozo left")
+                    pongLeaver();
                 break;
             }
         }
@@ -167,6 +191,13 @@ class UpSocket{
             console.error('WebSocket connection error:', error);
         }
     }
+
+    disconnect() {
+        if (this.socket.readyState === WebSocket.OPEN) {
+            this.socket.close();
+        }
+    }
+
     handleOpen(event) {
         console.log('WebSocket connection opened.');
     }
@@ -188,7 +219,6 @@ class UpSocket{
             switch (data.type){
                 case 'matchFound':
                     this.side = data.side;
-                    console.log(this.side);
                     startUpOnline(data);
                     break;
                 case 'platformSetUp':
