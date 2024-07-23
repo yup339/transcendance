@@ -187,6 +187,19 @@ function updateUpGame()
 
 	keysEvent(elapsedTime);
 	renderUp();
+	updateOnScreen();
+}
+
+function updateOnScreen()
+{
+	const onscreenTimer = document.getElementById("gameTime");
+	onscreenTimer.textContent = upcountdown;
+
+	const score1 = document.getElementById("scorePlayer1");
+	score1.textContent = "Player 1: " + distanceTravelled1;
+
+	const score2 = document.getElementById("scorePlayer2");
+	score2.textContent = "Player 2: " + distanceTravelled2;
 }
 
 function printPerSecond() // handles time events in the update loop
@@ -199,8 +212,6 @@ function printPerSecond() // handles time events in the update loop
 	if (showTime != second)
 	{
 		upcountdown -= 1;
-		console.log(Math.floor(upcountdown))
-		console.log(showTime);
 		second = showTime;
 	}
 }

@@ -107,9 +107,9 @@ const pages = {
 <div class="w-100 extra-top-padding container mt-5">
 <canvas id="UpCanvas" width="1920" height="1080" class="m-auto d-block w-100 h-100"></canvas>
 <div class="d-flex justify-content-between">
-    <div id="scorePlayer1" class="text-white display-4">Player 1 Score: 0</div>
-    <div id="gameTime" class="text-white display-5">Time: 00:00</div>
-	<div id="scorePlayer2" class="text-white display-4">Player 2 Score: 0</div>
+    <div id="scorePlayer1" class="text-white display-6"></div>
+    <div id="gameTime" class="text-white display-6"></div>
+	<div id="scorePlayer2" class="text-white display-6"></div>
     </div>
 
 <div class="modal fade" id="endModal" tabindex="-1" role="dialog" aria-labelledby="endModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">

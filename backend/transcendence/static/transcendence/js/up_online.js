@@ -15,7 +15,7 @@ function countdown()
 	{
 		requestId = requestAnimationFrame(countdown);
 	}
-	if (count < 0)
+	if (count < 1)
 	{
 		console.log("countdown over");
 		cancelAnimationFrame(requestId);
@@ -34,6 +34,8 @@ function countdown()
 		count -= 1;
 		second = showTime;
 	}
+	const onscreenTimer = document.getElementById("gameTime");
+	onscreenTimer.textContent = count;
 }
 
 function deserializePlatform(data)
@@ -212,6 +214,7 @@ function onlineUpdate(side)
 	if (!requestId)
 		requestId = requestAnimationFrame(onlineUpdate);
 	printPerSecond();
+
 	if (stop)
 	{
 		upStop();
@@ -231,6 +234,7 @@ function onlineUpdate(side)
 
 	playerController(currentSide, elapsedTime);
 	renderUp();
+	updateOnScreen();
 }
 
 function playerController(side, elapsedTime)

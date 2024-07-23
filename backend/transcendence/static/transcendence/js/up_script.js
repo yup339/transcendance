@@ -7,7 +7,8 @@ let uponline = false;
 let upcountdown;
 let stop;
 let startTime;
-let count;
+let count; // timer for the countdown at the start (starting at 3)
+let second; // timer for current round (starting at 60)
 
 //scene
 let upscene;
@@ -21,7 +22,6 @@ let winner;
 // in-game on-screen info
 let distanceTravelled1 = 0;
 let distanceTravelled2 = 0;
-let second; // timer for current round
 
 // player and player variables
 let players = [];
@@ -89,6 +89,12 @@ function setGlobals()
 	count = 3;
 	let currentSide = undefined;
 
+	updateOnScreen();
+	if (uponline)
+	{
+		const onscreenTimer = document.getElementById("gameTime");
+		onscreenTimer.textContent = count;
+	}
 }
 
 function prepareUpGame()
