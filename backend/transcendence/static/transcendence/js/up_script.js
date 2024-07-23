@@ -16,6 +16,7 @@ let uprenderer;
 // game stats for after
 let jumpCount1 = 0;
 let jumpCount2 = 0;
+let winner;
 
 // in-game on-screen info
 let distanceTravelled1 = 0;
@@ -227,6 +228,30 @@ function UpGame()
 	}
 }
 
+function findWinner()
+{
+	if(distanceTravelled1 == distanceTravelled2){
+		winner = "Both Players";
+	}
+	else if(distanceTravelled1 > distanceTravelled2){
+		if(game_mode == 'up_online'){
+			winner = players[0];
+		}
+		else{
+			winner = "Left Player";
+		}
+	
+	}
+	else{
+		if(game_mode == 'up_online'){
+			winner = players[1];
+		}
+		else{
+			winner = "Right Player";
+		}
+	}
+}
+
 function upStop()
 {
 	stop = true;
@@ -269,6 +294,13 @@ function upStop()
 
 	if (uprenderer)
 		uprenderer.dispose();
+
+	const upWinner = document.getElementById('labelWinner');
+	$("#endModal").modal('show');
+	if(upWinner){
+		findWinner();
+		upWinner.textContent = winner + " won!";
+	}
 
 	//TODO: remove
 	console.log("Player 1 Distance: ", distanceTravelled1);
