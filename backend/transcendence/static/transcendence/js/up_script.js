@@ -5,7 +5,7 @@ let requestId; // to stop loop
 //time vars
 let uponline;
 let upcountdown;
-let stop;
+let stop = true;
 let startTime;
 let count; // timer for the countdown at the start (starting at 3)
 let second; // timer for current round (starting at 60)
@@ -88,7 +88,6 @@ function setGlobals()
 		new THREE.BoxGeometry(1, 1, 5),
 		new THREE.BoxGeometry(0.5, 1, 5)];
 
-	stop = false;
 	players = []; // players
 	objects = []; // platforms for p1
 	objectsp2 = []; // platforms for p2
@@ -302,6 +301,8 @@ function findWinner()
 
 function upStop()
 {
+	if (stop == true)
+		return ;
 	stop = true;
 	document.removeEventListener('keydown', onKeyDown);
 	document.removeEventListener('keyup', onKeyUp);
