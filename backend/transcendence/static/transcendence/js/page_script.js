@@ -66,7 +66,6 @@ const pages = {
 				</a>
 			</div>
 		</div>
-        <div id="pongGameTime" class="display-6"></div>
 		<div id="customs" class="my-5">
 			<div class=" align-items-center row">
 				<div class="col-4 "><label class="form-label my-0 text-white h5">Ball Color</label></div>
@@ -95,7 +94,7 @@ const pages = {
 <div class="modal fade" id="winModal" tabindex="-1" role="dialog" aria-labelledby="winModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 <div class="modal-dialog modal-dialog-centered " role="document">
 	<div class="modal-content dark-color-bg text-white">
-		w<div class="modal-body p-5">
+		<div class="modal-body p-5">
 			<p class="tp-4 p-5 text-center text-white h1" id="winner"></p>
 			<button type="button" class="btn btn-color text-white d-block m-auto w-75 py-3" onclick="window.location.reload()">Play again</button>
 			<button type="button" data-dismiss="modal" aria-label="Close" class="close btn btn-color text-white d-block m-auto w-75 py-3 mt-3" onclick="navigateTo('game_choice')">Menu</button>

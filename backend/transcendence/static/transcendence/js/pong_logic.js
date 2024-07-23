@@ -1,5 +1,3 @@
-let pongCount;
-let pongSecond;
 
 function update(){
 	if(game_stop)
@@ -322,41 +320,10 @@ function restartGame()
 
 
 
-function pongCountdown()
-{
-	requestId = undefined;
-	if (!requestId)
-	{
-		requestId = requestAnimationFrame(countdown);
-	}
-	if (pongCount < 1)
-	{
-		cancelAnimationFrame(requestId);
-		return;
-	}
-
-	let currentTime = performance.now();
-	let showTime = Math.floor((currentTime - startTime) / 1000);
-	
-	if (showTime != pongSecond)
-	{
-		console.log(pongCount);
-		pongCount -= 1;
-		pongSecond = showTime;
-	}
-	const onscreenTimer = document.getElementById("pongGameTime");
-	onscreenTimer.textContent = pongCount;
-}
-
-
 function startOnlineMatch(data){
 	console.log("starting online match");
 	document.getElementById("play-link").style.visibility = 'hidden';
-	
-	pongSecond = 0;
-	pongCount = 3;
-	startTime = performance.now();
-	pongCountdown();
+
 
 	//delete the presentation ball
 	balls[0].cleanup();
