@@ -1,5 +1,3 @@
-const COTOYE = 50;
-
 //html stuff
 let upcanvas;
 let requestId; // to stop loop
@@ -8,8 +6,9 @@ let requestId; // to stop loop
 let uponline = false;
 let upcountdown;
 let stop;
-let lastTime;
 let startTime;
+let count; // timer for the countdown at the start (starting at 3)
+let second; // timer for current round (starting at 60)
 
 //scene
 let upscene;
@@ -23,7 +22,6 @@ let winner;
 // in-game on-screen info
 let distanceTravelled1 = 0;
 let distanceTravelled2 = 0;
-let second; // timer for current round
 
 // player and player variables
 let players = [];
@@ -79,6 +77,7 @@ function setGlobals()
 		new THREE.BoxGeometry(1, 1, 5),
 		new THREE.BoxGeometry(0.5, 1, 5)];
 
+	stop = false;
 	players = []; // players
 	objects = []; // platforms for p1
 	objectsp2 = []; // platforms for p2
@@ -88,8 +87,15 @@ function setGlobals()
 	distanceTravelled2 = 0;
 	jumpCount1 = 0; //stat
 	jumpCount2 = 0;
+	count = 3;
 	let currentSide = undefined;
 
+	updateOnScreen();
+	if (uponline)
+	{
+		const onscreenTimer = document.getElementById("gameTime");
+		onscreenTimer.textContent = count;
+	}
 }
 
 function prepareUpGame()
@@ -131,28 +137,14 @@ function prepareUpGame()
 	light1.position.set( 0, 14, 5 );
 	upscene.add(light1);
 	
-	
 	//light for player 2
 	light2 = new THREE.PointLight(0x404040, 10, 50);
 	light2.position.set( 30, 14, 5 );
 	upscene.add(light2);
-	
-	generateLevel();
 
-	stop = false;
-	// requestId = undefined;
-	lastTime = performance.now();
-	startTime = lastTime;
-	document.addEventListener('keydown', onKeyDown, false);
-	document.addEventListener('keyup', onKeyUp, false);
-	updateUpGame();
-}
-
-function generateLevel()
-{
 	// generate starting platforms
-	let geometry = new THREE.BoxGeometry(15, 1, 5);
-	let material = new THREE.MeshStandardMaterial( { color: 0x7377ff } );
+	geometry = new THREE.BoxGeometry(15, 1, 5);
+	material = new THREE.MeshStandardMaterial( { color: 0x7377ff } );
 	let startPlat = new UpObject(geometry, material);
 	let startPlat2 = new UpObject(geometry, material);
 	startPlat.position.set(0, -1, 0);
@@ -161,9 +153,51 @@ function generateLevel()
 	startPlat2.render(upscene);
 	objects.push(startPlat);
 	objectsp2.push(startPlat2);
+	
+	generateLevel();
+	renderUp();
+	startTime = performance.now();
+	countdown();
+}
 
+function countdown()
+{
+	requestId = undefined;
+	if (!requestId)
+	{
+		requestId = requestAnimationFrame(countdown);
+	}
+	if (count < 1)
+	{
+		console.log("countdown over");
+		cancelAnimationFrame(requestId);
+		second = 0;
+		startTime = performance.now();
+		document.addEventListener('keydown', onKeyDown, false);
+		document.addEventListener('keyup', onKeyUp, false);
+		updateUpGame();
+		return;
+	}
+
+	let currentTime = performance.now();
+	let showTime = Math.floor((currentTime - startTime) / 1000);
+	
+	if (showTime != second)
+	{
+		console.log(count);
+		count -= 1;
+		second = showTime;
+	}
+	const onscreenTimer = document.getElementById("gameTime");
+	onscreenTimer.textContent = count;
+}
+
+function generateLevel()
+{
 	let platform;
-	let y = startPlat.position.y + 6;
+	let material = new THREE.MeshStandardMaterial( { color: 0x7377ff } );
+	let y = 5;
+
 	for (let i = 0; i < 100; i++)
 	{
 		if (y < 50)
@@ -203,21 +237,6 @@ function generateLevel()
 		objectsp2[i].setHitbox();
 		upscene.add(objectsp2[i]);
 	}
-}
-
-function countdown()
-{
-	// if (!requestId)
-	// {
-	// 	startTime = performance.now();
-	// 	let countdown = 0;
-	// 	let count = 3;
-
-	// 	requestId = requestAnimationFrame(countdown());
-	// }
-
-	// lastTime = performance.now();
-	// startTime = lastTime;
 }
 
 function GetRandomInt(min, max)
@@ -318,4 +337,8 @@ function upStop()
 		findWinner();
 		upWinner.textContent = winner + " won!";
 	}
+
+	//TODO: remove
+	console.log("Player 1 Distance: ", distanceTravelled1);
+	console.log("Player 2 Distance: ", distanceTravelled2);
 }
