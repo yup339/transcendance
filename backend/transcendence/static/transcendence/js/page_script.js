@@ -95,7 +95,7 @@ const pages = {
 <div class="modal fade" id="winModal" tabindex="-1" role="dialog" aria-labelledby="winModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 <div class="modal-dialog modal-dialog-centered " role="document">
 	<div class="modal-content dark-color-bg text-white">
-		<div class="modal-body p-5">
+		w<div class="modal-body p-5">
 			<p class="tp-4 p-5 text-center text-white h1" id="winner"></p>
 			<button type="button" class="btn btn-color text-white d-block m-auto w-75 py-3" onclick="window.location.reload()">Play again</button>
 			<button type="button" data-dismiss="modal" aria-label="Close" class="close btn btn-color text-white d-block m-auto w-75 py-3 mt-3" onclick="navigateTo('game_choice')">Menu</button>
@@ -107,9 +107,9 @@ const pages = {
 <div class="w-100 extra-top-padding container mt-5">
 <canvas id="UpCanvas" width="1920" height="1080" class="m-auto d-block w-100 h-100"></canvas>
 <div class="d-flex justify-content-between">
-    <div id="scorePlayer1" class="text-white display-4">Player 1 Score: 0</div>
-    <div id="gameTime" class="text-white display-5">Time: 00:00</div>
-	<div id="scorePlayer2" class="text-white display-4">Player 2 Score: 0</div>
+    <div id="scorePlayer1" class="text-white display-4"></div>
+    <div id="gameTime" class="text-white display-5"></div>
+	<div id="scorePlayer2" class="text-white display-4"></div>
     </div>
 
 <div class="modal fade" id="endModal" tabindex="-1" role="dialog" aria-labelledby="endModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
