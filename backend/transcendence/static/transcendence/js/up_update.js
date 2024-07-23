@@ -176,6 +176,9 @@ function updateUpGame()
 
 	if (stop)
 	{
+		//reupdate counter so it reaches 0
+		const onscreenTimer = document.getElementById("gameTime");
+		onscreenTimer.textContent = 0;
 		upStop();
 		return ;
 	}

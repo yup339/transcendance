@@ -339,6 +339,7 @@ function upStop()
 	if (uprenderer)
 		uprenderer.dispose();
 
+	//Determines winner and sends endscreen notification
 	const upWinner = document.getElementById('labelWinner');
 	$("#endModal").modal('show');
 	if(upWinner){
