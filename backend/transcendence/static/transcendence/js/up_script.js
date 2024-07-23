@@ -90,6 +90,14 @@ function setGlobals()
 	count = 3;
 	let currentSide = undefined;
 
+	//Setting names
+	const name1 = document.getElementById("namePlayer1");
+	name1.textContent = "Player 1";
+	name1.style.color = 'lightgreen';
+	const name2 = document.getElementById("namePlayer2");
+	name2.textContent = "Player 2";
+	name2.style.color = 'lightpink';
+	
 	updateOnScreen();
 	if (uponline)
 	{
