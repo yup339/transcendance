@@ -168,11 +168,7 @@ function updateUpGame()
 	
 	if (second >= 60)
 	{
-		stop = true;
 		console.log("Game Over");
-	}
-	if (stop)
-	{
 		upStop();
 		return ;
 	}
