@@ -127,21 +127,11 @@ class Ball {
 
 			//this.velocityY *= -1;
 		if (this.HitBox.doesCollide(leftGoal, magnitude)){
-				score("right");
-				this.vec.x *= -1;
-				this.reset(1);
-
-			if (this.online && socket.side === 'left'){
-				socket.sendInfo(JSON.stringify({"type" : "scorePoint", "group" : socket.group, "side" : "right"}));
-				socket.sendInfo(this.serialize());}
+			this.rightScore();
 			return;
+
 		} else if (this.HitBox.doesCollide(rightGoal, magnitude)){
-				score("left");
-				this.vec.x *= -1;
-				this.reset(-1);
-			if (this.online && socket.side == 'right'){
-				socket.sendInfo(JSON.stringify({"type" : "scorePoint", "group" : socket.group, "side" : "left"}));
-				socket.sendInfo(this.serialize());}
+			this.leftScore();
 			return;
 		}
 			
@@ -153,6 +143,30 @@ class Ball {
 		this.HitBox.setPosition(this.x, this.y);
 		this.light.position.set( this.x, this.y, 0);
 		this.sphereMesh.position.set(this.x,this.y, 0);
+	}
+
+	leftScore(){
+		if (!this.online || socket.side == 'right')
+			score("left");
+		this.vec.x *= -1;
+		this.reset(-1);
+
+		if (this.online && socket.side == 'right'){
+			socket.sendInfo(JSON.stringify({"type" : "scorePoint", "group" : socket.group, "side" : "left"}));
+			socket.sendInfo(this.serialize());
+		}
+	}
+
+	rightScore(){
+		if (!this.online || socket.side == 'left')
+			score("right");
+		this.vec.x *= -1;
+		this.reset(1);
+
+		if (this.online && socket.side === 'left'){
+			socket.sendInfo(JSON.stringify({"type" : "scorePoint", "group" : socket.group, "side" : "right"}));
+			socket.sendInfo(this.serialize());
+		}
 	}
 
 	deserialize(data) {

@@ -121,6 +121,7 @@ class PongConsumer(AsyncWebsocketConsumer):
         await self.accept()
         self.side = 'no side yet'
         pong_queue.append(self)
+        self.score = 0
         print("connection to the pong server")
         #queue_lock.acquire()
         if len(pong_queue) >= 2:
@@ -135,17 +136,35 @@ class PongConsumer(AsyncWebsocketConsumer):
             print ("removing self from queue")
             pong_queue.remove(self)
         if hasattr(self, 'match_group_name'):
+            await self.channel_layer.group_send(
+                self.match_group_name,
+                {
+                    'type': 'leaver',
+                    'side':  self.side
+                }
+            )
+            print ("removing self from active match")
             players = active_matches.get(self.match_group_name, [])
             if self in players:
                 players.remove(self)
                 if not players:
                     del active_matches[self.match_group_name]
+
+
                 await self.channel_layer.group_discard(
                     self.match_group_name,
                     self.channel_name
                 )
                 print(f"Player disconnected: {self.channel_name}")
         print(pong_queue)
+
+    async def leaver(self, data):
+        if (data['side'] != self.side): 
+            await self.send(text_data=json.dumps({
+                    'type': 'leaver',
+                }
+            ))
+
 
     async def receive(self, text_data):
         try:
@@ -186,7 +205,6 @@ class PongConsumer(AsyncWebsocketConsumer):
                     'scoringSide': data['side']
                 }
             )
-
             else : 
                 print("unknown datatype")
                 
@@ -197,7 +215,9 @@ class PongConsumer(AsyncWebsocketConsumer):
             print(f"KeyError: Missing key {str(e)} in received data.")
 
     async def scorePoint(self, data):
-        if (data['side'] != self.side): 
+        if (data['side'] != self.side):
+            self.score += 1
+            print("score for {} is {}".format(self.side, self.score))
             await self.send(text_data=json.dumps({
                     'type': 'SCCCCOOOORRRREEEEE',
                     'side': data['scoringSide']

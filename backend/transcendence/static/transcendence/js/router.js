@@ -114,7 +114,6 @@ class GameSocket{
     }
 
     disconnect() {
-        console.log("disconnect pong socket");
         if (this.socket.readyState === WebSocket.OPEN) {
             this.socket.close();
         }
@@ -152,9 +151,14 @@ class GameSocket{
                     break;
                 case 'matchFound':
                     this.side = data.side;
+                    gameIsOver = false;
                     console.log(this.side);
                     this.group = data.group
                     startOnlineMatch(data);
+                break;
+                case 'leaver':
+                    console.log("bozo left")
+                    pongLeaver();
                 break;
             }
         }
@@ -189,7 +193,6 @@ class UpSocket{
     }
 
     disconnect() {
-        console.log("disconnect up socket");
         if (this.socket.readyState === WebSocket.OPEN) {
             this.socket.close();
         }
