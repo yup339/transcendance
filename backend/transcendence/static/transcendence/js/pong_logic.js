@@ -96,7 +96,7 @@ function PongGame()
 		prepare_tournament();
 	}
 	else if(game_mode == 'pong_online'){
-		if (!user.logged_in)
+		if (!user.loggedIn)
 			{
 				alert("You need to be logged in to play online");
 				navigateTo('login');
