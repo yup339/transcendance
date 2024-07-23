@@ -106,12 +106,19 @@ const pages = {
 'up': `
 <div class="w-100 extra-top-padding container mt-5">
 <canvas id="UpCanvas" width="1920" height="1080" class="m-auto d-block w-100 h-100"></canvas>
-<div class="d-flex justify-content-between">
-    <div id="scorePlayer1" class="text-white display-6"></div>
-    <div id="gameTime" class="text-white display-6"></div>
-	<div id="scorePlayer2" class="text-white display-6"></div>
+ <div class="d-flex justify-content-between text-center w-200">
+        <div class="text-white fixed-width player-container">
+            <div id="namePlayer1" class="display-6"></div>
+            <div id="scorePlayer1" class="display-6"></div>
+        </div>
+        <div class="fixed-width player-container">
+            <div id="gameTime" class="display-6"></div>
+        </div>
+        <div class="text-white fixed-width player-container">
+            <div id="namePlayer2" class="display-6"></div>
+            <div id="scorePlayer2" class="display-6"></div>
+        </div>
     </div>
-
 <div class="modal fade" id="endModal" tabindex="-1" role="dialog" aria-labelledby="endModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 <div class="modal-dialog modal-dialog-centered " role="document">
 	<div class="modal-content dark-color-bg text-white">
@@ -122,8 +129,23 @@ const pages = {
 		</div>
 	</div>
 </div>
-
-</div>`,
+</div>
+ <style>
+        .fixed-width {
+            width: 100px;
+        }
+        .player-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+            text-align: center;
+        }
+    </style>`
+,
 'signup':`
 <div class="container extra-top-padding mt-5">
 <form>

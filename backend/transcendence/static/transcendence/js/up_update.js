@@ -194,12 +194,24 @@ function updateOnScreen()
 {
 	const onscreenTimer = document.getElementById("gameTime");
 	onscreenTimer.textContent = upcountdown;
-
+	if(count > 0){
+		onscreenTimer.style.color = 'teal';
+	}
+	else{
+		if(upcountdown > 30)
+			onscreenTimer.style.color = '#00FF1A';
+		else if(upcountdown > 10)
+			onscreenTimer.style.color = 'yellow';
+		else
+			onscreenTimer.style.color = 'red';
+	}
+	
+	//Setting scores
 	const score1 = document.getElementById("scorePlayer1");
-	score1.textContent = "Player 1: " + distanceTravelled1;
+	score1.textContent = distanceTravelled1;
 
 	const score2 = document.getElementById("scorePlayer2");
-	score2.textContent = "Player 2: " + distanceTravelled2;
+	score2.textContent = distanceTravelled2;
 }
 
 function printPerSecond() // handles time events in the update loop
