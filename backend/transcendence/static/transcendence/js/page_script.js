@@ -95,7 +95,7 @@ const pages = {
 <div class="modal fade" id="winModal" tabindex="-1" role="dialog" aria-labelledby="winModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 <div class="modal-dialog modal-dialog-centered " role="document">
 	<div class="modal-content dark-color-bg text-white">
-		<div class="modal-body p-5">
+		w<div class="modal-body p-5">
 			<p class="tp-4 p-5 text-center text-white h1" id="winner"></p>
 			<button type="button" class="btn btn-color text-white d-block m-auto w-75 py-3" onclick="window.location.reload()">Play again</button>
 			<button type="button" data-dismiss="modal" aria-label="Close" class="close btn btn-color text-white d-block m-auto w-75 py-3 mt-3" onclick="navigateTo('game_choice')">Menu</button>
@@ -104,12 +104,48 @@ const pages = {
 </div>
 </div>`,
 'up': `
-	<div class="w-100 extra-top-padding container mt-5">
-	<canvas id="UpCanvas" width="1920" height="1080" class="m-auto d-block w-100 h-100"></canvas>
+<div class="w-100 extra-top-padding container mt-5">
+<canvas id="UpCanvas" width="1920" height="1080" class="m-auto d-block w-100 h-100"></canvas>
+ <div class="d-flex justify-content-between text-center w-200">
+        <div class="text-white fixed-width player-container">
+            <div id="namePlayer1" class="display-6"></div>
+            <div id="scorePlayer1" class="display-6"></div>
+        </div>
+        <div class="fixed-width player-container">
+            <div id="gameTime" class="display-6"></div>
+        </div>
+        <div class="text-white fixed-width player-container">
+            <div id="namePlayer2" class="display-6"></div>
+            <div id="scorePlayer2" class="display-6"></div>
+        </div>
+    </div>
+<div class="modal fade" id="endModal" tabindex="-1" role="dialog" aria-labelledby="endModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal-dialog modal-dialog-centered " role="document">
+	<div class="modal-content dark-color-bg text-white">
+		<div class="modal-body p-5">
+			<p class="tp-4 p-5 text-center text-white h1" id="labelWinner"></p>
+			<button type="button" class="btn btn-color text-white d-block m-auto w-75 py-3" onclick="window.location.reload()">Play again</button>
+			<button type="button" data-dismiss="modal" aria-label="Close" class="close btn btn-color text-white d-block m-auto w-75 py-3 mt-3" onclick="navigateTo('game_choice')">Menu</button>
+		</div>
 	</div>
-	<div id="score">
-
-	</div>`,
+</div>
+</div>
+ <style>
+        .fixed-width {
+            width: 100px;
+        }
+        .player-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+            text-align: center;
+        }
+    </style>`
+,
 'signup':`
 <div class="container extra-top-padding mt-5">
 <form id="myForm">
@@ -226,7 +262,59 @@ const pages = {
 				</div>
 			</div>
 		</div>
-</div>`
+</div>`,
+'loading_page':`<div class="loading-container d-flex flex-column justify-content-center align-items-center">
+    <div class="spinner-border text-white mb-3" role="status">
+    </div>
+    <div class="loading-text text-white">Loading Game...</div>
+</div>
+<style>
+    .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #343a40;
+        }
+    .spinner-border {
+    width: 5rem;
+    height: 5rem;
+    border: 0.5rem solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite, changeColor 1.5s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes changeColor {
+    0% {
+        border-top-color: blue;
+    }
+    25% {
+        border-top-color: green;
+    }
+    50% {
+        border-top-color: red;
+    }
+    75% {
+        border-top-color: yellow;
+    }
+    100% {
+        border-top-color: purple;
+    }
+}
+    .loading-text {
+        font-size: 1.5rem;
+    }
+</style>`
 
 }
 
@@ -235,7 +323,10 @@ const page404 = ` <div class="fullscreen"><h1 class="big-text text-white text-ce
 
 window.addEventListener('popstate', function (event) {
     const pageName = event.state;
-	
+    
+    if (socket)
+        socket.disconnect();
+
 	if ($('#winModal').hasClass('show')) 
 	{ 
 		$('#winModal').modal('hide');
@@ -347,7 +438,8 @@ function displayPage(pageName)
 
 function navigateTo(pageName)
 {
-
+    if (socket)
+        socket.disconnect();
     if (history.state !== pageName) 
         history.pushState(pageName, null, pageName);
     

@@ -13,6 +13,7 @@ var ballSlider;
 var ballSliderOutput;
 var speedSlider;
 var speedOutput;
+let gameIsOver = true;
 
 //scene
 let scene;
@@ -329,3 +330,5 @@ function set_round()
 		rightPlayer = r2_loser;
 	}
 }
+
+

@@ -22,12 +22,6 @@ function keysEvent(elapsedTime)
 		jumpCount1 += 1;
 	}
 
-	//TODO: REMOVE
-	if (keys[32]) // space
-	{
-		players[0].position.y = 250
-	}
-
 	// player 2 movement
 	if (keys[37]) // left
 	{
@@ -100,17 +94,6 @@ function updateStats()
 		distanceTravelled2 = Math.floor(players[1].position.y);
 }
 
-function updateStatsOnline(side)
-{
-	if (side == 'left')
-		i = 0;
-	else
-		i = 1;
-
-	if (players[i].position.y > distanceTravelled1)
-		distanceTravelled1 = Math.floor(players[i].position.y);
-}
-
 function jumpLogic(elapsedTime)
 {
 	// jump logic
@@ -134,10 +117,8 @@ function jumpLogic(elapsedTime)
 				players[i].jumpSet = true;
 			}
 			players[i].nextPos.y += players[i].jumpSpeed * elapsedTime;
-			
 			if (players[i].jumpSpeed > -50)
 				players[i].jumpSpeed -= 1;
-	
 		}
 		else
 		{
@@ -184,16 +165,19 @@ function updateUpGame()
 	if (!requestId)
 		requestId = requestAnimationFrame(updateUpGame);
 	printPerSecond();
-	if (stop)
-	{
-		upStop();
-		return ;
-	}
-
+	
 	if (second >= 60)
 	{
 		stop = true;
 		console.log("Game Over");
+	}
+	if (stop)
+	{
+		//reupdate counter so it reaches 0
+		const onscreenTimer = document.getElementById("gameTime");
+		onscreenTimer.textContent = 0;
+		upStop();
+		return ;
 	}
 	
 	// delta time
@@ -201,9 +185,33 @@ function updateUpGame()
 	// lastTime = performance.now();
 	elapsedTime = 1/60.0;
 
-	if (!uponline)
-		keysEvent(elapsedTime);
+	keysEvent(elapsedTime);
 	renderUp();
+	updateOnScreen();
+}
+
+function updateOnScreen()
+{
+	const onscreenTimer = document.getElementById("gameTime");
+	onscreenTimer.textContent = upcountdown;
+	if(count > 0){
+		onscreenTimer.style.color = 'teal';
+	}
+	else{
+		if(upcountdown > 30)
+			onscreenTimer.style.color = '#00FF1A';
+		else if(upcountdown > 10)
+			onscreenTimer.style.color = 'yellow';
+		else
+			onscreenTimer.style.color = 'red';
+	}
+	
+	//Setting scores
+	const score1 = document.getElementById("scorePlayer1");
+	score1.textContent = distanceTravelled1;
+
+	const score2 = document.getElementById("scorePlayer2");
+	score2.textContent = distanceTravelled2;
 }
 
 function printPerSecond() // handles time events in the update loop
@@ -216,8 +224,11 @@ function printPerSecond() // handles time events in the update loop
 	if (showTime != second)
 	{
 		upcountdown -= 1;
-		console.log(Math.floor(upcountdown))
-		console.log(showTime);
 		second = showTime;
 	}
+}
+
+function upLeaver()
+{
+
 }

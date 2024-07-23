@@ -1,4 +1,12 @@
 //for user
+
+window.addEventListener('beforeunload', function (event) {
+    if (socket)
+        socket.disconnect();
+    // You can add custom message or actions if needed
+});
+
+
 class UserSocket{
 
     loggedIn = false;
@@ -118,6 +126,12 @@ class GameSocket{
         }
     }
 
+    disconnect() {
+        if (this.socket.readyState === WebSocket.OPEN) {
+            this.socket.close();
+        }
+    }
+
     handleOpen(event) {
         console.log('WebSocket connection opened.');
     }
@@ -144,10 +158,28 @@ class GameSocket{
                 case 'disconect':
                     console.log("disconect TODO");
                     break;
+                case 'SCCCCOOOORRRREEEEE':
+                    score(data.side);
+                    balls[0].reset(-1);
+                    let resetSide = 1;
+                    if (data.side == 'left')
+                        resetSide = -1
+                    if (data.side == this.side){
+                        balls[0].vec.x *= -1;
+                        balls[0].reset(resetSide);
+                        socket.sendInfo(balls[0].serialize());
+                    }
+                    break;
                 case 'matchFound':
                     this.side = data.side;
+                    gameIsOver = false;
+                    console.log(this.side);
                     this.group = data.group
                     startOnlineMatch(data);
+                break;
+                case 'leaver':
+                    console.log("bozo left")
+                    pongLeaver();
                 break;
             }
         }
@@ -155,6 +187,7 @@ class GameSocket{
     }
 
     updateBallPos(data){
+        console.log("got an update of ball")
         balls[0].deserialize(data);
     }
 
@@ -180,6 +213,13 @@ class UpSocket{
             console.error('WebSocket connection error:', error);
         }
     }
+
+    disconnect() {
+        if (this.socket.readyState === WebSocket.OPEN) {
+            this.socket.close();
+        }
+    }
+
     handleOpen(event) {
         console.log('WebSocket connection opened.');
     }
@@ -201,7 +241,6 @@ class UpSocket{
             switch (data.type){
                 case 'matchFound':
                     this.side = data.side;
-                    console.log(this.side);
                     startUpOnline(data);
                     break;
                 case 'platformSetUp':

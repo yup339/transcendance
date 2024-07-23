@@ -1,28 +1,27 @@
-const COTOYE = 50;
-
 //html stuff
 let upcanvas;
 let requestId; // to stop loop
 
 //time vars
-let uponline = false;
+let uponline;
 let upcountdown;
 let stop;
-let lastTime;
 let startTime;
+let count; // timer for the countdown at the start (starting at 3)
+let second; // timer for current round (starting at 60)
 
 //scene
 let upscene;
 let uprenderer;
 
 // game stats for after
-let jumpCount1 = 0;
-let jumpCount2 = 0;
+let jumpCount1;
+let jumpCount2;
+let winner;
 
 // in-game on-screen info
-let distanceTravelled1 = 0;
-let distanceTravelled2 = 0;
-let second; // timer for current round
+let distanceTravelled1;
+let distanceTravelled2;
 
 // player and player variables
 let players = [];
@@ -68,6 +67,17 @@ function onKeyUp(event)
 	keys[event.keyCode] = false;
 }
 
+function onVisibilityChange()
+{
+	if (document.visibilityState == "visible") {
+		alert("you left the page game has been stopped")
+	} else {
+		navigateTo('game_choice');
+		if(uponline && socket)
+			socket.disconnect();
+	}
+}
+
 function setGlobals()
 {
 	platformsGeo = [
@@ -78,6 +88,7 @@ function setGlobals()
 		new THREE.BoxGeometry(1, 1, 5),
 		new THREE.BoxGeometry(0.5, 1, 5)];
 
+	stop = false;
 	players = []; // players
 	objects = []; // platforms for p1
 	objectsp2 = []; // platforms for p2
@@ -87,14 +98,26 @@ function setGlobals()
 	distanceTravelled2 = 0;
 	jumpCount1 = 0; //stat
 	jumpCount2 = 0;
+	count = 3;
 	let currentSide = undefined;
-
+	document.addEventListener("visibilitychange", onVisibilityChange);
+	
+	//Setting names
+	const name1 = document.getElementById("namePlayer1");
+	name1.textContent = "Player 1";
+	name1.style.color = 'lightgreen';
+	const name2 = document.getElementById("namePlayer2");
+	name2.textContent = "Player 2";
+	name2.style.color = 'lightpink';
+	
+	updateOnScreen();
+	const onscreenTimer = document.getElementById("gameTime");
+	onscreenTimer.textContent = count;
 }
 
 function prepareUpGame()
 {
 	upcanvas = document.getElementById('UpCanvas');
-	uponline = false;
 	// set up cameras
 	for (let i = 0; i < views.length; ++i)
 	{
@@ -130,28 +153,14 @@ function prepareUpGame()
 	light1.position.set( 0, 14, 5 );
 	upscene.add(light1);
 	
-	
 	//light for player 2
 	light2 = new THREE.PointLight(0x404040, 10, 50);
 	light2.position.set( 30, 14, 5 );
 	upscene.add(light2);
-	
-	generateLevel();
 
-	stop = false;
-	// requestId = undefined;
-	lastTime = performance.now();
-	startTime = lastTime;
-	document.addEventListener('keydown', onKeyDown, false);
-	document.addEventListener('keyup', onKeyUp, false);
-	updateUpGame();
-}
-
-function generateLevel()
-{
 	// generate starting platforms
-	let geometry = new THREE.BoxGeometry(15, 1, 5);
-	let material = new THREE.MeshStandardMaterial( { color: 0x7377ff } );
+	geometry = new THREE.BoxGeometry(15, 1, 5);
+	material = new THREE.MeshStandardMaterial( { color: 0x7377ff } );
 	let startPlat = new UpObject(geometry, material);
 	let startPlat2 = new UpObject(geometry, material);
 	startPlat.position.set(0, -1, 0);
@@ -160,9 +169,51 @@ function generateLevel()
 	startPlat2.render(upscene);
 	objects.push(startPlat);
 	objectsp2.push(startPlat2);
+	
+	generateLevel();
+	renderUp();
+	startTime = performance.now();
+	document.addEventListener('keydown', onKeyDown, false);
+	document.addEventListener('keyup', onKeyUp, false);
+	countdown();
+}
 
+function countdown()
+{
+	requestId = undefined;
+	if (!requestId)
+	{
+		requestId = requestAnimationFrame(countdown);
+	}
+	if (count < 1)
+	{
+		console.log("countdown over");
+		cancelAnimationFrame(requestId);
+		second = 0;
+		startTime = performance.now();
+		updateUpGame();
+		return;
+	}
+
+	let currentTime = performance.now();
+	let showTime = Math.floor((currentTime - startTime) / 1000);
+	
+	if (showTime != second)
+	{
+		console.log(count);
+		count -= 1;
+		second = showTime;
+	}
+	const onscreenTimer = document.getElementById("gameTime");
+	onscreenTimer.textContent = count;
+}
+
+function generateLevel()
+{
 	let platform;
-	let y = startPlat.position.y + 6;
+	let material = new THREE.MeshStandardMaterial( { color: 0x7377ff } );
+	let y = 5;
+
 	for (let i = 0; i < 100; i++)
 	{
 		if (y < 50)
@@ -204,21 +255,6 @@ function generateLevel()
 	}
 }
 
-function countdown()
-{
-	// if (!requestId)
-	// {
-	// 	startTime = performance.now();
-	// 	let countdown = 0;
-	// 	let count = 3;
-
-	// 	requestId = requestAnimationFrame(countdown());
-	// }
-
-	// lastTime = performance.now();
-	// startTime = lastTime;
-}
-
 function GetRandomInt(min, max)
 {
 	return Math.floor(Math.random() * (max - min + 1) + min);
@@ -231,16 +267,36 @@ function UpGame()
 	
 	if(game_mode == 'up_dual')
 	{
-		playerLeft = 'Left player';
-		playerRight = 'Right player';
 		prepareUpGame();
-
 	}
 	else if(game_mode == 'up_online')
 	{
-		playerLeft = 'You';
-		playerRight = 'Player 2';
+		uponline = true;
 		prepareOnline();
+	}
+}
+
+function findWinner()
+{
+	if(distanceTravelled1 == distanceTravelled2){
+		winner = "Both Players";
+	}
+	else if(distanceTravelled1 > distanceTravelled2){
+		if(game_mode == 'up_online'){
+			winner = players[0];
+		}
+		else{
+			winner = "Left Player";
+		}
+	
+	}
+	else{
+		if(game_mode == 'up_online'){
+			winner = players[1];
+		}
+		else{
+			winner = "Right Player";
+		}
 	}
 }
 
@@ -249,13 +305,27 @@ function upStop()
 	stop = true;
 	document.removeEventListener('keydown', onKeyDown);
 	document.removeEventListener('keyup', onKeyUp);
+	document.removeEventListener('visibilitychange', onVisibilityChange);
 	cancelAnimationFrame(requestId);
 	requestId = undefined;
 	
 	if (uponline)
 	{
 		// TODO: for online stats
+		if	(currentSide == 'left')
+		{
+			console.log("Jump count: ", jumpCount1);
+		}
+		else
+		{
+			console.log("Jump count: ", jumpCount2);
+		}
 		uponline = false;
+	}
+	else
+	{
+		console.log("Jump count: ", jumpCount1);
+		console.log("Jump count: ", jumpCount2);
 	}
 
 	for (let i = 0; i < objects.length; i++)
@@ -286,4 +356,12 @@ function upStop()
 
 	if (uprenderer)
 		uprenderer.dispose();
+
+	//Determines winner and sends endscreen notification
+	const upWinner = document.getElementById('labelWinner');
+	$("#endModal").modal('show');
+	if(upWinner){
+		findWinner();
+		upWinner.textContent = winner + " won!";
+	}
 }

@@ -1,9 +1,41 @@
 function gameReady()
 {
-    // document.addEventListener('keydown', onKeyDown, false);
-	// document.addEventListener('keyup', onKeyUp, false);
-    console.log("GAME READY");
-    // updateUpGame();
+    document.addEventListener('keydown', onKeyDown, false);
+	document.addEventListener('keyup', onKeyUp, false);
+	stop = false;
+	startTime = performance.now();
+    console.log("GAME READY FOR BOTH PLAYER");
+	countdownOnline();
+}
+
+function countdownOnline()
+{
+	requestId = undefined;
+	if (!requestId)
+	{
+		requestId = requestAnimationFrame(countdownOnline);
+	}
+	if (count < 1)
+	{
+		console.log("countdown over");
+		cancelAnimationFrame(requestId);
+		second = 0;
+		startTime = performance.now();
+		onlineUpdate(currentSide);
+		return;
+	}
+
+	let currentTime = performance.now();
+	let showTime = Math.floor((currentTime - startTime) / 1000);
+	
+	if (showTime != second)
+	{
+		console.log(count);
+		count -= 1;
+		second = showTime;
+	}
+	const onscreenTimer = document.getElementById("gameTime");
+	onscreenTimer.textContent = count;
 }
 
 function deserializePlatform(data)
@@ -52,28 +84,16 @@ function updatePosition(data)
 
 function startUpOnline(data) // separation of 2 players
 {
-	document.addEventListener('keydown', onKeyDown, false);
-	document.addEventListener('keyup', onKeyUp, false);
-	stop = false;
-	requestId = undefined;
-	lastTime = performance.now();
-	startTime = lastTime;
+	currentSide = data.side;
 	if (data.side == 'left')
 	{
+		console.log("Generating level...");
 		generateLevelOnline();
-		countdown();
-		onlineUpdate(data.side)
-	}
-	else
-	{
-		countdown();
-		onlineUpdate(data.side);
 	}
 }
 
 function prepareOnline()
 {
-	uponline = true;
 	upcanvas = document.getElementById('UpCanvas');
 	
 	// set up cameras
@@ -103,15 +123,13 @@ function prepareOnline()
 	players[1].position.set(30, 0.2, 0);
 	upscene.add(players[1]);
 	
-	//light
+	//lights
 	let geo = new THREE.SphereGeometry(1, 32, 16);
 	let mat = new THREE.MeshBasicMaterial({color: 0x404040});
 	light1 = new THREE.PointLight(0x404040, 10, 50);
 	light1.position.set( 0, 14, 5 );
 	upscene.add(light1);
 	
-	
-	//light for player 2
 	light2 = new THREE.PointLight(0x404040, 10, 50);
 	light2.position.set( 30, 14, 5 );
 	upscene.add(light2);
@@ -130,6 +148,15 @@ function prepareOnline()
 	startPlat.setHitbox();
 	startPlat2.setHitbox();
 
+
+	//Setting names //TODO: fix to change names for login
+	const name1 = document.getElementById("namePlayer1");
+	name1.textContent = "Name 1";
+	name1.style.color = 'lightgreen';
+	const name2 = document.getElementById("namePlayer2");
+	name2.textContent = "Name 2";
+	name2.style.color = 'lightpink';
+
 	renderUp();
 
 	socket = new UpSocket()
@@ -139,7 +166,7 @@ function generateLevelOnline()
 {
 	let platform;
 	let material = new THREE.MeshStandardMaterial( { color: 0x7377ff } );
-	let y = 5; //ok compliquer pour rien de faire des calcul qui sont toujours = a 5 donc ca vas etre ca ici vus que la platform de depart de toute facons est declarer dans une autre fonction pour le online si jamais tu as un problem avec ca deal with it ceci mets donc fin a ce long commentaire constructif
+	let y = 5; 
 	for (let i = 0; i < 100; i++)
 	{
 		if (y < 50)
@@ -193,16 +220,16 @@ function onlineUpdate(side)
 	if (!requestId)
 		requestId = requestAnimationFrame(onlineUpdate);
 	printPerSecond();
-	if (stop)
-	{
-		upStop();
-		return ;
-	}
-
+	
 	if (second >= 60)
 	{
 		stop = true;
 		console.log("Game Over");
+	}
+	if (stop)
+	{
+		upStop();
+		return ;
 	}
 
 	// delta time
@@ -212,6 +239,7 @@ function onlineUpdate(side)
 
 	playerController(currentSide, elapsedTime);
 	renderUp();
+	updateOnScreen();
 }
 
 function playerController(side, elapsedTime)
@@ -257,7 +285,7 @@ function playerController(side, elapsedTime)
 			players[1].isFalling = true;
 			players[1].isJumping = true;
 			players[1].jumpSet = false;
-			jumpCount1 += 1;
+			jumpCount2 += 1;
 		}
 	}
 
@@ -342,10 +370,18 @@ function checkCollisionOnline(side)
 		}
 	}
 
+	players[i].updatePos();
 	if (players[i].nextPos != new THREE.Vector3(0, 0, 0))
 	{
-		players[i].updatePos();
 		socket.sendInfo(players[i].serialize());
 	}
 	updateStatsOnline(side);
+}
+
+function updateStatsOnline(side)
+{
+	if (players[0].position.y > distanceTravelled1)
+		distanceTravelled1 = Math.floor(players[0].position.y);
+	if (players[1].position.y > distanceTravelled2)
+		distanceTravelled2 = Math.floor(players[1].position.y);
 }
