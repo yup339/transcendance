@@ -24,6 +24,12 @@ class UserSocket{
     }
     handleOpen(event) {
         console.log('WebSocket connection opened.');
+        if (this.loggedIn == false && localStorage.getItem('token') !== null)
+        {
+            console.log("Token found: " + localStorage.getItem('token'));
+            console.log("Attempting to log in with token");
+            this.sendInfo(JSON.stringify({type: 'token_login', token: localStorage.getItem('token')}));
+        }
     }
 
     // use with serialize object
@@ -61,8 +67,14 @@ class UserSocket{
     loginSuccess(data){
         this.loggedIn = true;
         try{
+            const navid = document.getElementById('navid');
             console.log("Successfully logged in " + data.username);
+            localStorage.setItem('token', data.token);
             navigateTo('game_choice');
+            navid.innerHTML = ` <a class="nav-item nav-link active clickable" onclick="navigateTo('stats')">Stats</a>
+                    <a class="nav-item nav-link active clickable" onclick="logout_user()")">Logout</a>`;
+            
+            
         }
         catch (error){
             console.error(error);
@@ -82,6 +94,7 @@ class UserSocket{
     loginError(data){
         try{
             console.log("Login error: " + data.message);
+            alert("Invalid username or password");
             navigateTo('login');
         }
         catch (error){
