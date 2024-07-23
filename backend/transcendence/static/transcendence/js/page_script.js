@@ -66,7 +66,7 @@ const pages = {
 				</a>
 			</div>
 		</div>
-
+        <div id="pongGameTime" class="display-6"></div>
 		<div id="customs" class="my-5">
 			<div class=" align-items-center row">
 				<div class="col-4 "><label class="form-label my-0 text-white h5">Ball Color</label></div>
