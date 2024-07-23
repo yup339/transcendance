@@ -5,15 +5,15 @@ function gameReady()
 	stop = false;
 	startTime = performance.now();
     console.log("GAME READY FOR BOTH PLAYER");
-	countdown();
+	countdownOnline();
 }
 
-function countdown()
+function countdownOnline()
 {
 	requestId = undefined;
 	if (!requestId)
 	{
-		requestId = requestAnimationFrame(countdown);
+		requestId = requestAnimationFrame(countdownOnline);
 	}
 	if (count < 1)
 	{
@@ -221,7 +221,7 @@ function onlineUpdate(side)
 		return ;
 	}
 
-	if (second >= 10)
+	if (second >= 60)
 	{
 		stop = true;
 		console.log("Game Over");
