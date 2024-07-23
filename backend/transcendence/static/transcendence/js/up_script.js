@@ -3,7 +3,7 @@ let upcanvas;
 let requestId; // to stop loop
 
 //time vars
-let uponline = false;
+let uponline;
 let upcountdown;
 let stop;
 let startTime;
@@ -15,13 +15,13 @@ let upscene;
 let uprenderer;
 
 // game stats for after
-let jumpCount1 = 0;
-let jumpCount2 = 0;
+let jumpCount1;
+let jumpCount2;
 let winner;
 
 // in-game on-screen info
-let distanceTravelled1 = 0;
-let distanceTravelled2 = 0;
+let distanceTravelled1;
+let distanceTravelled2;
 
 // player and player variables
 let players = [];
@@ -67,6 +67,17 @@ function onKeyUp(event)
 	keys[event.keyCode] = false;
 }
 
+function onVisibilityChange()
+{
+	if (document.visibilityState == "visible") {
+		alert("you left the page game has been stopped")
+	} else {
+		navigateTo('game_choice');
+		if(uponline && socket)
+			socket.disconnect();
+	}
+}
+
 function setGlobals()
 {
 	platformsGeo = [
@@ -90,18 +101,16 @@ function setGlobals()
 	count = 3;
 	let currentSide = undefined;
 
+	document.addEventListener("visibilitychange", onVisibilityChange);
+
 	updateOnScreen();
-	if (uponline)
-	{
-		const onscreenTimer = document.getElementById("gameTime");
-		onscreenTimer.textContent = count;
-	}
+	const onscreenTimer = document.getElementById("gameTime");
+	onscreenTimer.textContent = count;
 }
 
 function prepareUpGame()
 {
 	upcanvas = document.getElementById('UpCanvas');
-	uponline = false;
 	// set up cameras
 	for (let i = 0; i < views.length; ++i)
 	{
@@ -157,6 +166,8 @@ function prepareUpGame()
 	generateLevel();
 	renderUp();
 	startTime = performance.now();
+	document.addEventListener('keydown', onKeyDown, false);
+	document.addEventListener('keyup', onKeyUp, false);
 	countdown();
 }
 
@@ -173,8 +184,6 @@ function countdown()
 		cancelAnimationFrame(requestId);
 		second = 0;
 		startTime = performance.now();
-		document.addEventListener('keydown', onKeyDown, false);
-		document.addEventListener('keyup', onKeyUp, false);
 		updateUpGame();
 		return;
 	}
@@ -251,15 +260,11 @@ function UpGame()
 	
 	if(game_mode == 'up_dual')
 	{
-		playerLeft = 'Left player';
-		playerRight = 'Right player';
 		prepareUpGame();
-
 	}
 	else if(game_mode == 'up_online')
 	{
-		playerLeft = 'You';
-		playerRight = 'Player 2';
+		uponline = true;
 		prepareOnline();
 	}
 }
@@ -293,13 +298,27 @@ function upStop()
 	stop = true;
 	document.removeEventListener('keydown', onKeyDown);
 	document.removeEventListener('keyup', onKeyUp);
+	document.removeEventListener('visibilitychange', onVisibilityChange);
 	cancelAnimationFrame(requestId);
 	requestId = undefined;
 	
 	if (uponline)
 	{
 		// TODO: for online stats
+		if	(currentSide == 'left')
+		{
+			console.log("Jump count: ", jumpCount1);
+		}
+		else
+		{
+			console.log("Jump count: ", jumpCount2);
+		}
 		uponline = false;
+	}
+	else
+	{
+		console.log("Jump count: ", jumpCount1);
+		console.log("Jump count: ", jumpCount2);
 	}
 
 	for (let i = 0; i < objects.length; i++)
@@ -337,8 +356,4 @@ function upStop()
 		findWinner();
 		upWinner.textContent = winner + " won!";
 	}
-
-	//TODO: remove
-	console.log("Player 1 Distance: ", distanceTravelled1);
-	console.log("Player 2 Distance: ", distanceTravelled2);
 }

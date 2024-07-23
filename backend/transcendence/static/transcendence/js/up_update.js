@@ -117,10 +117,8 @@ function jumpLogic(elapsedTime)
 				players[i].jumpSet = true;
 			}
 			players[i].nextPos.y += players[i].jumpSpeed * elapsedTime;
-			
 			if (players[i].jumpSpeed > -50)
 				players[i].jumpSpeed -= 1;
-	
 		}
 		else
 		{
@@ -173,7 +171,6 @@ function updateUpGame()
 		stop = true;
 		console.log("Game Over");
 	}
-
 	if (stop)
 	{
 		upStop();
@@ -214,4 +211,9 @@ function printPerSecond() // handles time events in the update loop
 		upcountdown -= 1;
 		second = showTime;
 	}
+}
+
+function upLeaver()
+{
+
 }

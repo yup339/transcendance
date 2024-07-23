@@ -293,9 +293,9 @@ function restartGame()
 	leftPaddle = new Paddle(-GAME_WIDTH + PADDLE_DISTANCE_FROM_GOAL , 0, randomColor());
 	rightPaddle = new Paddle(GAME_WIDTH - PADDLE_DISTANCE_FROM_GOAL, 0, randomColor());
 
-	balls.push(new Ball(0,0,BALL_SPEED, randomValue(), ball_color))
-	setBall(extra_ball_number);
 	update();
+	setBall(extra_ball_number);
+	balls.push(new Ball(0,0,BALL_SPEED, randomValue(), ball_color))
 }
 
 function startOnlineMatch(data){
