@@ -223,3 +223,8 @@ function printPerSecond() // handles time events in the update loop
 		second = showTime;
 	}
 }
+
+function upLeaver()
+{
+
+}
