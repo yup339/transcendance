@@ -166,7 +166,7 @@ function updateUpGame()
 		requestId = requestAnimationFrame(updateUpGame);
 	printPerSecond();
 	
-	if (second >= 10)
+	if (second >= 60)
 	{
 		console.log("Game Over");
 		//reupdate counter so it reaches 0

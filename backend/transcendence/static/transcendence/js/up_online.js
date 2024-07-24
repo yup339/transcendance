@@ -240,7 +240,7 @@ function onlineUpdate(side)
 		requestId = requestAnimationFrame(onlineUpdate);
 	printPerSecond();
 	
-	if (second >= 10)
+	if (second >= 60)
 	{
 		console.log("Game Over");
 		gameIsOver = true;

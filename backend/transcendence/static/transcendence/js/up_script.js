@@ -345,42 +345,42 @@ function upStop()
 	{
 		uponline = false;
 	}
-
+	
 	for (let i = 0; i < objects.length; i++)
-	{
-		upscene.remove(objects[i]);
-		upscene.remove(objectsp2[i]);
-		objects[i].geometry.dispose();
-		objects[i].material.dispose();
-		objectsp2[i].geometry.dispose();
-		objectsp2[i].material.dispose();
-	}
-	objects = [];
-	objectsp2 = [];
-
-	for (let i = 0; i < players.length; i++)
-	{
-		upscene.remove(players[i]);
-		players[i].geometry.dispose();
-		players[i].material.dispose();
-	}
-	players = [];
-	platformsGeo = [];
-	if (light1 && light2)
-	{
-		upscene.remove(light2);
-		upscene.remove(light1);
-	}
-
-	if (uprenderer)
-		uprenderer.dispose();
-
-	//Determines winner and sends endscreen notification
-	if(game_mode != 'up_online'){
-		const upWinner = document.getElementById('labelWinner');
-		$("#endModal").modal('show');
-		if(upWinner){
-			findWinner();
+		{
+			upscene.remove(objects[i]);
+			upscene.remove(objectsp2[i]);
+			objects[i].geometry.dispose();
+			objects[i].material.dispose();
+			objectsp2[i].geometry.dispose();
+			objectsp2[i].material.dispose();
+		}
+		objects = [];
+		objectsp2 = [];
+		
+		for (let i = 0; i < players.length; i++)
+			{
+				upscene.remove(players[i]);
+				players[i].geometry.dispose();
+				players[i].material.dispose();
+			}
+			players = [];
+			platformsGeo = [];
+			if (light1 && light2)
+				{
+					upscene.remove(light2);
+					upscene.remove(light1);
+				}
+				
+				if (uprenderer)
+					uprenderer.dispose();
+				
+				//Determines winner and sends endscreen notification
+				if(game_mode != 'up_online'){
+					const upWinner = document.getElementById('labelWinner');
+					$("#endModal").modal('show');
+					if(upWinner){
+						findWinner();
 			upWinner.textContent = winner + " won!";
 		}
 	}
