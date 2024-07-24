@@ -102,27 +102,21 @@ function setGlobals()
 	let currentSide = undefined;
 	document.addEventListener("visibilitychange", onVisibilityChange);
 	
-		//Setting names
-	if(game_mode == 'up_online'){
+	//Setting names
+	const name1 = document.getElementById("namePlayer1");
+	name1.textContent = "Player 1";
+	name1.style.color = 'lightgreen';
+	const name2 = document.getElementById("namePlayer2");
+	name2.textContent = "Player 2";
+	name2.style.color = 'lightpink';
+	updateOnScreen();
+	if (game_mode == 'up_online')
+	{
 		const onscreenTimer = document.getElementById("gameTime");
 		onscreenTimer.textContent = "Waiting for a player...";
-		const name1 = document.getElementById("namePlayer1");
-		name1.textContent = players[0];
-		name1.style.color = 'lightgreen';
-		const name2 = document.getElementById("namePlayer2");
-		name2.textContent = players[1];
-		name2.style.color = 'lightpink';
-		
 	}
-	else{
-		const name1 = document.getElementById("namePlayer1");
-		name1.textContent = "Player 1";
-		name1.style.color = 'lightgreen';
-		const name2 = document.getElementById("namePlayer2");
-		name2.textContent = "Player 2";
-		name2.style.color = 'lightpink';
-		
-		updateOnScreen();
+	else
+	{
 		const onscreenTimer = document.getElementById("gameTime");
 		onscreenTimer.textContent = count;
 	}

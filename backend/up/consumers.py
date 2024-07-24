@@ -20,19 +20,36 @@ class upConsumer(AsyncWebsocketConsumer):
 
     async def disconnect(self, close_code):
         if self in up_queue :
+            print ("removing self from queue")
             up_queue.remove(self)
-
         if hasattr(self, 'match_group_name'):
+            await self.channel_layer.group_send(
+                self.match_group_name,
+                {
+                    'type': 'leaver',
+                    'side':  self.side
+                }
+            )
+            print ("removing self from active match")
             players = active_matches.get(self.match_group_name, [])
             if self in players:
                 players.remove(self)
                 if not players:
                     del active_matches[self.match_group_name]
+
+
                 await self.channel_layer.group_discard(
                     self.match_group_name,
                     self.channel_name
                 )
                 print(f"Player disconnected: {self.channel_name}")
+
+    async def leaver(self, data):
+        if (data['side'] != self.side): 
+            await self.send(text_data=json.dumps({
+                    'type': 'leaver',
+                }
+            ))
 
     async def receive(self, text_data):
         try:

@@ -1,4 +1,3 @@
-
 function update(){
 	if(game_stop)
 		return ;
@@ -47,6 +46,29 @@ function score(side){
 			loser = leftPlayer;
 		}
 		
+		if (game_mode == "pong_ai" ){
+			gameStats.stats.pong_offline_game_played++;
+			if (winner == leftPlayer)
+				gameStats.stats.pong_won++;
+			else
+				gameStats.stats.pong_lost++;
+		}
+		else if (game_mode == "pong_online"){
+			gameStats.stats.pong_online_game_played++;
+			if (socket.side == 'left'){
+				if (winner == leftPlayer)
+				gameStats.stats.pong_won++;
+				else
+					gameStats.stats.pong_lost++;
+			}
+			else {
+				if (winner == leftPlayer)
+					gameStats.stats.pong_lost++;
+				else
+					gameStats.stats.pong_won++;
+			}
+		}
+
 		if(game_mode == "pong_tournament")
 		{
 			endRound(winner, loser);
@@ -56,8 +78,8 @@ function score(side){
 			$("#winModal").modal('show');
 			document.getElementById('winner').textContent = winner + " won!";
 		}
-		
-		user.send_stats(gameStats);
+		if (game_mode == "pong_ai" || game_mode == "pong_online")
+			user.send_stats(gameStats);
 	}
 }
 
@@ -166,7 +188,6 @@ function prepare_online_Game()
 	//ball for presentation
 	balls.push(new Ball(0,0,0, 0, ball_color));
 }
-
 
 
 
@@ -279,6 +300,7 @@ function pongLeaver(){
 
 function stopGame() 
 {
+	gameIsOver = true;
 	if(colorPicker)
 		colorPicker.removeEventListener('input', handleColorPicked);
 
@@ -359,15 +381,4 @@ function startOnlineMatch(data){
 		document.addEventListener('keyup', rightKeyUpHandler);
 		rightPaddle.setOnline(true);
 	}
-}
-
-
-
-
-function pongLeaver(){
-	if (gameIsOver == true)
-		return
-	stopGame()
-	alert("your stupid opponent left he is such a loser, you win !");
-	navigateTo('game_choice');
 }

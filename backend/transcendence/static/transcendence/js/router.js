@@ -30,6 +30,7 @@ class StatsContainer{
     }
 
     serialize(){
+        console.log(this.stats)
         return JSON.stringify(this.stats);
     }
 
@@ -37,6 +38,8 @@ class StatsContainer{
         this.stats = data;
     }
 }
+
+
 class UserSocket{
 
     loggedIn = false;
@@ -238,7 +241,6 @@ class GameSocket{
                     startOnlineMatch(data);
                 break;
                 case 'leaver':
-                    console.log("bozo left")
                     pongLeaver();
                 break;
             }
@@ -302,6 +304,7 @@ class UpSocket{
             switch (data.type){
                 case 'matchFound':
                     this.side = data.side;
+                    gameIsOver = false;
                     startUpOnline(data);
                     break;
                 case 'platformSetUp':
@@ -313,10 +316,24 @@ class UpSocket{
 				case 'playerPosition':
 					updatePosition(data);
 					break;
+                case 'leaver':
+                    upLeaver();
+                    break;
 				default: console.log("error: type unknown");
 
             }
         }
         catch (error){console.error(error)}
     }
+}
+
+function upLeaver(){
+    console.log(gameIsOver);
+    if (gameIsOver == true)
+        return ;
+    gameIsOver = true;
+    alert("dude was so bad he ragequit :(")
+    navigateTo('game_choice');
+    upStop()
+    socket.disconnect();
 }

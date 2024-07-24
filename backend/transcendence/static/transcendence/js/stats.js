@@ -1,9 +1,9 @@
 
 function setStats(){
-   const stat_collection = document.getElementsByClassName('stats');
+    const stat_collection = document.getElementsByClassName('stats');
     const stats = user.stats.stats;
 
-   if(stat_collection){
+    if(stat_collection){
 
     const stats_elements = Array.from(stat_collection);
     
@@ -29,5 +29,5 @@ function setStats(){
             })
         }
     });
-   }
+    }
 }
