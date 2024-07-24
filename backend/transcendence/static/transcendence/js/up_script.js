@@ -323,8 +323,11 @@ function findWinner() // sends gameStats as well
 		winner = document.getElementById("namePlayer2").textContent;
 	}
 
-	if (game_mode = 'up_online')
+	if (uponline)
+	{
+		uponline = false;
 		gameStats.stats.up_online_game_played++;
+	}
 	else
 		gameStats.stats.up_offline_game_played++;
 
@@ -341,11 +344,6 @@ function upStop()
 	document.removeEventListener('visibilitychange', onVisibilityChange);
 	cancelAnimationFrame(requestId);
 	requestId = undefined;
-	
-	if (uponline)
-	{
-		uponline = false;
-	}
 	
 	for (let i = 0; i < objects.length; i++)
 	{
