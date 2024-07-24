@@ -340,21 +340,7 @@ function upStop()
 	
 	if (uponline)
 	{
-		// TODO: for online stats
-		if	(currentSide == 'left')
-		{
-			console.log("Jump count: ", jumpCount1);
-		}
-		else
-		{
-			console.log("Jump count: ", jumpCount2);
-		}
 		uponline = false;
-	}
-	else
-	{
-		console.log("Jump count: ", jumpCount1);
-		console.log("Jump count: ", jumpCount2);
 	}
 
 	for (let i = 0; i < objects.length; i++)
