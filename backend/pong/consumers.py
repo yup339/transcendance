@@ -182,14 +182,14 @@ class UserConsumer(AsyncWebsocketConsumer):
         async def login_user(self, data):
             from pong.models import User
             username = data.get('username')
-            password = data.get('hashed_password')
+            password = data.get('password')
             userbase = User.objects.all()
             try:
                 user = await sync_to_async(userbase.get)(username=username)
             except User.DoesNotExist:
                 user = None
             if user:
-                if await sync_to_async(check_password)(password, user.password):
+                if await sync_to_async(check_password)(password, user.hashed_password):
                     self.username = username
                     self.user_token = default_token_generator.make_token(user)
                     for user in logged_in_users:
