@@ -108,8 +108,9 @@ class UserSocket{
             this.username = data.username;
             navigateTo('game_choice');
             navid.innerHTML = ` <a class="nav-item nav-link active clickable" onclick="navigateTo('stats')">Stats</a>
-                    <a class="nav-item nav-link active clickable" onclick="logout_user()")">Logout</a>`;
-            
+                    <a class="nav-item nav-link active clickable" onclick="logout_user()")">Log out</a>`;
+            const showLogin = document.getElementById('showLogin');
+            showLogin.textContent = "Logged in as: " + data.username;
    
         }
         catch (error){
