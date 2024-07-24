@@ -120,6 +120,7 @@ class UserConsumer(AsyncWebsocketConsumer):
                 await sync_to_async(up_stats.save)()
                 await sync_to_async(user.save)()
                 print(f"User stats updated: {self.username}")
+                await self.get_stats(data)
             else:
                 await self.send(text_data=json.dumps({
                     'type': 'update_stats_error',
@@ -167,7 +168,7 @@ class UserConsumer(AsyncWebsocketConsumer):
                 user = await sync_to_async(userbase.create)(username=username)
                 password = data.get('password')
                 hashed_password = make_password(password)
-                user.password = hashed_password
+                user.hashed_password = hashed_password
                 self.username = username
                 self.user_token = default_token_generator.make_token(user)
                 logged_in_users[self.user_token] = self
@@ -189,15 +190,16 @@ class UserConsumer(AsyncWebsocketConsumer):
             except User.DoesNotExist:
                 user = None
             if user:
-                if await sync_to_async(check_password)(password, user.password):
+                if await sync_to_async(check_password)(password, user.hashed_password):
                     self.username = username
                     self.user_token = default_token_generator.make_token(user)
-                    if logged_in_users.get(self.user_token):
-                        await self.send(text_data=json.dumps({
-                            'type': 'login_error',
-                            'message': 'User already logged in'
-                        }))
-                        return
+                    for user in logged_in_users:
+                        if logged_in_users[user].username == username:
+                            await self.send(text_data=json.dumps({
+                                'type': 'login_error',
+                                'message': 'User already logged in'
+                            }))
+                            return
                     logged_in_users[self.user_token] = self
                     await self.send(text_data=json.dumps({
                         'type': 'login_success',

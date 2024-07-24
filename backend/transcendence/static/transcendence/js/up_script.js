@@ -5,7 +5,7 @@ let requestId; // to stop loop
 //time vars
 let uponline;
 let upcountdown;
-let stop;
+let stop = true;
 let startTime;
 let count; // timer for the countdown at the start (starting at 3)
 let second; // timer for current round (starting at 60)
@@ -101,6 +101,8 @@ function setGlobals()
 	count = 3;
 	let currentSide = undefined;
 	document.addEventListener("visibilitychange", onVisibilityChange);
+
+	gameStats = new StatsContainer();
 	
 	//Setting names
 	const name1 = document.getElementById("namePlayer1");
@@ -292,41 +294,44 @@ function UpGame()
 	}
 }
 
-function findWinner()
+function findWinner() // sends gameStats as well
 {
 	if(distanceTravelled1 == distanceTravelled2){
+		gameStats.stats.up_drawn++;
 		winner = "Both Players";
 	}
 	else if(distanceTravelled1 > distanceTravelled2){
+		if (game_mode = 'up_online')
+		{
+			if (currentSide == 'left')
+				gameStats.stats.up_won++;
+			else
+				gameStats.stats.up_lost++;
+		}
+		else
+			gameStats.stats.up_won++;
 		winner = document.getElementById("namePlayer1").textContent;
 	}
 	else{
+		if (game_mode = 'up_online')
+		{
+			if (currentSide == 'left')
+				gameStats.stats.up_lost++;
+			else
+				gameStats.stats.up_won++;
+		}
 		winner = document.getElementById("namePlayer2").textContent;
 	}
-	sendStats();
-}
 
-function sendStats()
-{
-	//stats: number of jumps, games, wins, distance
-	if(game_mode == 'up_online'){
-		//user.onlineGames += 1 //nb of online games
-		//user.jumps += jumpcount1 //jumps
-		//user.distance += distanceTravelled1 //distance
-
-		//if(user.username == winner || winner == "Both Players"){
-			//user.wins += 1; 
-		//}
-		//else{
-			//user.losses += 1;
-		//}
+	if (uponline)
+	{
+		uponline = false;
+		gameStats.stats.up_online_game_played++;
 	}
-	if(game_mode == 'up_dual'){
-		//user.offlineGames += 1 //nb of offline games
-		//user.jumps += jumpcount1 //jumps
-		//user.distance += distanceTravelled1 //distance
-	}
+	else
+		gameStats.stats.up_offline_game_played++;
 
+	user.send_stats(gameStats);
 }
 
 function upStop()
@@ -340,46 +345,41 @@ function upStop()
 	cancelAnimationFrame(requestId);
 	requestId = undefined;
 	
-	if (uponline)
+	for (let i = 0; i < objects.length; i++)
 	{
-		uponline = false;
+		upscene.remove(objects[i]);
+		upscene.remove(objectsp2[i]);
+		objects[i].geometry.dispose();
+		objects[i].material.dispose();
+		objectsp2[i].geometry.dispose();
+		objectsp2[i].material.dispose();
+	}
+	objects = [];
+	objectsp2 = [];
+		
+	for (let i = 0; i < players.length; i++)
+	{
+		upscene.remove(players[i]);
+		players[i].geometry.dispose();
+		players[i].material.dispose();
+	}
+	players = [];
+	platformsGeo = [];
+	if (light1 && light2)
+	{
+		upscene.remove(light2);
+		upscene.remove(light1);
 	}
 	
-	for (let i = 0; i < objects.length; i++)
-		{
-			upscene.remove(objects[i]);
-			upscene.remove(objectsp2[i]);
-			objects[i].geometry.dispose();
-			objects[i].material.dispose();
-			objectsp2[i].geometry.dispose();
-			objectsp2[i].material.dispose();
-		}
-		objects = [];
-		objectsp2 = [];
-		
-		for (let i = 0; i < players.length; i++)
-			{
-				upscene.remove(players[i]);
-				players[i].geometry.dispose();
-				players[i].material.dispose();
-			}
-			players = [];
-			platformsGeo = [];
-			if (light1 && light2)
-				{
-					upscene.remove(light2);
-					upscene.remove(light1);
-				}
+	if (uprenderer)
+		uprenderer.dispose();
 				
-				if (uprenderer)
-					uprenderer.dispose();
-				
-				//Determines winner and sends endscreen notification
-				if(game_mode != 'up_online'){
-					const upWinner = document.getElementById('labelWinner');
-					$("#endModal").modal('show');
-					if(upWinner){
-						findWinner();
+	//Determines winner and sends endscreen notification
+	if(game_mode != 'up_online'){
+		const upWinner = document.getElementById('labelWinner');
+		$("#endModal").modal('show');
+		if(upWinner){
+			findWinner();
 			upWinner.textContent = winner + " won!";
 		}
 	}
