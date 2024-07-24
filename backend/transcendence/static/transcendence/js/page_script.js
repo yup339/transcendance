@@ -186,78 +186,78 @@ const pages = {
 'stats':`
 <div class="container extra-top-padding mt-5">
         <div class="row m-auto gy-5 gx-5 gap-5 mb-5">
-			<div class="row col-xl-6 col-12">
+			<div class="row col-xl-6 col-12" >
 				<div class="col-12 mb-3 py-3">
 					<h1 class="text-white text-center ">Pong Game Stats</h1>
 				</div>
 				<div class="col-6 py-3">
 					<label  class="text-white text-center d-block m-auto ">Total Games Played:</label>
-					<p id="pong-total-games" class=" mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5"> 456347658 </p>
+					<p id="pong_total_games" class="stats mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5">  </p>
 				</div>
 				<div class="col-6 py-3">
 					<label  class="text-white text-center d-block m-auto ">Wins:</label>
-					<p id="pong-wins" class=" mt-2 m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5"> 456347658 </p>
+					<p id="pong_won" class="stats mt-2 m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5">  </p>
 				</div>
 				<div class="col-6 py-3">
 					<label  class="text-white text-center d-block m-auto ">Losses:</label>
-					<p id="pong-losses" class=" mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5"> 456347658 </p>
+					<p id="pong_lost" class="stats mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5">  </p>
 				</div>
 				<div class="col-6 py-3">
 				<label  class="text-white text-center d-block m-auto ">Win Rate:</label>
-				<p id="pong-win-rate" class=" mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5"> 456347658 </p>
+				<p id="win_rate" class="stats mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5">  </p>
 				</div>
 				<div class="col-6 py-3">
 				<label  class="text-white text-center d-block m-auto ">Online games played:</label>
-				<p id="pong-online-games" class=" mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5"> 456347658 </p>
+				<p id="pong_online_game_played" class="stats mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5">  </p>
 				</div>
 				<div class="col-6 py-3">
-					<label  class="text-white text-center d-block m-auto ">Offline games played:</label>
-					<p id="pong-offline-games" class=" mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5"> 456347658 </p>
-					</div>
+				<label  class="text-white text-center d-block m-auto ">Offline games played:</label>
+				<p id="pong_offline_game_played" class="stats mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5">  </p>
+				</div>
 				<div class="col-6 py-3">
-					<label  class="text-white text-center d-block m-auto ">Highest score:</label>
-					<p id="pong-highest-score" class=" mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5"> 456347658 </p>
+				<label  class="text-white text-center d-block m-auto ">Traveled distance:</label>
+				<p id="ball_travel_distance" class="stats mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5">  </p>
 				</div>
 				<div class="col-6 py-3">
 					<label  class="text-white text-center d-block m-auto ">Paddle hits:</label>
-					<p id="pong-paddle-hits" class=" mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5"> 0 </p>
+					<p id="paddle_hits" class="stats mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5">  </p>
 				</div>
 			</div>
-			<div class="row col-xl-6 col-12 ">
+			<div class="row col-xl-6 col-12 " >
 				<div class="col-12 mb-3 py-3">
 					<h1 class="text-white text-center ">Up Game Stats</h1>
 				</div>
 				<div class="col-6 py-3">
 					<label  class="text-white text-center d-block m-auto ">Total Games Played:</label>
-					<p id="up-total-games" class=" mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5"> 456347658 </p>
+					<p id="up_total_games" class="stats mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5">  </p>
 				</div>
 				<div class="col-6 py-3">
-					<label  class="text-white text-center d-block m-auto ">Win Rate:</label>
-					<p id="up-win-rate" class=" mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5"> 456347658 </p>
+				<label  class="text-white text-center d-block m-auto ">Wins:</label>
+				<p id="up_won" class=" stats mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5">  </p>
 				</div>
 				<div class="col-6 py-3">
-					<label  class="text-white text-center d-block m-auto ">Number of wins:</label>
-					<p id="up-wins" class=" mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5"> 456347658 </p>
+					<label  class="text-white text-center d-block m-auto ">Losses:</label>
+					<p id="up_lost" class="stats mt-2 m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5">  </p>
 				</div>
 				<div class="col-6 py-3">
-					<label  class="text-white text-center d-block m-auto ">Number of losses:</label>
-					<p id="up-losses" class=" mt-2 m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5"> 456347658 </p>
+					<label  class="text-white text-center d-block m-auto ">Draws:</label>
+					<p id="up_drawn" class="stats mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5">  </p>
 				</div>
 				<div class="col-6 py-3">
 					<label  class="text-white text-center d-block m-auto ">Online games played:</label>
-					<p id="up-online-games" class=" mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5"> 456347658 </p>
+					<p id="up_online_game_played" class="stats mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5">  </p>
 				</div>
 				<div class="col-6 py-3">
 					<label  class="text-white text-center d-block m-auto ">Offline games played:</label>
-					<p id="up-offline-games" class=" mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5"> 456347658 </p>
+					<p id="up_offline_game_played" class="stats mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5">  </p>
 				</div>
 				<div class="col-6 py-3">
-					<label  class="text-white text-center d-block m-auto ">Number of jumps:</label>
-					<p id="up-jumps" class=" mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5"> 456347658 </p>
+				<label  class="text-white text-center d-block m-auto ">Total distance:</label>
+				<p id="travelled_distance" class="stats mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5">  </p>
 				</div>
 				<div class="col-6 py-3">
-					<label  class="text-white text-center d-block m-auto ">Total distance:</label>
-					<p id="up-distance" class=" mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5"> 456347658 </p>
+					<label  class="text-white text-center d-block m-auto ">Jumps:</label>
+					<p id="jump_count" class="stats mt-2  m-auto text-center py-5 dark-color-bg text-white overflow-hidden rounded-5">  </p>
 				</div>
 			</div>
 		</div>
@@ -420,6 +420,9 @@ function displayPage(pageName)
 			PongGame();
 		else if(pageName == 'up')
 			UpGame();
+		else if(pageName == 'stats'){
+			setStats();
+		}
 		else
 		{
 			stopGame();
