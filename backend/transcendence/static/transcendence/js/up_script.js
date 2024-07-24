@@ -104,9 +104,8 @@ function setGlobals()
 	
 		//Setting names
 	if(game_mode == 'up_online'){
-
-		//players[0] = user.username;
-		//players[1] = 
+		const onscreenTimer = document.getElementById("gameTime");
+		onscreenTimer.textContent = "Waiting for a player...";
 		const name1 = document.getElementById("namePlayer1");
 		name1.textContent = players[0];
 		name1.style.color = 'lightgreen';
