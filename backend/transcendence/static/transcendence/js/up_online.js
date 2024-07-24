@@ -5,6 +5,27 @@ function gameReady()
 	stop = false;
 	startTime = performance.now();
     console.log("GAME READY FOR BOTH PLAYER");
+
+	const onscreenTimer = document.getElementById("gameTime");
+	onscreenTimer.textContent = count;
+	//Make names appear
+	if(currentSide == 'left'){
+		const name1 = document.getElementById("namePlayer1");
+		name1.textContent = user.username;
+		name1.style.color = 'lightgreen';
+		const name2 = document.getElementById("namePlayer2");
+		name2.textContent = "opponent";
+		name2.style.color = 'lightpink';
+	}
+	else if(currentSide){
+		const name1 = document.getElementById("namePlayer1");
+		name1.textContent = "opponent";
+		name1.style.color = 'lightgreen';
+		const name2 = document.getElementById("namePlayer2");
+		name2.textContent = user.username;
+		name2.style.color = 'lightpink';
+	}
+
 	countdownOnline();
 }
 
@@ -220,6 +241,8 @@ function onlineUpdate(side)
 	}
 	if (stop)
 	{
+		const onscreenTimer = document.getElementById("gameTime");
+		onscreenTimer.textContent = 0;
 		upStop();
 		return ;
 	}
