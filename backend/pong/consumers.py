@@ -134,11 +134,11 @@ class UserConsumer(AsyncWebsocketConsumer):
                 logged_in_users[token] = self
                 del pending_tokens[token]
                 await self.send(text_data=json.dumps({
-                    'type': 'login_success',
+                    'type': 'token_login_success',
                     'username': logged_in_users[token].username,
                     'token': token
                 }))
-                self.get_stats(data)
+                await self.get_stats(data)
                 print(f"User logged in with token: {token}")
             else:
                 await self.send(text_data=json.dumps({
@@ -177,7 +177,7 @@ class UserConsumer(AsyncWebsocketConsumer):
                     'username': username,
                     'token': self.user_token
                 }))
-                self.get_stats(data)
+                await self.get_stats(data)
                 print(f"User registered: {username}")
                 await sync_to_async(user.save)()
         
@@ -207,7 +207,7 @@ class UserConsumer(AsyncWebsocketConsumer):
                         'username': username,
                         'token': self.user_token
                     }))
-                    self.get_stats(data)
+                    await self.get_stats(data)
                     print(f"User logged in: {username}")
                 else:
                     await self.send(text_data=json.dumps({

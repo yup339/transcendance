@@ -85,6 +85,9 @@ class UserSocket{
                 case 'registration_success':
                     this.loginSuccess(data);
                     break;
+                case 'token_login_success':
+                    this.tokenLoginSuccess(data);
+                    break;
                 case 'registration_error':
                     this.registrationError(data);
                     break;
@@ -101,6 +104,25 @@ class UserSocket{
         }
         catch (error){console.error(error)}
     }
+
+    tokenLoginSuccess(data){
+        this.loggedIn = true;
+        try{
+            const navid = document.getElementById('navid');
+            console.log("Successfully logged in " + data.username);
+            localStorage.setItem('token', data.token);
+            this.username = data.username;
+            if (window.location.pathname === '/login' || window.location.pathname === '/signup')
+                navigateTo('game_choice');
+            navid.innerHTML = ` <a class="nav-item nav-link active clickable" onclick="navigateTo('stats')">Stats</a>
+                    <a class="nav-item nav-link active clickable" onclick="logout_user()")">Log out</a>`;
+            const showLogin = document.getElementById('showLogin');
+            showLogin.textContent = "Logged in as: " + data.username;
+        }
+        catch (error){
+            console.error(error);
+        }
+    }      
 
     loginSuccess(data){
         this.loggedIn = true;
