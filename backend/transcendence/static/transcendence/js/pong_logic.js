@@ -73,6 +73,11 @@ function score(side){
 		{
 			endRound(winner, loser);
 		}
+		else if(game_mode == "pong_online")
+		{
+			$("#winModalOnline").modal('show');
+			document.getElementById('winnerOnline').textContent = winner + " won!";
+		}
 		else
 		{
 			$("#winModal").modal('show');
