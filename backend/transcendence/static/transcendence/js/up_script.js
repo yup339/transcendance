@@ -133,7 +133,10 @@ function prepareUpGame()
 		camera.position.fromArray(view.position);
 		view.camera = camera;
 	}
-	
+	if(gameMode = 'up_online'){
+		const onscreenTimer = document.getElementById("gameTime");
+		onscreenTimer.textContent = "Waiting for a player...";
+	}
 	setGlobals();
 	
 	upscene = new THREE.Scene();
@@ -384,10 +387,20 @@ function upStop()
 		uprenderer.dispose();
 
 	//Determines winner and sends endscreen notification
-	const upWinner = document.getElementById('labelWinner');
-	$("#endModal").modal('show');
-	if(upWinner){
-		findWinner();
-		upWinner.textContent = winner + " won!";
+	if(game_mode != 'up_online'){
+		const upWinner = document.getElementById('labelWinner');
+		$("#endModal").modal('show');
+		if(upWinner){
+			findWinner();
+			upWinner.textContent = winner + " won!";
+		}
+	}
+	else{
+		const upWinner = document.getElementById('labelWinnerOnline');
+		$("#endModalOnline").modal('show');
+		if(upWinner){
+			findWinner();
+			upWinner.textContent = winner + " won!";
+		}
 	}
 }

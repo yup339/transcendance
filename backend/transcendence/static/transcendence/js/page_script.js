@@ -119,16 +119,28 @@ const pages = {
         </div>
     </div>
 <div class="modal fade" id="endModal" tabindex="-1" role="dialog" aria-labelledby="endModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-<div class="modal-dialog modal-dialog-centered " role="document">
-	<div class="modal-content dark-color-bg text-white">
-		<div class="modal-body p-5">
-			<p class="tp-4 p-5 text-center text-white h1" id="labelWinner"></p>
-			<button type="button" class="btn btn-color text-white d-block m-auto w-75 py-3" onclick="window.location.reload()">Play again</button>
-			<button type="button" data-dismiss="modal" aria-label="Close" class="close btn btn-color text-white d-block m-auto w-75 py-3 mt-3" onclick="navigateTo('game_choice')">Menu</button>
+	<div class="modal-dialog modal-dialog-centered " role="document">
+		<div class="modal-content dark-color-bg text-white">
+			<div class="modal-body p-5">
+				<p class="tp-4 p-5 text-center text-white h1" id="labelWinner"></p>
+				<button type="button" class="btn btn-color text-white d-block m-auto w-75 py-3" onclick="window.location.reload()">Play again</button>
+				<button type="button" data-dismiss="modal" aria-label="Close" class="close btn btn-color text-white d-block m-auto w-75 py-3 mt-3" onclick="navigateTo('game_choice')">Menu</button>
+			</div>
 		</div>
 	</div>
 </div>
+
+<div class="modal fade" id="endModalOnline" tabindex="-1" role="dialog" aria-labelledby="endModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog modal-dialog-centered " role="document">
+		<div class="modal-content dark-color-bg text-white">
+			<div class="modal-body p-5">
+				<p class="tp-4 p-5 text-center text-white h1" id="labelWinnerOnline"></p>
+				<button type="button" data-dismiss="modal" aria-label="Close" class="close btn btn-color text-white d-block m-auto w-75 py-3 mt-3" onclick="navigateTo('game_choice')">Back to menu</button>
+			</div>
+		</div>
+	</div>
 </div>
+
  <style>
         .fixed-width {
             width: 100px;
