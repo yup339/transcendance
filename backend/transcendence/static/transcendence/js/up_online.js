@@ -398,7 +398,7 @@ function updateStatsOnline(side)
 	if (players[1].position.y > distanceTravelled2)
 		distanceTravelled2 = Math.floor(players[1].position.y);
 
-	if (side == left)
+	if (side == 'left')
 	{
 		gameStats.stats.travelled_distance = distanceTravelled1;
 	}

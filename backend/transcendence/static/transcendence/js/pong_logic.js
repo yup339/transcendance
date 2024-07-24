@@ -99,6 +99,16 @@ function start_pong()
 		startMatch();
 }
 
+function onVisibilityChange()
+{
+	if (document.visibilityState == "visible") {
+		alert("you left the page game has been stopped")
+		navigateTo('game_choice');
+		if(socket)
+			socket.disconnect();
+	}
+}
+
 function PongGame()
 {
 	game_stop = false;
