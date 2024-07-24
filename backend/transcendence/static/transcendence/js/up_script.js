@@ -101,17 +101,31 @@ function setGlobals()
 	let currentSide = undefined;
 	document.addEventListener("visibilitychange", onVisibilityChange);
 	
-	//Setting names
-	const name1 = document.getElementById("namePlayer1");
-	name1.textContent = "Player 1";
-	name1.style.color = 'lightgreen';
-	const name2 = document.getElementById("namePlayer2");
-	name2.textContent = "Player 2";
-	name2.style.color = 'lightpink';
-	
-	updateOnScreen();
-	const onscreenTimer = document.getElementById("gameTime");
-	onscreenTimer.textContent = count;
+		//Setting names
+	if(game_mode == 'up_online'){
+
+		//players[0] = user.username;
+		//players[1] = 
+		const name1 = document.getElementById("namePlayer1");
+		name1.textContent = players[0];
+		name1.style.color = 'lightgreen';
+		const name2 = document.getElementById("namePlayer2");
+		name2.textContent = players[1];
+		name2.style.color = 'lightpink';
+		
+	}
+	else{
+		const name1 = document.getElementById("namePlayer1");
+		name1.textContent = "Player 1";
+		name1.style.color = 'lightgreen';
+		const name2 = document.getElementById("namePlayer2");
+		name2.textContent = "Player 2";
+		name2.style.color = 'lightpink';
+		
+		updateOnScreen();
+		const onscreenTimer = document.getElementById("gameTime");
+		onscreenTimer.textContent = count;
+	}
 }
 
 function prepareUpGame()
@@ -270,6 +284,12 @@ function UpGame()
 	}
 	else if(game_mode == 'up_online')
 	{
+		if (!user.loggedIn)
+		{
+			alert("You need to be logged in to play online");
+			navigateTo('login');
+			return;
+		}
 		uponline = true;
 		prepareOnline();
 	}
@@ -297,6 +317,30 @@ function findWinner()
 			winner = "Right Player";
 		}
 	}
+	sendStats();
+}
+
+function sendStats()
+{
+	//stats: number of jumps, games, wins, distance
+	if(game_mode == 'up_online'){
+		//user.onlineGames += 1 //nb of online games
+		//user.jumps += jumpcount1 //jumps
+		//user.distance += distanceTravelled1 //distance
+
+		//if(user.username == winner || winner == "Both Players"){
+			//user.wins += 1; 
+		//}
+		//else{
+			//user.losses += 1;
+		//}
+	}
+	if(game_mode == 'up_dual'){
+		//user.offlineGames += 1 //nb of offline games
+		//user.jumps += jumpcount1 //jumps
+		//user.distance += distanceTravelled1 //distance
+	}
+
 }
 
 function upStop()
