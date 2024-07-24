@@ -5,7 +5,7 @@ let requestId; // to stop loop
 //time vars
 let uponline;
 let upcountdown;
-let stop;
+let stop = true;
 let startTime;
 let count; // timer for the countdown at the start (starting at 3)
 let second; // timer for current round (starting at 60)
@@ -294,24 +294,52 @@ function UpGame()
 	}
 }
 
-function findWinner()
+function findWinner() // sends gameStats as well
 {
 	if(distanceTravelled1 == distanceTravelled2){
+		gameStats.stats.up_drawn++;
 		winner = "Both Players";
 	}
 	else if(distanceTravelled1 > distanceTravelled2){
+		if (uponline)
+		{
+			if (currentSide == 'left')
+				gameStats.stats.up_won++;
+			else
+				gameStats.stats.up_lost++;
+		}
+		else
+			gameStats.stats.up_won++;
 		winner = document.getElementById("namePlayer1").textContent;
 	}
 	else{
+		if (uponline)
+		{
+			if (currentSide == 'left')
+				gameStats.stats.up_lost++;
+			else
+				gameStats.stats.up_won++;
+		}
+		else
+			gameStats.stats.up_lost++;
 		winner = document.getElementById("namePlayer2").textContent;
 	}
+
+	if (uponline)
+	{
+		uponline = false;
+		gameStats.stats.up_online_game_played++;
+	}
+	else
+		gameStats.stats.up_offline_game_played++;
+
+	user.send_stats(gameStats);
 }
 
 function upStop()
 {
 	if (stop == true)
 		return;
-	user.send_stats(gameStats);
 	stop = true;
 	document.removeEventListener('keydown', onKeyDown);
 	document.removeEventListener('keyup', onKeyUp);
@@ -319,46 +347,41 @@ function upStop()
 	cancelAnimationFrame(requestId);
 	requestId = undefined;
 	
-	if (uponline)
+	for (let i = 0; i < objects.length; i++)
 	{
-		uponline = false;
+		upscene.remove(objects[i]);
+		upscene.remove(objectsp2[i]);
+		objects[i].geometry.dispose();
+		objects[i].material.dispose();
+		objectsp2[i].geometry.dispose();
+		objectsp2[i].material.dispose();
+	}
+	objects = [];
+	objectsp2 = [];
+		
+	for (let i = 0; i < players.length; i++)
+	{
+		upscene.remove(players[i]);
+		players[i].geometry.dispose();
+		players[i].material.dispose();
+	}
+	players = [];
+	platformsGeo = [];
+	if (light1 && light2)
+	{
+		upscene.remove(light2);
+		upscene.remove(light1);
 	}
 	
-	for (let i = 0; i < objects.length; i++)
-		{
-			upscene.remove(objects[i]);
-			upscene.remove(objectsp2[i]);
-			objects[i].geometry.dispose();
-			objects[i].material.dispose();
-			objectsp2[i].geometry.dispose();
-			objectsp2[i].material.dispose();
-		}
-		objects = [];
-		objectsp2 = [];
-		
-		for (let i = 0; i < players.length; i++)
-			{
-				upscene.remove(players[i]);
-				players[i].geometry.dispose();
-				players[i].material.dispose();
-			}
-			players = [];
-			platformsGeo = [];
-			if (light1 && light2)
-				{
-					upscene.remove(light2);
-					upscene.remove(light1);
-				}
+	if (uprenderer)
+		uprenderer.dispose();
 				
-				if (uprenderer)
-					uprenderer.dispose();
-				
-				//Determines winner and sends endscreen notification
-				if(game_mode != 'up_online'){
-					const upWinner = document.getElementById('labelWinner');
-					$("#endModal").modal('show');
-					if(upWinner){
-						findWinner();
+	//Determines winner and sends endscreen notification
+	if(game_mode != 'up_online'){
+		const upWinner = document.getElementById('labelWinner');
+		$("#endModal").modal('show');
+		if(upWinner){
+			findWinner();
 			upWinner.textContent = winner + " won!";
 		}
 	}
