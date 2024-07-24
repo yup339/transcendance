@@ -281,6 +281,7 @@ class UpSocket{
 
     handleOpen(event) {
         console.log('WebSocket connection opened.');
+        this.sendInfo(JSON.stringify({type: 'userInit', username: user.username}));
     }
 
     // use with serialize object
@@ -306,7 +307,7 @@ class UpSocket{
                     deserializePlatform(data);
                     break;
                 case 'startosgamos':
-                    gameReady();
+                    gameReady(data);
 					break;
 				case 'playerPosition':
 					updatePosition(data);
