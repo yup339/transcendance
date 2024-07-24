@@ -1,3 +1,4 @@
+
 function update(){
 	if(game_stop)
 		return ;
@@ -104,6 +105,10 @@ function PongGame()
 			}
 		leftPlayer = "Please";
 		rightPlayer = "Wait";
+		const customs = document.getElementById('customs');
+		const uglyplaybutton = document.getElementById('play-link');
+		customs.style.display = 'none';
+		uglyplaybutton.style.display = 'none';
 		socket = new GameSocket();
 		prepare_online_Game();
 	}
@@ -320,6 +325,8 @@ function restartGame()
 	setBall(extra_ball_number);
 	balls.push(new Ball(0,0,BALL_SPEED, randomValue(), ball_color))
 }
+
+
 
 function startOnlineMatch(data){
 	console.log("starting online match");
