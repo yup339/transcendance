@@ -101,6 +101,8 @@ function setGlobals()
 	count = 3;
 	let currentSide = undefined;
 	document.addEventListener("visibilitychange", onVisibilityChange);
+
+	gameStats = new StatsContainer();
 	
 	//Setting names
 	const name1 = document.getElementById("namePlayer1");
@@ -303,36 +305,13 @@ function findWinner()
 	else{
 		winner = document.getElementById("namePlayer2").textContent;
 	}
-	sendStats();
-}
-
-function sendStats()
-{
-	//stats: number of jumps, games, wins, distance
-	if(game_mode == 'up_online'){
-		//user.onlineGames += 1 //nb of online games
-		//user.jumps += jumpcount1 //jumps
-		//user.distance += distanceTravelled1 //distance
-
-		//if(user.username == winner || winner == "Both Players"){
-			//user.wins += 1; 
-		//}
-		//else{
-			//user.losses += 1;
-		//}
-	}
-	if(game_mode == 'up_dual'){
-		//user.offlineGames += 1 //nb of offline games
-		//user.jumps += jumpcount1 //jumps
-		//user.distance += distanceTravelled1 //distance
-	}
-
 }
 
 function upStop()
 {
 	if (stop == true)
 		return;
+	user.send_stats(gameStats);
 	stop = true;
 	document.removeEventListener('keydown', onKeyDown);
 	document.removeEventListener('keyup', onKeyUp);
