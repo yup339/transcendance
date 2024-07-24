@@ -50,11 +50,81 @@ class UserConsumer(AsyncWebsocketConsumer):
                     await self.token_login(data)
                 elif data_type == 'logout':
                     await self.logout_user(data)
+                elif data_type == 'update_stats':
+                    await self.update_stats(data)
+                elif data_type == 'get_stats':
+                    await self.get_stats(data)
                 else:
                     print(f"Unknown message type: {data_type}")
             except json.JSONDecodeError as e:
                 print(f"JSON decoding error: {str(e)}")
-            
+
+
+        async def get_stats(self, data):
+            from pong.models import User
+            from pong.models import PongStats
+            from pong.models import UpStats
+            if self.user_token:
+                user = await sync_to_async(User.objects.get)(username=self.username)
+                pong_stats = (await sync_to_async(PongStats.objects.get_or_create)(user=user))[0]
+                up_stats = (await sync_to_async(UpStats.objects.get_or_create)(user=user))[0]
+                await self.send(text_data=json.dumps({
+                    'type': 'update_stats',
+
+                    'pong_won': pong_stats.games_won,
+                    'pong_lost': pong_stats.games_lost,
+                    'paddle_hits': pong_stats.paddle_hits,
+                    'ball_travel_distance': pong_stats.ball_travel_distance,
+                    'pong_online_game_played': pong_stats.online_game_played,
+                    'pong_offline_game_played': pong_stats.offline_game_played,
+
+                    'up_won': up_stats.games_won,
+                    'up_lost': up_stats.games_lost,
+                    'up_drawn': up_stats.games_drawn,
+                    'jump_count': up_stats.jump_count,
+                    'travelled_distance': up_stats.travelled_distance,
+                    'up_online_game_played': up_stats.online_game_played,
+                    'up_offline_game_played': up_stats.offline_game_played
+                }))
+                print(f"User stats sent: {self.username}")
+            else:
+                await self.send(text_data=json.dumps({
+                    'type': 'get_stats_error',
+                    'message': 'User not logged in'
+                }))
+
+        async def update_stats(self, data):
+            from pong.models import User
+            from pong.models import PongStats
+            from pong.models import UpStats
+            if self.user_token:
+                user = await sync_to_async(User.objects.get)(username=self.username)
+                #update stats for pong in Pongstats
+                pong_stats = (await sync_to_async(PongStats.objects.get_or_create)(user=user))[0]
+                pong_stats.games_won += data.get('pong_won', 0)
+                pong_stats.games_lost += data.get('pong_lost', 0)
+                pong_stats.paddle_hits += data.get('paddle_hits', 0)
+                pong_stats.ball_travel_distance += data.get('ball_travel_distance', 0)
+                pong_stats.online_game_played += data.get('pong_online_game_played', 0)
+                pong_stats.offline_game_played += data.get('pong_offline_game_played', 0)
+                await sync_to_async(pong_stats.save)()
+                #update stats for up in Upstats
+                up_stats = (await sync_to_async(UpStats.objects.get_or_create)(user=user))[0]
+                up_stats.games_won += data.get('up_won', 0)
+                up_stats.games_lost += data.get('up_lost', 0)
+                up_stats.games_drawn += data.get('up_drawn', 0)
+                up_stats.jump_count += data.get('jump_count', 0)
+                up_stats.travelled_distance += data.get('travelled_distance', 0)
+                up_stats.online_game_played += data.get('up_online_game_played', 0)
+                up_stats.offline_game_played += data.get('up_offline_game_played', 0)
+                await sync_to_async(up_stats.save)()
+                await sync_to_async(user.save)()
+                print(f"User stats updated: {self.username}")
+            else:
+                await self.send(text_data=json.dumps({
+                    'type': 'update_stats_error',
+                    'message': 'User not logged in'
+                })) 
 
         async def token_login(self, data):
             token = data.get('token')
@@ -159,16 +229,7 @@ class PongConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         await self.accept()
         self.side = 'no side yet'
-        pong_queue.append(self)
         self.score = 0
-        print("connection to the pong server")
-        #queue_lock.acquire()
-        if len(pong_queue) >= 2:
-            player1 = pong_queue.pop(0)
-            player2 = pong_queue.pop(0)
-            self.match_group_name = generate_match_group_name()            
-            await self.create_match(player1, player2, self.match_group_name)
-        #queue_lock.release()
 
     async def disconnect(self, close_code):
         if self in pong_queue :
@@ -221,6 +282,19 @@ class PongConsumer(AsyncWebsocketConsumer):
                     'side': self.side
                 }
         )
+
+            elif data['type'] == 'userInit':
+                self.username = data['username']
+                print(f"User {self.username} connected")
+                pong_queue.append(self)
+                print("connection to the pong server")
+                #queue_lock.acquire()
+                if len(pong_queue) >= 2:
+                    player1 = pong_queue.pop(0)
+                    player2 = pong_queue.pop(0)
+                    self.match_group_name = generate_match_group_name()            
+                    await self.create_match(player1, player2, self.match_group_name)
+                #queue_lock.release()
 
             elif data['type'] == 'paddlePosition':
                 await self.channel_layer.group_send(
@@ -280,12 +354,16 @@ class PongConsumer(AsyncWebsocketConsumer):
         await player1.send(text_data=json.dumps({
             'type': 'matchFound',
             'group': group_name,
-            'side': 'right'
+            'side': 'right',
+            'left': player2.username,
+            'right': player1.username
         }))
         await player2.send(text_data=json.dumps({
             'type': 'matchFound',
             'group': group_name,
-            'side': 'left'
+            'side': 'left',
+            'left': player2.username,
+            'right': player1.username
         }))
         player2.side = 'left'
         player1.side = 'right'

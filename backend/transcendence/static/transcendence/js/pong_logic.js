@@ -15,8 +15,6 @@ function update(){
 	requestAnimationFrame(update);
 }
 
-
-
 function score(side){
 	if (side === "left"){
 		leftPlayerScore++;
@@ -58,6 +56,7 @@ function score(side){
 			document.getElementById('winner').textContent = winner + " won!";
 		}
 		
+		user.send_stats(gameStats);
 	}
 }
 
@@ -75,6 +74,7 @@ function start_pong()
 function PongGame()
 {
 	game_stop = false;
+	gameStats = new StatsContainer();
 
 	if(game_mode == 'pong_dual')
 	{
@@ -102,6 +102,8 @@ function PongGame()
 				navigateTo('login');
 				return;
 			}
+		leftPlayer = "Please";
+		rightPlayer = "Wait";
 		socket = new GameSocket();
 		prepare_online_Game();
 	}
@@ -323,6 +325,12 @@ function startOnlineMatch(data){
 	console.log("starting online match");
 	document.getElementById("play-link").style.visibility = 'hidden';
 	
+	leftPlayer = data.left;
+	rightPlayer = data.right;
+
+	document.getElementById('leftPlayerScore').textContent = leftPlayer + ': ' + leftPlayerScore;
+	document.getElementById('rightPlayerScore').textContent = rightPlayer + ': ' + rightPlayerScore;	
+
 	//delete the presentation ball
 	balls[0].cleanup();
 	balls = [];
