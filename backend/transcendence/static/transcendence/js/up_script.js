@@ -336,7 +336,7 @@ function findWinner() // sends gameStats as well
 	user.send_stats(gameStats);
 }
 
-function upStop()
+function upStop(hard=false)
 {
 	if (stop == true)
 		return;
@@ -375,7 +375,11 @@ function upStop()
 	
 	if (uprenderer)
 		uprenderer.dispose();
-				
+	
+	if (hard)
+	{
+		return;
+	}
 	//Determines winner and sends endscreen notification
 	if(game_mode != 'up_online'){
 		const upWinner = document.getElementById('labelWinner');

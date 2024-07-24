@@ -466,6 +466,10 @@ function displayPage(pageName)
 
 function navigateTo(pageName)
 {
+	if (!stop)
+		upStop(true);
+	if (!game_stop)
+		stopGame();
     if (socket)
         socket.disconnect();
     if (history.state !== pageName) 
