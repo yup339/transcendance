@@ -276,7 +276,7 @@ function playerController(side, elapsedTime)
 			players[0].isFalling = true;
 			players[0].isJumping = true;
 			players[0].jumpSet = false;
-			jumpCount1 += 1;
+			gameStats.stats.jump_count++;
 		}
 	}
 	else
@@ -298,7 +298,7 @@ function playerController(side, elapsedTime)
 			players[1].isFalling = true;
 			players[1].isJumping = true;
 			players[1].jumpSet = false;
-			jumpCount2 += 1;
+			gameStats.stats.jump_count++;
 		}
 	}
 
@@ -397,4 +397,13 @@ function updateStatsOnline(side)
 		distanceTravelled1 = Math.floor(players[0].position.y);
 	if (players[1].position.y > distanceTravelled2)
 		distanceTravelled2 = Math.floor(players[1].position.y);
+
+	if (side == left)
+	{
+		gameStats.stats.travelled_distance = distanceTravelled1;
+	}
+	else
+	{
+		gameStats.stats.travelled_distance = distanceTravelled2;
+	}
 }
