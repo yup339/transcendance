@@ -301,7 +301,7 @@ function findWinner() // sends gameStats as well
 		winner = "Both Players";
 	}
 	else if(distanceTravelled1 > distanceTravelled2){
-		if (game_mode = 'up_online')
+		if (uponline)
 		{
 			if (currentSide == 'left')
 				gameStats.stats.up_won++;
@@ -313,13 +313,15 @@ function findWinner() // sends gameStats as well
 		winner = document.getElementById("namePlayer1").textContent;
 	}
 	else{
-		if (game_mode = 'up_online')
+		if (uponline)
 		{
 			if (currentSide == 'left')
 				gameStats.stats.up_lost++;
 			else
 				gameStats.stats.up_won++;
 		}
+		else
+			gameStats.stats.up_lost++;
 		winner = document.getElementById("namePlayer2").textContent;
 	}
 
