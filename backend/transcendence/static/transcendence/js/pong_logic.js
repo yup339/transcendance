@@ -157,7 +157,7 @@ function prepare_online_Game()
 	scoreOutput = document.getElementById("scoreSliderValue");
 	scene = new THREE.Scene();
 	
-	backgroundGeometry = new THREE.BoxGeometry(GAME_WIDTH * 2, GAME_HEIGHT * 2 ,1)
+	backgroundGeometry = new THREE.BoxGeometry(GAME_WIDTH * 8, GAME_HEIGHT * 8 ,1)
 	backgroud_materail = new THREE.MeshStandardMaterial({color: 0x444444});
 	background = new THREE.Mesh( backgroundGeometry, backgroud_materail);
 	background.position.z = -BOUND_DEPTH / 2;
@@ -169,10 +169,10 @@ function prepare_online_Game()
 	scene.add(light);
 	scene.background = new THREE.Color(0x000000);
 	scene.add(background);
- 	floor = new HitBox(0, -GAME_HEIGHT , GAME_WIDTH * 2, 1, BOUND_DEPTH);
- 	roof = new HitBox(0, GAME_HEIGHT, GAME_WIDTH * 2, 1, BOUND_DEPTH);
- 	leftGoal = new HitBox(-GAME_WIDTH , 0, 1, GAME_HEIGHT * 2, BOUND_DEPTH);
-	rightGoal = new HitBox(GAME_WIDTH, 0, 1, GAME_HEIGHT * 2, BOUND_DEPTH); 
+	floor = new HitBox(0, -GAME_HEIGHT + 5, GAME_WIDTH * 2, 10, BOUND_DEPTH + 50);
+	roof = new HitBox(0, GAME_HEIGHT + 5, GAME_WIDTH * 2, 10, BOUND_DEPTH + 50);
+	leftGoal = new HitBox(-GAME_WIDTH - 50, 0, 100, GAME_HEIGHT * 2, BOUND_DEPTH + 50);
+    rightGoal = new HitBox(GAME_WIDTH + 50, 0, 100, GAME_HEIGHT * 2, BOUND_DEPTH + 50); 
 	leftPaddle = new Paddle(-GAME_WIDTH + PADDLE_DISTANCE_FROM_GOAL , 0, randomColor());
 	rightPaddle = new Paddle(GAME_WIDTH - PADDLE_DISTANCE_FROM_GOAL, 0, randomColor());
 	speedOutput.innerHTML = speedSlider.value;
@@ -212,7 +212,7 @@ function prepareGame()
 	scoreOutput = document.getElementById("scoreSliderValue");
 	scene = new THREE.Scene();
 	
-	backgroundGeometry = new THREE.BoxGeometry(GAME_WIDTH * 2, GAME_HEIGHT * 2 ,1)
+	backgroundGeometry = new THREE.BoxGeometry(GAME_WIDTH * 8, GAME_HEIGHT * 8 ,1)
 	backgroud_materail = new THREE.MeshStandardMaterial({color: 0x444444});
 	background = new THREE.Mesh( backgroundGeometry, backgroud_materail);
 	background.position.z = -BOUND_DEPTH / 2;
@@ -224,10 +224,10 @@ function prepareGame()
 	scene.add(light);
 	scene.background = new THREE.Color(0x000000);
 	scene.add(background);
- 	floor = new HitBox(0, -GAME_HEIGHT , GAME_WIDTH * 2, 1, BOUND_DEPTH);
- 	roof = new HitBox(0, GAME_HEIGHT, GAME_WIDTH * 2, 1, BOUND_DEPTH);
- 	leftGoal = new HitBox(-GAME_WIDTH , 0, 1, GAME_HEIGHT * 2, BOUND_DEPTH);
-	rightGoal = new HitBox(GAME_WIDTH, 0, 1, GAME_HEIGHT * 2, BOUND_DEPTH); 
+ 	floor = new HitBox(0, -GAME_HEIGHT + 5, GAME_WIDTH * 2, 10, BOUND_DEPTH + 50);
+ 	roof = new HitBox(0, GAME_HEIGHT + 5, GAME_WIDTH * 2, 10, BOUND_DEPTH + 50);
+ 	leftGoal = new HitBox(-GAME_WIDTH - 50, 0, 100, GAME_HEIGHT * 2, BOUND_DEPTH + 50);
+	rightGoal = new HitBox(GAME_WIDTH + 50, 0, 100, GAME_HEIGHT * 2, BOUND_DEPTH + 50); 
 	leftPaddle = new Paddle(-GAME_WIDTH + PADDLE_DISTANCE_FROM_GOAL , 0, randomColor());
 	rightPaddle = new Paddle(GAME_WIDTH - PADDLE_DISTANCE_FROM_GOAL, 0, randomColor());
 	speedOutput.innerHTML = speedSlider.value;

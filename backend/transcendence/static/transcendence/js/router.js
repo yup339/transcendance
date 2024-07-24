@@ -317,6 +317,7 @@ class UpSocket{
 					updatePosition(data);
 					break;
                 case 'leaver':
+                    console.log("here");
                     upLeaver();
                     break;
 				default: console.log("error: type unknown");
@@ -328,7 +329,7 @@ class UpSocket{
 }
 
 function upLeaver(){
-    console.log(gameIsOver);
+    console.log("receiving leaver");
     if (gameIsOver == true)
         return ;
     gameIsOver = true;
