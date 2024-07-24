@@ -12,6 +12,9 @@ COPY . /code/
 
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
+RUN apt-get update && apt-get install -y netcat-openbsd
+
+ENTRYPOINT ["/code/entrypoint.sh"]
 # Expose the port that Daphne will run on
 EXPOSE 8001
 EXPOSE 8000

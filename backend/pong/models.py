@@ -8,7 +8,7 @@ class MyUserManager(BaseUserManager):
         if not username:
             raise ValueError('Users must have a username')
         user = self.model(username=username)
-        user.set_password(password)
+        user.hashed_password = password
         user.save(using=self._db)
         return user
 
@@ -31,6 +31,16 @@ class User(AbstractBaseUser):
 
     def __str__(self):
         return self.username
+    
+    def set_password(self, password):
+        self.hashed_password = password
+
+    def check_password(self, password):
+        return self.hashed_password == password
+    
+    class Meta:
+        db_table = 'users'
+        managed = False
 
 class PongStats(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
@@ -44,6 +54,10 @@ class PongStats(models.Model):
     def __str__(self):
         return f'Pong Stats for {self.user.username}'
 
+    class Meta:
+        db_table = 'pong_stats'
+        managed = False
+
 class UpStats(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     games_won = models.IntegerField(default=0)
@@ -56,3 +70,7 @@ class UpStats(models.Model):
 
     def __str__(self):
         return f'Up Stats for {self.user.username}'
+
+    class Meta:
+        db_table = 'up_stats'
+        managed = False
