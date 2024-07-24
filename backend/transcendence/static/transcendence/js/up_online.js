@@ -149,14 +149,6 @@ function prepareOnline()
 	startPlat2.setHitbox();
 
 
-	//Setting names //TODO: fix to change names for login
-	const name1 = document.getElementById("namePlayer1");
-	name1.textContent = "Name 1";
-	name1.style.color = 'lightgreen';
-	const name2 = document.getElementById("namePlayer2");
-	name2.textContent = "Name 2";
-	name2.style.color = 'lightpink';
-
 	renderUp();
 
 	socket = new UpSocket()
@@ -223,9 +215,11 @@ function onlineUpdate(side)
 	
 	if (second >= 60)
 	{
-		const onscreenTimer = document.getElementById("gameTime");
-		onscreenTimer.textContent = 0;
+		stop = true;
 		console.log("Game Over");
+	}
+	if (stop)
+	{
 		upStop();
 		return ;
 	}
