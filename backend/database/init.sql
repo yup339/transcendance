@@ -2,7 +2,9 @@
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY NOT NULL,
     username VARCHAR(25) UNIQUE NOT NULL,
-    hashed_password TEXT NOT NULL  /*hash it on django*/
+    hashed_password TEXT NOT NULL,  /*hash it on django*/
+    password TEXT,
+    last_login TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE pong_stats (

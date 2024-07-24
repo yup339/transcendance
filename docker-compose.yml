@@ -12,6 +12,7 @@ services:
       - ./backend:/code
       - ./backend/transcendence/static/:/static/
     build: ./backend
+    command: /code/entrypoint.sh
     networks:
       - transcendance
     ports:
