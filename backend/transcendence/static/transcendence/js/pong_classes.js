@@ -96,12 +96,12 @@ class Ball {
 		this.vec.x *= -1;
 		this.updateSpeed();
 		this.snap((leftPaddle.HitBox.x + (leftPaddle.HitBox.width / 2 + this.radius)), -1);
-		this.HitBox.disable();
-		leftPaddle.disableHitbox();
 		if (rightPaddle.aiActive)
 			gameStats.stats.paddle_hits++;
 		if (this.online && socket.side === 'left')
 		{
+			this.HitBox.disable();
+			leftPaddle.disableHitbox();
 			gameStats.stats.paddle_hits++;
 			socket.sendInfo(this.serialize());
 		}
@@ -112,9 +112,9 @@ class Ball {
 		this.vec.x *= -1;
 		this.updateSpeed()
 		this.snap(rightPaddle.HitBox.x - (rightPaddle.HitBox.width / 2 + this.radius), -1);			
-		this.HitBox.disable();
-		rightPaddle.disableHitbox();
 		if (this.online && socket.side === 'right'){
+			this.HitBox.disable();
+			rightPaddle.disableHitbox();
 			gameStats.stats.paddle_hits++;
 			socket.sendInfo(this.serialize());
 		}
