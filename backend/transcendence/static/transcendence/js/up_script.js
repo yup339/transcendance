@@ -71,9 +71,8 @@ function onVisibilityChange()
 {
 	if (document.visibilityState == "visible") {
 		alert("you left the page game has been stopped")
-	} else {
 		navigateTo('game_choice');
-		if(uponline && socket)
+		if(socket)
 			socket.disconnect();
 	}
 }
