@@ -128,14 +128,10 @@ class Ball {
 
 			//this.velocityY *= -1;
 		if (this.HitBox.doesCollide(leftGoal, magnitude)){
-			leftGoal.disable();
-			this.HitBox.disable();
 			this.rightScore();
 			return;
 
 		} else if (this.HitBox.doesCollide(rightGoal, magnitude)){
-			rightGoal.disable();
-			this.HitBox.disable();
 			this.leftScore();
 			return;
 		}
@@ -158,6 +154,8 @@ class Ball {
 		}
 
 		if (this.online && socket.side == 'left'){
+			rightGoal.disable();
+			this.HitBox.disable();
 			socket.sendInfo(JSON.stringify({"type" : "scorePoint", "group" : socket.group, "side" : "left"}));
 		}
 	}
@@ -171,6 +169,8 @@ class Ball {
 		}
 
 		if (this.online && socket.side === 'right'){
+			leftGoal.disable();
+			this.HitBox.disable();
 			socket.sendInfo(JSON.stringify({"type" : "scorePoint", "group" : socket.group, "side" : "right"}));
 		}
 	}
