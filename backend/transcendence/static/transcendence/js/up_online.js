@@ -236,11 +236,7 @@ function onlineUpdate(side)
 	
 	if (second >= 60)
 	{
-		stop = true;
 		console.log("Game Over");
-	}
-	if (stop)
-	{
 		const onscreenTimer = document.getElementById("gameTime");
 		onscreenTimer.textContent = 0;
 		upStop();
