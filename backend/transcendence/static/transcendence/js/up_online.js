@@ -226,12 +226,16 @@ function onlineUpdate(side)
 
 	if (stop)
 	{
+		console.log("test1")
+		gameIsOver = true;
 		upStop();
 		return ;
 	}
 
 	if (second >= 60)
 	{
+		console.log("test2")
+		gameIsOver = true;
 		stop = true;
 		console.log("Game Over");
 	}

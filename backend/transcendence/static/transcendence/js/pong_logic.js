@@ -131,8 +131,8 @@ function prepare_online_Game()
 	scene.add(background);
  	floor = new HitBox(0, -GAME_HEIGHT , GAME_WIDTH * 2, 1, BOUND_DEPTH);
  	roof = new HitBox(0, GAME_HEIGHT, GAME_WIDTH * 2, 1, BOUND_DEPTH);
- 	leftGoal = new HitBox(-GAME_WIDTH , 0, 1, GAME_HEIGHT * 2, BOUND_DEPTH);
-	rightGoal = new HitBox(GAME_WIDTH, 0, 1, GAME_HEIGHT * 2, BOUND_DEPTH); 
+ 	leftGoal = new HitBox(-GAME_WIDTH , 0, 50, GAME_HEIGHT * 2, BOUND_DEPTH);
+	rightGoal = new HitBox(GAME_WIDTH, 0, 50, GAME_HEIGHT * 2, BOUND_DEPTH); 
 	leftPaddle = new Paddle(-GAME_WIDTH + PADDLE_DISTANCE_FROM_GOAL , 0, randomColor());
 	rightPaddle = new Paddle(GAME_WIDTH - PADDLE_DISTANCE_FROM_GOAL, 0, randomColor());
 	speedOutput.innerHTML = speedSlider.value;
@@ -266,6 +266,7 @@ function pongLeaver(){
 
 function stopGame() 
 {
+	gameIsOver = true;
 	if(colorPicker)
 		colorPicker.removeEventListener('input', handleColorPicked);
 
@@ -338,15 +339,4 @@ function startOnlineMatch(data){
 		document.addEventListener('keyup', rightKeyUpHandler);
 		rightPaddle.setOnline(true);
 	}
-}
-
-
-
-
-function pongLeaver(){
-	if (gameIsOver == true)
-		return
-	stopGame()
-	alert("your stupid opponent left he is such a loser, you win !");
-	navigateTo('game_choice');
 }

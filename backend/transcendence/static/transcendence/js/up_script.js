@@ -298,6 +298,7 @@ function findWinner()
 
 function upStop()
 {
+	
 	stop = true;
 	document.removeEventListener('keydown', onKeyDown);
 	document.removeEventListener('keyup', onKeyUp);

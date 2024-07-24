@@ -170,8 +170,9 @@ function updateUpGame()
 	
 	if (second >= 60)
 	{
+		gameIsOver = true;
 		stop = true;
-		console.log("Game Over");
+		console.log("Game Over2");
 	}
 
 	if (stop)
