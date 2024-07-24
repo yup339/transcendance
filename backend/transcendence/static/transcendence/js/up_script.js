@@ -301,21 +301,10 @@ function findWinner()
 		winner = "Both Players";
 	}
 	else if(distanceTravelled1 > distanceTravelled2){
-		if(game_mode == 'up_online'){
-			winner = players[0];
-		}
-		else{
-			winner = "Left Player";
-		}
-	
+		winner = document.getElementById("namePlayer1").textContent;
 	}
 	else{
-		if(game_mode == 'up_online'){
-			winner = players[1];
-		}
-		else{
-			winner = "Right Player";
-		}
+		winner = document.getElementById("namePlayer2").textContent;
 	}
 	sendStats();
 }
