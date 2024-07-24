@@ -380,6 +380,8 @@ function logout_user()
     navigateTo('game_choice');
 	navid.innerHTML = `  <a class="nav-item nav-link active clickable" onclick="navigateTo('signup')">Sign Up</a>
                     <a class="nav-item nav-link active clickable" onclick="navigateTo('login')">Log in</a>`;
+	const showLogin = document.getElementById('showLogin');
+	showLogin.textContent = "";
 }
 
 function displayPage(pageName) 

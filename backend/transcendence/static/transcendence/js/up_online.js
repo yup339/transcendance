@@ -1,4 +1,4 @@
-function gameReady()
+function gameReady(data)
 {
     document.addEventListener('keydown', onKeyDown, false);
 	document.addEventListener('keyup', onKeyUp, false);
@@ -9,22 +9,22 @@ function gameReady()
 	const onscreenTimer = document.getElementById("gameTime");
 	onscreenTimer.textContent = count;
 	//Make names appear
-	if(currentSide == 'left'){
-		const name1 = document.getElementById("namePlayer1");
-		name1.textContent = user.username;
-		name1.style.color = 'lightgreen';
-		const name2 = document.getElementById("namePlayer2");
-		name2.textContent = "opponent";
-		name2.style.color = 'lightpink';
-	}
-	else if(currentSide){
-		const name1 = document.getElementById("namePlayer1");
-		name1.textContent = "opponent";
-		name1.style.color = 'lightgreen';
-		const name2 = document.getElementById("namePlayer2");
-		name2.textContent = user.username;
-		name2.style.color = 'lightpink';
-	}
+//	if(currentSide == 'left'){
+//		const name1 = document.getElementById("namePlayer1");
+//		name1.textContent = data.left;
+//		name1.style.color = 'lightgreen';
+//		const name2 = document.getElementById("namePlayer2");
+//		name2.textContent = data.right;
+//		name2.style.color = 'lightpink';
+//	}
+//	else if(currentSide){
+//		const name1 = document.getElementById("namePlayer1");
+//		name1.textContent = data.left;
+//		name1.style.color = 'lightgreen';
+//		const name2 = document.getElementById("namePlayer2");
+//		name2.textContent = data.right;
+//		name2.style.color = 'lightpink';
+//	}
 
 	countdownOnline();
 }
@@ -106,6 +106,12 @@ function updatePosition(data)
 function startUpOnline(data) // separation of 2 players
 {
 	currentSide = data.side;
+	const name1 = document.getElementById("namePlayer1");
+	name1.textContent = data.left;
+	name1.style.color = 'lightgreen';
+	const name2 = document.getElementById("namePlayer2");
+	name2.textContent = data.right;
+	name2.style.color = 'lightpink';
 	if (data.side == 'left')
 	{
 		console.log("Generating level...");
