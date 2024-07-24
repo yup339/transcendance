@@ -309,6 +309,10 @@ function stopGame()
 	if(colorPicker)
 		colorPicker.removeEventListener('input', handleColorPicked);
 
+	if(game_mode == 'pong_online'){
+		document.removeEventListener('keydown', rightKeyDownHandler);
+		document.removeEventListener('keyup', rightKeyUpHandler);
+	}
 	
 	document.removeEventListener('keydown', keyDownHandler);
 
