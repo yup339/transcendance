@@ -98,6 +98,7 @@ function setGlobals()
 	distanceTravelled2 = 0;
 	jumpCount1 = 0; //stat
 	jumpCount2 = 0;
+	elapsedTime = 1/60.0;
 	count = 3;
 	let currentSide = undefined;
 	document.addEventListener("visibilitychange", onVisibilityChange);
@@ -331,6 +332,8 @@ function sendStats()
 
 function upStop()
 {
+	if (stop == true)
+		return;
 	stop = true;
 	document.removeEventListener('keydown', onKeyDown);
 	document.removeEventListener('keyup', onKeyUp);
@@ -340,21 +343,7 @@ function upStop()
 	
 	if (uponline)
 	{
-		// TODO: for online stats
-		if	(currentSide == 'left')
-		{
-			console.log("Jump count: ", jumpCount1);
-		}
-		else
-		{
-			console.log("Jump count: ", jumpCount2);
-		}
 		uponline = false;
-	}
-	else
-	{
-		console.log("Jump count: ", jumpCount1);
-		console.log("Jump count: ", jumpCount2);
 	}
 
 	for (let i = 0; i < objects.length; i++)

@@ -240,7 +240,7 @@ function onlineUpdate(side)
 		requestId = requestAnimationFrame(onlineUpdate);
 	printPerSecond();
 	
-	if (second >= 60)
+	if (second >= 10)
 	{
 		console.log("Game Over");
 		gameIsOver = true;
@@ -249,11 +249,6 @@ function onlineUpdate(side)
 		upStop();
 		return ;
 	}
-
-	// delta time
-	// let elapsedTime = (performance.now() - lastTime) / 1000;
-	// lastTime = performance.now();
-	elapsedTime = 1/60.0;
 
 	playerController(currentSide, elapsedTime);
 	renderUp();
