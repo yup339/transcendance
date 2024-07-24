@@ -103,6 +103,7 @@ function PongGame()
 {
 	game_stop = false;
 	gameStats = new StatsContainer();
+	document.addEventListener("visibilitychange", onVisibilityChange);
 
 	if(game_mode == 'pong_dual')
 	{
@@ -317,7 +318,7 @@ function stopGame()
 	document.removeEventListener('keydown', keyDownHandler);
 
 	game_mode = "";
-
+	document.removeEventListener("visibilitychange", onVisibilityChange);
 	document.removeEventListener('keyup', keyUpHandler);
 	leftPlayerScore = 0;
     rightPlayerScore = 0;
