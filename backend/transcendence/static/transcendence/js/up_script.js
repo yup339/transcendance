@@ -5,7 +5,7 @@ let requestId; // to stop loop
 //time vars
 let uponline;
 let upcountdown;
-let stop = true;
+let stop;
 let startTime;
 let count; // timer for the countdown at the start (starting at 3)
 let second; // timer for current round (starting at 60)
@@ -102,11 +102,20 @@ function setGlobals()
 	let currentSide = undefined;
 	document.addEventListener("visibilitychange", onVisibilityChange);
 	
-		//Setting up stats for DB
-	gameStats = new StatsContainer();
-
 		//Setting names
-	if(game_mode == 'up_dual'){
+	if(game_mode == 'up_online'){
+
+		//players[0] = user.username;
+		//players[1] = 
+		const name1 = document.getElementById("namePlayer1");
+		name1.textContent = players[0];
+		name1.style.color = 'lightgreen';
+		const name2 = document.getElementById("namePlayer2");
+		name2.textContent = players[1];
+		name2.style.color = 'lightpink';
+		
+	}
+	else{
 		const name1 = document.getElementById("namePlayer1");
 		name1.textContent = "Player 1";
 		name1.style.color = 'lightgreen';
@@ -114,13 +123,8 @@ function setGlobals()
 		name2.textContent = "Player 2";
 		name2.style.color = 'lightpink';
 		
-	}
-	updateOnScreen();
-	const onscreenTimer = document.getElementById("gameTime");
-	if(game_mode == 'up_online'){
-		onscreenTimer.textContent = "Waiting for a player...";
-	}
-	else{
+		updateOnScreen();
+		const onscreenTimer = document.getElementById("gameTime");
 		onscreenTimer.textContent = count;
 	}
 }
@@ -299,10 +303,7 @@ function findWinner()
 	}
 	else if(distanceTravelled1 > distanceTravelled2){
 		if(game_mode == 'up_online'){
-			if(currentSide == 'left')
-				winner = user.username;
-			else
-				winner = "opponent";
+			winner = players[0];
 		}
 		else{
 			winner = "Left Player";
@@ -311,10 +312,7 @@ function findWinner()
 	}
 	else{
 		if(game_mode == 'up_online'){
-			if(currentSide == 'left')
-				winner = "opponent";
-			else
-				winner = user.username;
+			winner = players[1];
 		}
 		else{
 			winner = "Right Player";
@@ -327,29 +325,27 @@ function sendStats()
 {
 	//stats: number of jumps, games, wins, distance
 	if(game_mode == 'up_online'){
-		gameStats.up_online_game_played++; //nb of online games
-		gameStats.jumps += jumpCount1; //jumps
-		gameStats.distance += distanceTravelled1; //distance
+		//user.onlineGames += 1 //nb of online games
+		//user.jumps += jumpcount1 //jumps
+		//user.distance += distanceTravelled1 //distance
 
-		if(user.username == winner || winner == "Both Players"){
-			gameStats.up_won++; 
-		}
-		else{
-			gameStats.up_lost++;
-		}
+		//if(user.username == winner || winner == "Both Players"){
+			//user.wins += 1; 
+		//}
+		//else{
+			//user.losses += 1;
+		//}
 	}
 	if(game_mode == 'up_dual'){
-		gameStats.up_offline_game_played++; //nb of offline games
-		// gameStats.jumps += jumpCount1; //jumps
-		// gameStats.distance += distanceTravelled1; //distance
+		//user.offlineGames += 1 //nb of offline games
+		//user.jumps += jumpcount1 //jumps
+		//user.distance += distanceTravelled1 //distance
 	}
-	user.send_stats(gameStats);
+
 }
 
 function upStop()
 {
-	if (stop == true)
-		return;
 	stop = true;
 	document.removeEventListener('keydown', onKeyDown);
 	document.removeEventListener('keyup', onKeyUp);
