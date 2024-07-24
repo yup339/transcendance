@@ -5,7 +5,7 @@ let requestId; // to stop loop
 //time vars
 let uponline;
 let upcountdown;
-let stop;
+let stop = true;
 let startTime;
 let count; // timer for the countdown at the start (starting at 3)
 let second; // timer for current round (starting at 60)
@@ -348,6 +348,8 @@ function sendStats()
 
 function upStop()
 {
+	if (stop == true)
+		return;
 	stop = true;
 	document.removeEventListener('keydown', onKeyDown);
 	document.removeEventListener('keyup', onKeyUp);

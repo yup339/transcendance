@@ -168,11 +168,7 @@ function updateUpGame()
 	
 	if (second >= 60)
 	{
-		stop = true;
 		console.log("Game Over");
-	}
-	if (stop)
-	{
 		//reupdate counter so it reaches 0
 		const onscreenTimer = document.getElementById("gameTime");
 		onscreenTimer.textContent = 0;
