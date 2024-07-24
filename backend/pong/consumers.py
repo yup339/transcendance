@@ -120,6 +120,7 @@ class UserConsumer(AsyncWebsocketConsumer):
                 await sync_to_async(up_stats.save)()
                 await sync_to_async(user.save)()
                 print(f"User stats updated: {self.username}")
+                await self.get_stats(data)
             else:
                 await self.send(text_data=json.dumps({
                     'type': 'update_stats_error',
