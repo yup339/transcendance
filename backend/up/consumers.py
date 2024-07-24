@@ -16,13 +16,7 @@ class upConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         await self.accept()
         self.side = 'no side yet'
-        up_queue.append(self)
         print("connection to the up server")
-        if len(up_queue) >= 2:
-            player1 = up_queue.pop(0)
-            player2 = up_queue.pop(0)
-            self.match_group_name = generate_match_group_name()            
-            await self.create_match(player1, player2, self.match_group_name)
 
     async def disconnect(self, close_code):
         if self in up_queue :
@@ -74,6 +68,14 @@ class upConsumer(AsyncWebsocketConsumer):
                         'side': self.side
                     })
 
+            elif data['type'] == 'userInit':
+                self.username = data['username']
+                up_queue.append(self)
+                if len(up_queue) >= 2:
+                    player1 = up_queue.pop(0)
+                    player2 = up_queue.pop(0)
+                    self.match_group_name = generate_match_group_name()            
+                    await self.create_match(player1, player2, self.match_group_name)
 
             elif data['type'] == 'playerPosition':
                 await self.channel_layer.group_send(
@@ -140,12 +142,16 @@ class upConsumer(AsyncWebsocketConsumer):
         await player1.send(text_data=json.dumps({
             'type': 'matchFound',
             'group': group_name,
-            'side': 'right'
+            'side': 'right',
+            'left': player2.username,
+            'right': player1.username
         }))
         await player2.send(text_data=json.dumps({
             'type': 'matchFound',
             'group': group_name,
-            'side': 'left'
+            'side': 'left',
+            'left': player2.username,
+            'right': player1.username
         }))
         player2.side = 'left'
         player1.side = 'right'

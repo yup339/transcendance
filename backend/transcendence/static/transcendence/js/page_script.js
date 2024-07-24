@@ -85,7 +85,7 @@ const pages = {
 
 			<div class="align-items-center mt-3 row">
 				<div class="col-4 "> <label class="form-label my-0  text-white h5">Ball Speed: <span id="speedSliderValue">1</span></label></div>
-				<div class="col-8 "><input type="range" min="1" max="5" value="2" step="0.01" class="slider " id="speedSlider"></div>
+				<div class="col-8 "><input type="range" min="1" max="4" value="2" step="0.01" class="slider " id="speedSlider"></div>
 			</div>
 		</div>
 	</div>
@@ -380,6 +380,8 @@ function logout_user()
     navigateTo('game_choice');
 	navid.innerHTML = `  <a class="nav-item nav-link active clickable" onclick="navigateTo('signup')">Sign Up</a>
                     <a class="nav-item nav-link active clickable" onclick="navigateTo('login')">Log in</a>`;
+	const showLogin = document.getElementById('showLogin');
+	showLogin.textContent = "";
 }
 
 function displayPage(pageName) 

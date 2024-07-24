@@ -12,15 +12,26 @@
 
     <header>
         <nav class="navbar navbar-expand navbar-dark dark-color-bg py-4 fixed-top ">
-            <div class="container ">
-                <a class="navbar-brand clickable" onclick="navigateTo('game_choice')">ft_transcendence</a>
-                <div class="navbar-nav gap-3" id="navid">
-                    <a class="nav-item nav-link active clickable" onclick="navigateTo('signup')">Sign Up</a>
-                    <a class="nav-item nav-link active clickable" onclick="navigateTo('login')">Log in</a>
+            <div class="container-fluid">
+                <div class="row w-100">
+                    <div class="col d-flex align-items-center">
+                        <a class="navbar-brand clickable" onclick="navigateTo('game_choice')">ft_transcendence</a>
+                    </div>
+                    <div class="col d-flex justify-content-center">
+                        <div class="navbar-nav gap-3" id="navid">
+                            <a class="nav-item nav-link active clickable" onclick="navigateTo('signup')">Sign Up</a>
+                            <a class="nav-item nav-link active clickable" onclick="navigateTo('login')">Log in</a>
+                        </div>
+                    </div>
+                    <div class="col d-flex justify-content-end align-items-center">
+                        <div class="text-white" id="showLogin"></div>
+                    </div>
                 </div>
             </div>
         </nav>
     </header>
+    
+    
     <main>
         <div id="content"></div>
     </main>

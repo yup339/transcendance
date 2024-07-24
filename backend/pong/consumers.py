@@ -192,6 +192,12 @@ class UserConsumer(AsyncWebsocketConsumer):
                 if await sync_to_async(check_password)(password, user.password):
                     self.username = username
                     self.user_token = default_token_generator.make_token(user)
+                    if logged_in_users.get(self.user_token):
+                        await self.send(text_data=json.dumps({
+                            'type': 'login_error',
+                            'message': 'User already logged in'
+                        }))
+                        return
                     logged_in_users[self.user_token] = self
                     await self.send(text_data=json.dumps({
                         'type': 'login_success',

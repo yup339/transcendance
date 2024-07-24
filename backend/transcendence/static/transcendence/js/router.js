@@ -111,8 +111,9 @@ class UserSocket{
             this.username = data.username;
             navigateTo('game_choice');
             navid.innerHTML = ` <a class="nav-item nav-link active clickable" onclick="navigateTo('stats')">Stats</a>
-                    <a class="nav-item nav-link active clickable" onclick="logout_user()")">Logout</a>`;
-            
+                    <a class="nav-item nav-link active clickable" onclick="logout_user()")">Log out</a>`;
+            const showLogin = document.getElementById('showLogin');
+            showLogin.textContent = "Logged in as: " + data.username;
    
         }
         catch (error){
@@ -283,6 +284,7 @@ class UpSocket{
 
     handleOpen(event) {
         console.log('WebSocket connection opened.');
+        this.sendInfo(JSON.stringify({type: 'userInit', username: user.username}));
     }
 
     // use with serialize object
@@ -309,7 +311,7 @@ class UpSocket{
                     deserializePlatform(data);
                     break;
                 case 'startosgamos':
-                    gameReady();
+                    gameReady(data);
 					break;
 				case 'playerPosition':
 					updatePosition(data);
