@@ -243,16 +243,12 @@ function onlineUpdate(side)
 	if (second >= 60)
 	{
 		console.log("Game Over");
+		gameIsOver = true;
 		const onscreenTimer = document.getElementById("gameTime");
 		onscreenTimer.textContent = 0;
 		upStop();
 		return ;
 	}
-
-	// delta time
-	// let elapsedTime = (performance.now() - lastTime) / 1000;
-	// lastTime = performance.now();
-	elapsedTime = 1/60.0;
 
 	playerController(currentSide, elapsedTime);
 	renderUp();

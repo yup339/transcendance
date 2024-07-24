@@ -1,21 +1,16 @@
 
-auth de base
-tournois
+1:  ◦ Module majeur : Utiliser un framework en backend.
 
-majeur 3d :pascal 1
-majeur: autre jeu : aurelia 2
-majeur: online play 3
-majeur: ia du jeu :pascal 4
-majeur: backend 5
-mineur: database
-mineur:firefox (devrais ce faire tout seul)6
+2:  ◦ Module mineur : Utiliser un framework ou toolkit en frontend.
+    ◦ Module mineur : Utiliser une base de données en backend.
 
-potentiel:
-majeur: stats 5 : will ou alex 
-majeur: foursome 😉
-majeur: gestion utilisateur et vrai auth
-mineur: stats
-mineur: framework en frontend
-mineur: 3 langue, 3 languages, 3ngôn ngữ : will
+3:  ◦ Module majeur : Joueurs à distance
 
+4:  ◦ Module majeur : Ajout d’un second jeu avec historique utilisateur et "matchmaking".
 
+5: ◦ Module majeur : Ajout d’un second jeu avec historique utilisateur et "matchmaking".
+
+6: ◦ Module majeur : Implémenter un adversaire contrôlé par IA.
+   ◦ Module mineur : Étendre la compatibilité des navigateurs web.
+
+7:  ◦ Module majeur : Utilisation de techniques avancées 3D.

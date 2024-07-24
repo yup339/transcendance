@@ -175,11 +175,6 @@ function updateUpGame()
 		upStop();
 		return ;
 	}
-	
-	// delta time
-	// let elapsedTime = (performance.now() - lastTime) / 1000;
-	// lastTime = performance.now();
-	elapsedTime = 1/60.0;
 
 	keysEvent(elapsedTime);
 	renderUp();
@@ -222,9 +217,4 @@ function printPerSecond() // handles time events in the update loop
 		upcountdown -= 1;
 		second = showTime;
 	}
-}
-
-function upLeaver()
-{
-
 }

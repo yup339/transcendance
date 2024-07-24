@@ -98,32 +98,26 @@ function setGlobals()
 	distanceTravelled2 = 0;
 	jumpCount1 = 0; //stat
 	jumpCount2 = 0;
+	elapsedTime = 1/60.0;
 	count = 3;
 	let currentSide = undefined;
 	document.addEventListener("visibilitychange", onVisibilityChange);
 	
-		//Setting names
-	if(game_mode == 'up_online'){
-
-		//players[0] = user.username;
-		//players[1] = 
-		const name1 = document.getElementById("namePlayer1");
-		name1.textContent = players[0];
-		name1.style.color = 'lightgreen';
-		const name2 = document.getElementById("namePlayer2");
-		name2.textContent = players[1];
-		name2.style.color = 'lightpink';
-		
+	//Setting names
+	const name1 = document.getElementById("namePlayer1");
+	name1.textContent = "Player 1";
+	name1.style.color = 'lightgreen';
+	const name2 = document.getElementById("namePlayer2");
+	name2.textContent = "Player 2";
+	name2.style.color = 'lightpink';
+	updateOnScreen();
+	if (game_mode == 'up_online')
+	{
+		const onscreenTimer = document.getElementById("gameTime");
+		onscreenTimer.textContent = "Waiting for a player...";
 	}
-	else{
-		const name1 = document.getElementById("namePlayer1");
-		name1.textContent = "Player 1";
-		name1.style.color = 'lightgreen';
-		const name2 = document.getElementById("namePlayer2");
-		name2.textContent = "Player 2";
-		name2.style.color = 'lightpink';
-		
-		updateOnScreen();
+	else
+	{
 		const onscreenTimer = document.getElementById("gameTime");
 		onscreenTimer.textContent = count;
 	}
@@ -140,7 +134,10 @@ function prepareUpGame()
 		camera.position.fromArray(view.position);
 		view.camera = camera;
 	}
-	
+	if(gameMode = 'up_online'){
+		const onscreenTimer = document.getElementById("gameTime");
+		onscreenTimer.textContent = "Waiting for a player...";
+	}
 	setGlobals();
 	
 	upscene = new THREE.Scene();
@@ -335,6 +332,8 @@ function sendStats()
 
 function upStop()
 {
+	if (stop == true)
+		return;
 	stop = true;
 	document.removeEventListener('keydown', onKeyDown);
 	document.removeEventListener('keyup', onKeyUp);
@@ -344,57 +343,53 @@ function upStop()
 	
 	if (uponline)
 	{
-		// TODO: for online stats
-		if	(currentSide == 'left')
-		{
-			console.log("Jump count: ", jumpCount1);
-		}
-		else
-		{
-			console.log("Jump count: ", jumpCount2);
-		}
 		uponline = false;
 	}
-	else
-	{
-		console.log("Jump count: ", jumpCount1);
-		console.log("Jump count: ", jumpCount2);
-	}
-
+	
 	for (let i = 0; i < objects.length; i++)
-	{
-		upscene.remove(objects[i]);
-		upscene.remove(objectsp2[i]);
-		objects[i].geometry.dispose();
-		objects[i].material.dispose();
-		objectsp2[i].geometry.dispose();
-		objectsp2[i].material.dispose();
+		{
+			upscene.remove(objects[i]);
+			upscene.remove(objectsp2[i]);
+			objects[i].geometry.dispose();
+			objects[i].material.dispose();
+			objectsp2[i].geometry.dispose();
+			objectsp2[i].material.dispose();
+		}
+		objects = [];
+		objectsp2 = [];
+		
+		for (let i = 0; i < players.length; i++)
+			{
+				upscene.remove(players[i]);
+				players[i].geometry.dispose();
+				players[i].material.dispose();
+			}
+			players = [];
+			platformsGeo = [];
+			if (light1 && light2)
+				{
+					upscene.remove(light2);
+					upscene.remove(light1);
+				}
+				
+				if (uprenderer)
+					uprenderer.dispose();
+				
+				//Determines winner and sends endscreen notification
+				if(game_mode != 'up_online'){
+					const upWinner = document.getElementById('labelWinner');
+					$("#endModal").modal('show');
+					if(upWinner){
+						findWinner();
+			upWinner.textContent = winner + " won!";
+		}
 	}
-	objects = [];
-	objectsp2 = [];
-
-	for (let i = 0; i < players.length; i++)
-	{
-		upscene.remove(players[i]);
-		players[i].geometry.dispose();
-		players[i].material.dispose();
-	}
-	players = [];
-	platformsGeo = [];
-	if (light1 && light2)
-	{
-		upscene.remove(light2);
-		upscene.remove(light1);
-	}
-
-	if (uprenderer)
-		uprenderer.dispose();
-
-	//Determines winner and sends endscreen notification
-	const upWinner = document.getElementById('labelWinner');
-	$("#endModal").modal('show');
-	if(upWinner){
-		findWinner();
-		upWinner.textContent = winner + " won!";
+	else{
+		const upWinner = document.getElementById('labelWinnerOnline');
+		$("#endModalOnline").modal('show');
+		if(upWinner){
+			findWinner();
+			upWinner.textContent = winner + " won!";
+		}
 	}
 }

@@ -1,4 +1,3 @@
-
 function update(){
 	if(game_stop)
 		return ;
@@ -47,17 +46,45 @@ function score(side){
 			loser = leftPlayer;
 		}
 		
+		if (game_mode == "pong_ai" ){
+			gameStats.stats.pong_offline_game_played++;
+			if (winner == leftPlayer)
+				gameStats.stats.pong_won++;
+			else
+				gameStats.stats.pong_lost++;
+		}
+		else if (game_mode == "pong_online"){
+			gameStats.stats.pong_online_game_played++;
+			if (socket.side == 'left'){
+				if (winner == leftPlayer)
+				gameStats.stats.pong_won++;
+				else
+					gameStats.stats.pong_lost++;
+			}
+			else {
+				if (winner == leftPlayer)
+					gameStats.stats.pong_lost++;
+				else
+					gameStats.stats.pong_won++;
+			}
+		}
+
 		if(game_mode == "pong_tournament")
 		{
 			endRound(winner, loser);
+		}
+		else if(game_mode == "pong_online")
+		{
+			$("#winModalOnline").modal('show');
+			document.getElementById('winnerOnline').textContent = winner + " won!";
 		}
 		else
 		{
 			$("#winModal").modal('show');
 			document.getElementById('winner').textContent = winner + " won!";
 		}
-		
-		user.send_stats(gameStats);
+		if (game_mode == "pong_ai" || game_mode == "pong_online")
+			user.send_stats(gameStats);
 	}
 }
 
@@ -130,7 +157,7 @@ function prepare_online_Game()
 	scoreOutput = document.getElementById("scoreSliderValue");
 	scene = new THREE.Scene();
 	
-	backgroundGeometry = new THREE.BoxGeometry(GAME_WIDTH * 2, GAME_HEIGHT * 2 ,1)
+	backgroundGeometry = new THREE.BoxGeometry(GAME_WIDTH * 8, GAME_HEIGHT * 8 ,1)
 	backgroud_materail = new THREE.MeshStandardMaterial({color: 0x444444});
 	background = new THREE.Mesh( backgroundGeometry, backgroud_materail);
 	background.position.z = -BOUND_DEPTH / 2;
@@ -142,10 +169,10 @@ function prepare_online_Game()
 	scene.add(light);
 	scene.background = new THREE.Color(0x000000);
 	scene.add(background);
- 	floor = new HitBox(0, -GAME_HEIGHT , GAME_WIDTH * 2, 1, BOUND_DEPTH);
- 	roof = new HitBox(0, GAME_HEIGHT, GAME_WIDTH * 2, 1, BOUND_DEPTH);
- 	leftGoal = new HitBox(-GAME_WIDTH , 0, 1, GAME_HEIGHT * 2, BOUND_DEPTH);
-	rightGoal = new HitBox(GAME_WIDTH, 0, 1, GAME_HEIGHT * 2, BOUND_DEPTH); 
+	floor = new HitBox(0, -GAME_HEIGHT + 5, GAME_WIDTH * 2, 10, BOUND_DEPTH + 50);
+	roof = new HitBox(0, GAME_HEIGHT + 5, GAME_WIDTH * 2, 10, BOUND_DEPTH + 50);
+	leftGoal = new HitBox(-GAME_WIDTH - 50, 0, 100, GAME_HEIGHT * 2, BOUND_DEPTH + 50);
+    rightGoal = new HitBox(GAME_WIDTH + 50, 0, 100, GAME_HEIGHT * 2, BOUND_DEPTH + 50); 
 	leftPaddle = new Paddle(-GAME_WIDTH + PADDLE_DISTANCE_FROM_GOAL , 0, randomColor());
 	rightPaddle = new Paddle(GAME_WIDTH - PADDLE_DISTANCE_FROM_GOAL, 0, randomColor());
 	speedOutput.innerHTML = speedSlider.value;
@@ -169,7 +196,6 @@ function prepare_online_Game()
 
 
 
-
 function prepareGame()
 {
 	document.getElementById('leftPlayerScore').textContent = leftPlayer + ': ' + leftPlayerScore;
@@ -186,7 +212,7 @@ function prepareGame()
 	scoreOutput = document.getElementById("scoreSliderValue");
 	scene = new THREE.Scene();
 	
-	backgroundGeometry = new THREE.BoxGeometry(GAME_WIDTH * 2, GAME_HEIGHT * 2 ,1)
+	backgroundGeometry = new THREE.BoxGeometry(GAME_WIDTH * 8, GAME_HEIGHT * 8 ,1)
 	backgroud_materail = new THREE.MeshStandardMaterial({color: 0x444444});
 	background = new THREE.Mesh( backgroundGeometry, backgroud_materail);
 	background.position.z = -BOUND_DEPTH / 2;
@@ -198,10 +224,10 @@ function prepareGame()
 	scene.add(light);
 	scene.background = new THREE.Color(0x000000);
 	scene.add(background);
- 	floor = new HitBox(0, -GAME_HEIGHT , GAME_WIDTH * 2, 1, BOUND_DEPTH);
- 	roof = new HitBox(0, GAME_HEIGHT, GAME_WIDTH * 2, 1, BOUND_DEPTH);
- 	leftGoal = new HitBox(-GAME_WIDTH , 0, 1, GAME_HEIGHT * 2, BOUND_DEPTH);
-	rightGoal = new HitBox(GAME_WIDTH, 0, 1, GAME_HEIGHT * 2, BOUND_DEPTH); 
+ 	floor = new HitBox(0, -GAME_HEIGHT + 5, GAME_WIDTH * 2, 10, BOUND_DEPTH + 50);
+ 	roof = new HitBox(0, GAME_HEIGHT + 5, GAME_WIDTH * 2, 10, BOUND_DEPTH + 50);
+ 	leftGoal = new HitBox(-GAME_WIDTH - 50, 0, 100, GAME_HEIGHT * 2, BOUND_DEPTH + 50);
+	rightGoal = new HitBox(GAME_WIDTH + 50, 0, 100, GAME_HEIGHT * 2, BOUND_DEPTH + 50); 
 	leftPaddle = new Paddle(-GAME_WIDTH + PADDLE_DISTANCE_FROM_GOAL , 0, randomColor());
 	rightPaddle = new Paddle(GAME_WIDTH - PADDLE_DISTANCE_FROM_GOAL, 0, randomColor());
 	speedOutput.innerHTML = speedSlider.value;
@@ -279,6 +305,7 @@ function pongLeaver(){
 
 function stopGame() 
 {
+	gameIsOver = true;
 	if(colorPicker)
 		colorPicker.removeEventListener('input', handleColorPicked);
 
@@ -359,15 +386,4 @@ function startOnlineMatch(data){
 		document.addEventListener('keyup', rightKeyUpHandler);
 		rightPaddle.setOnline(true);
 	}
-}
-
-
-
-
-function pongLeaver(){
-	if (gameIsOver == true)
-		return
-	stopGame()
-	alert("your stupid opponent left he is such a loser, you win !");
-	navigateTo('game_choice');
 }
