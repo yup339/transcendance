@@ -91,6 +91,35 @@ class Ball {
 		this.online = true;
 	}
 
+	leftPaddleHit(){
+		this.vec.y =  leftPaddle.getImpactVector(this.y);
+		this.vec.x *= -1;
+		this.updateSpeed();
+		this.snap((leftPaddle.HitBox.x + (leftPaddle.HitBox.width / 2 + this.radius)), -1);
+		this.HitBox.disable();
+		leftPaddle.disableHitbox();
+		if (rightPaddle.aiActive)
+			gameStats.stats.paddle_hits++;
+		if (this.online && socket.side === 'left')
+		{
+			gameStats.stats.paddle_hits++;
+			socket.sendInfo(this.serialize());
+		}
+	}
+
+	rightPaddleHit(){
+		this.vec.y =  rightPaddle.getImpactVector(this.y);
+		this.vec.x *= -1;
+		this.updateSpeed()
+		this.snap(rightPaddle.HitBox.x - (rightPaddle.HitBox.width / 2 + this.radius), -1);			
+		this.HitBox.disable();
+		rightPaddle.disableHitbox();
+		if (this.online && socket.side === 'right'){
+			gameStats.stats.paddle_hits++;
+			socket.sendInfo(this.serialize());
+		}
+	}
+
 	update(magnitude){
 		if(game_stop)
 		{
@@ -98,24 +127,10 @@ class Ball {
 		}
 		
 		if (this.HitBox.doesCollide(leftPaddle.HitBox, magnitude)){
-			this.vec.y =  leftPaddle.getImpactVector(this.y);
-			this.vec.x *= -1;
-			this.updateSpeed();
-			this.snap((leftPaddle.HitBox.x + (leftPaddle.HitBox.width / 2 + this.radius)), -1);
-			this.HitBox.disable();
-			leftPaddle.disableHitbox();
-			if (this.online && socket.side === 'left') 
-				socket.sendInfo(this.serialize());
+			this.leftPaddleHit();
 		}
 		if(this.HitBox.doesCollide(rightPaddle.HitBox, magnitude)){
-			this.vec.y =  rightPaddle.getImpactVector(this.y);
-			this.vec.x *= -1;
-			this.updateSpeed()
-			this.snap(rightPaddle.HitBox.x - (rightPaddle.HitBox.width / 2 + this.radius), -1);			
-			this.HitBox.disable();
-			rightPaddle.disableHitbox();
-			if (this.online && socket.side === 'right')
-				socket.sendInfo(this.serialize());
+			this.rightPaddleHit();
 		}
 		if (this.HitBox.doesCollide(roof, magnitude)){
 			this.vec.y *= -1;
@@ -140,6 +155,8 @@ class Ball {
 		this.x += this.vec.x * magnitude;
 		this.y += this.vec.y * magnitude;
 
+		if (gameStats)
+			gameStats.stats.ball_travel_distance += Math.abs(this.vec.x * magnitude) + Math.abs(this.vec.y * magnitude);
 
 		this.HitBox.setPosition(this.x, this.y);
 		this.light.position.set( this.x, this.y, 0);

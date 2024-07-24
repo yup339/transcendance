@@ -30,6 +30,7 @@ class StatsContainer{
     }
 
     serialize(){
+        console.log(this.stats)
         return JSON.stringify(this.stats);
     }
 
@@ -37,6 +38,8 @@ class StatsContainer{
         this.stats = data;
     }
 }
+
+
 class UserSocket{
 
     loggedIn = false;
