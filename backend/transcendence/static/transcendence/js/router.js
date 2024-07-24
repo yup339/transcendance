@@ -7,12 +7,44 @@ window.addEventListener('beforeunload', function (event) {
 });
 
 
+class StatsContainer{
+    constructor(){
+        this.stats = {
+            type: 'update_stats',
+
+            pong_won : 0,
+            pong_lost : 0,
+            paddle_hits : 0,
+            ball_travel_distance : 0,
+            pong_online_game_played : 0,
+            pong_offline_game_played : 0,
+
+            up_won : 0,
+            up_lost : 0,
+            up_drawn : 0,
+            jump_count : 0,
+            travelled_distance : 0,
+            up_online_game_played : 0,
+            up_offline_game_played : 0
+        }
+    }
+
+    serialize(){
+        return JSON.stringify(this.stats);
+    }
+
+    deserialize(data){
+        this.stats = data;
+    }
+}
 class UserSocket{
 
     loggedIn = false;
+    username = "";
 
     constructor() {
         this.loggedIn = false;
+        this.stats = new StatsContainer();
         try {
             this.socket = new WebSocket(`wss://${window.location.host}/ws/user`);
             this.socket.onopen = this.handleOpen.bind(this);
@@ -56,6 +88,9 @@ class UserSocket{
                 case 'login_error':
                     this.loginError(data);
                     break;
+                case 'update_stats':
+                    this.recieveStats(data);
+                    break;
                 default:
                     this.updateUser(data);
                     break;
@@ -70,11 +105,12 @@ class UserSocket{
             const navid = document.getElementById('navid');
             console.log("Successfully logged in " + data.username);
             localStorage.setItem('token', data.token);
+            this.username = data.username;
             navigateTo('game_choice');
             navid.innerHTML = ` <a class="nav-item nav-link active clickable" onclick="navigateTo('stats')">Stats</a>
                     <a class="nav-item nav-link active clickable" onclick="logout_user()")">Logout</a>`;
             
-            
+   
         }
         catch (error){
             console.error(error);
@@ -95,6 +131,8 @@ class UserSocket{
         try{
             console.log("Login error: " + data.message);
             alert("Invalid username or password");
+            localStorage.removeItem('token');
+            this.username = "";
             navigateTo('login');
         }
         catch (error){
@@ -105,6 +143,26 @@ class UserSocket{
     updateUser(data){
         try{
             console.log("User update: " + data.username);
+        }
+        catch (error){
+            console.error(error);
+        }
+    }
+
+    send_stats(stats){
+        console.log("Sending stats");
+        this.sendInfo(stats.serialize());
+    }
+
+    ask_stats(){
+        this.stats = new StatsContainer();
+        this.sendInfo(JSON.stringify({type: 'get_stats'}));
+    }
+
+    recieveStats(data){
+        try{
+            this.stats.deserialize(data);
+            console.log(this.stats);
         }
         catch (error){
             console.error(error);
@@ -134,6 +192,7 @@ class GameSocket{
 
     handleOpen(event) {
         console.log('WebSocket connection opened.');
+        this.sendInfo(JSON.stringify({type: 'userInit', username: user.username}));
     }
 
     // use with serialize object

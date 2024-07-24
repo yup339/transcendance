@@ -88,6 +88,7 @@ function setGlobals()
 		new THREE.BoxGeometry(1, 1, 5),
 		new THREE.BoxGeometry(0.5, 1, 5)];
 
+	stop = false;
 	players = []; // players
 	objects = []; // platforms for p1
 	objectsp2 = []; // platforms for p2
@@ -101,17 +102,27 @@ function setGlobals()
 	let currentSide = undefined;
 	document.addEventListener("visibilitychange", onVisibilityChange);
 	
-	//Setting names
-	const name1 = document.getElementById("namePlayer1");
-	name1.textContent = "Player 1";
-	name1.style.color = 'lightgreen';
-	const name2 = document.getElementById("namePlayer2");
-	name2.textContent = "Player 2";
-	name2.style.color = 'lightpink';
-	
+		//Setting up stats for DB
+	gameStats = new StatsContainer();
+
+		//Setting names
+	if(game_mode == 'up_dual'){
+		const name1 = document.getElementById("namePlayer1");
+		name1.textContent = "Player 1";
+		name1.style.color = 'lightgreen';
+		const name2 = document.getElementById("namePlayer2");
+		name2.textContent = "Player 2";
+		name2.style.color = 'lightpink';
+		
+	}
 	updateOnScreen();
 	const onscreenTimer = document.getElementById("gameTime");
-	onscreenTimer.textContent = count;
+	if(game_mode == 'up_online'){
+		onscreenTimer.textContent = "Waiting for a player...";
+	}
+	else{
+		onscreenTimer.textContent = count;
+	}
 }
 
 function prepareUpGame()
@@ -270,6 +281,12 @@ function UpGame()
 	}
 	else if(game_mode == 'up_online')
 	{
+		if (!user.loggedIn)
+		{
+			alert("You need to be logged in to play online");
+			navigateTo('login');
+			return;
+		}
 		uponline = true;
 		prepareOnline();
 	}
@@ -282,7 +299,10 @@ function findWinner()
 	}
 	else if(distanceTravelled1 > distanceTravelled2){
 		if(game_mode == 'up_online'){
-			winner = players[0];
+			if(currentSide == 'left')
+				winner = user.username;
+			else
+				winner = "opponent";
 		}
 		else{
 			winner = "Left Player";
@@ -291,18 +311,45 @@ function findWinner()
 	}
 	else{
 		if(game_mode == 'up_online'){
-			winner = players[1];
+			if(currentSide == 'left')
+				winner = "opponent";
+			else
+				winner = user.username;
 		}
 		else{
 			winner = "Right Player";
 		}
 	}
+	sendStats();
+}
+
+function sendStats()
+{
+	//stats: number of jumps, games, wins, distance
+	if(game_mode == 'up_online'){
+		gameStats.up_online_game_played++; //nb of online games
+		gameStats.jumps += jumpCount1; //jumps
+		gameStats.distance += distanceTravelled1; //distance
+
+		if(user.username == winner || winner == "Both Players"){
+			gameStats.up_won++; 
+		}
+		else{
+			gameStats.up_lost++;
+		}
+	}
+	if(game_mode == 'up_dual'){
+		gameStats.up_offline_game_played++; //nb of offline games
+		// gameStats.jumps += jumpCount1; //jumps
+		// gameStats.distance += distanceTravelled1; //distance
+	}
+	user.send_stats(gameStats);
 }
 
 function upStop()
 {
 	if (stop == true)
-		return ;
+		return;
 	stop = true;
 	document.removeEventListener('keydown', onKeyDown);
 	document.removeEventListener('keyup', onKeyUp);

@@ -5,6 +5,27 @@ function gameReady()
 	stop = false;
 	startTime = performance.now();
     console.log("GAME READY FOR BOTH PLAYER");
+
+	const onscreenTimer = document.getElementById("gameTime");
+	onscreenTimer.textContent = count;
+	//Make names appear
+	if(currentSide == 'left'){
+		const name1 = document.getElementById("namePlayer1");
+		name1.textContent = user.username;
+		name1.style.color = 'lightgreen';
+		const name2 = document.getElementById("namePlayer2");
+		name2.textContent = "opponent";
+		name2.style.color = 'lightpink';
+	}
+	else if(currentSide){
+		const name1 = document.getElementById("namePlayer1");
+		name1.textContent = "opponent";
+		name1.style.color = 'lightgreen';
+		const name2 = document.getElementById("namePlayer2");
+		name2.textContent = user.username;
+		name2.style.color = 'lightpink';
+	}
+
 	countdownOnline();
 }
 
@@ -149,14 +170,6 @@ function prepareOnline()
 	startPlat2.setHitbox();
 
 
-	//Setting names //TODO: fix to change names for login
-	const name1 = document.getElementById("namePlayer1");
-	name1.textContent = "Name 1";
-	name1.style.color = 'lightgreen';
-	const name2 = document.getElementById("namePlayer2");
-	name2.textContent = "Name 2";
-	name2.style.color = 'lightpink';
-
 	renderUp();
 
 	socket = new UpSocket()
@@ -223,10 +236,10 @@ function onlineUpdate(side)
 	
 	if (second >= 60)
 	{
+		console.log("Game Over");
 		gameIsOver = true;
 		const onscreenTimer = document.getElementById("gameTime");
 		onscreenTimer.textContent = 0;
-		console.log("Game Over");
 		upStop();
 		return ;
 	}
