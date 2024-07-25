@@ -84,7 +84,10 @@ function score(side){
 			document.getElementById('winner').textContent = winner + " won!";
 		}
 		if (game_mode == "pong_ai" || game_mode == "pong_online")
-			user.send_stats(gameStats);
+		{
+			if (user.loggedIn)
+				user.send_stats(gameStats);
+		}
 	}
 }
 
