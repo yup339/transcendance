@@ -32,7 +32,8 @@ class UserConsumer(AsyncWebsocketConsumer):
                 pending_tokens[self.user_token] = True
                 await asyncio.sleep(5)
                 if self.user_token in pending_tokens:
-                    del logged_in_users[self.user_token]
+                    if self.user_token in logged_in_users:
+                        del logged_in_users[self.user_token]
                     del pending_tokens[self.user_token]
                     print(f"User disconnected: {self.channel_name}")
     
@@ -57,7 +58,26 @@ class UserConsumer(AsyncWebsocketConsumer):
                     print(f"Unknown message type: {data_type}")
             except json.JSONDecodeError as e:
                 print(f"JSON decoding error: {str(e)}")
+            except AttributeError as e:
+                print(f"AttributeError: {str(e)}")
 
+
+        async def validate_stats(self, data):
+            if not all(key in data for key in ['pong_won', 'pong_lost', 'paddle_hits', 'ball_travel_distance', 'pong_online_game_played', 'pong_offline_game_played', 'up_won', 'up_lost', 'up_drawn', 'jump_count', 'travelled_distance', 'up_online_game_played', 'up_offline_game_played']):
+                await self.send(text_data=json.dumps({
+                    'type': 'update_stats_error',
+                    'message': 'Missing stats data'
+                }))
+                return False
+            #check for data types except key 'type'
+            for key in data:
+                if key != 'type' and not isinstance(data[key], int):
+                    await self.send(text_data=json.dumps({
+                        'type': 'update_stats_error',
+                        'message': 'Invalid stats data'
+                    }))
+                    return False
+            return True
 
         async def get_stats(self, data):
             from pong.models import User
@@ -96,7 +116,7 @@ class UserConsumer(AsyncWebsocketConsumer):
             from pong.models import User
             from pong.models import PongStats
             from pong.models import UpStats
-            if self.user_token:
+            if self.user_token and await self.validate_stats(data):
                 user = await sync_to_async(User.objects.get)(username=self.username)
                 #update stats for pong in Pongstats
                 pong_stats = (await sync_to_async(PongStats.objects.get_or_create)(user=user))[0]
@@ -149,6 +169,12 @@ class UserConsumer(AsyncWebsocketConsumer):
         async def register_user(self, data):
             from pong.models import User
             username = data.get('username')
+            if len(username) > 15:
+                await self.send(text_data=json.dumps({
+                    'type': 'registration_error',
+                    'message': 'Username too long'
+                }))
+                return
             userbase = User.objects.all()
             try:
                 user = await sync_to_async(userbase.get)(username=username)
@@ -167,6 +193,12 @@ class UserConsumer(AsyncWebsocketConsumer):
             else:
                 user = await sync_to_async(userbase.create)(username=username)
                 password = data.get('password')
+                if len(password) > 100:
+                    await self.send(text_data=json.dumps({
+                        'type': 'registration_error',
+                        'message': 'Password too long'
+                    }))
+                    return
                 hashed_password = make_password(password)
                 user.hashed_password = hashed_password
                 self.username = username
@@ -184,7 +216,19 @@ class UserConsumer(AsyncWebsocketConsumer):
         async def login_user(self, data):
             from pong.models import User
             username = data.get('username')
+            if len(username) > 15:
+                await self.send(text_data=json.dumps({
+                    'type': 'login_error',
+                    'message': 'Username too long'
+             }))
+                return
             password = data.get('password')
+            if len(password) > 100:
+                await self.send(text_data=json.dumps({
+                    'type': 'login_error',
+                    'message': 'Password too long'
+                }))
+                return
             userbase = User.objects.all()
             try:
                 user = await sync_to_async(userbase.get)(username=username)
