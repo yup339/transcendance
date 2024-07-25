@@ -83,7 +83,7 @@ class UserConsumer(AsyncWebsocketConsumer):
                         'message': 'Invalid stats data'
                     }))
                     return False
-                if key == 'ball_travel_distance' and not isinstance(data[key], float):
+                if key == 'ball_travel_distance' and not (isinstance(data[key], float) or isinstance(data[key], int)):
                     await self.send(text_data=json.dumps({
                         'type': 'update_stats_error',
                         'message': 'Invalid stats data'
