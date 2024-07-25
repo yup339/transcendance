@@ -8,7 +8,7 @@ function gameReady(data)
 
 	const onscreenTimer = document.getElementById("gameTime");
 	onscreenTimer.textContent = count;
-	//Make names appear
+//Make names appear
 //	if(currentSide == 'left'){
 //		const name1 = document.getElementById("namePlayer1");
 //		name1.textContent = data.left;

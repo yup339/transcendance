@@ -142,19 +142,19 @@ class Ball {
 		}
 
 			//this.velocityY *= -1;
-		if (this.HitBox.doesCollide(leftGoal, magnitude)){
+		if (this.HitBox.doesCollide(leftGoal, magnitude) || this.x < leftGoal.x + 10){
 			this.rightScore();
 			return;
 
-		} else if (this.HitBox.doesCollide(rightGoal, magnitude)){
+		} else if (this.HitBox.doesCollide(rightGoal, magnitude) || this.x > rightGoal.x + 10){
 			this.leftScore();
 			return;
 		}
-			
+
+
 
 		this.x += this.vec.x * magnitude;
 		this.y += this.vec.y * magnitude;
-
 		if (gameStats)
 			gameStats.stats.ball_travel_distance += Math.abs(this.vec.x * magnitude) + Math.abs(this.vec.y * magnitude);
 
