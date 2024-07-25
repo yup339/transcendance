@@ -71,12 +71,23 @@ class UserConsumer(AsyncWebsocketConsumer):
                 return False
             #check for data types except key 'type'
             for key in data:
-                if key != 'type' and not isinstance(data[key], int):
+                if key != 'type' and key != 'ball_travel_distance' and not isinstance(data[key], int):
                     await self.send(text_data=json.dumps({
                         'type': 'update_stats_error',
                         'message': 'Invalid stats data'
                     }))
                     return False
+                if key == 'type' and not isinstance(data[key], str):
+                    await self.send(text_data=json.dumps({
+                        'type': 'update_stats_error',
+                        'message': 'Invalid stats data'
+                    }))
+                    return False
+                if key == 'ball_travel_distance' and not isinstance(data[key], float):
+                    await self.send(text_data=json.dumps({
+                        'type': 'update_stats_error',
+                        'message': 'Invalid stats data'
+                    }))
             return True
 
         async def get_stats(self, data):
@@ -271,7 +282,9 @@ class UserConsumer(AsyncWebsocketConsumer):
                     'type': 'logout_success',
                     'username': self.username
                 }))
+                self.user_token = ''
                 print(f"User logged out: {self.username}")
+                self.username = ''
             else:
                 await self.send(text_data=json.dumps({
                     'type': 'logout_error',
