@@ -168,7 +168,7 @@ class UserSocket{
 
     updateUser(data){
         try{
-            console.log("User update: " + data.username);
+            console.log(data);
         }
         catch (error){
             console.error(error);
