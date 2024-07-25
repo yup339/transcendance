@@ -60,16 +60,11 @@ class UpObject extends THREE.Mesh
 	collisionResolution(object) // for adjusting movement after interaction with an object
 	{
 		let dirHitbox = new THREE.Box3().setFromObject(this);
-		let newPos = new THREE.Vector3()
-		
-		dirHitbox.translate(this.nextPos.x, 0, 0);
-		if (dirHitbox.intersectsBox(object.hitbox))
-		{
-			// console.log("min in", this.dirHitbox.min);
-			this.nextPos.x = 0;
-		}
 
-		dirHitbox.translate(-this.nextPos.x, this.nextPos.y, 0);
+		let yVector = new THREE.Vector3(0, this.nextPos.y, 0);
+		let xVector = new THREE.Vector3(this.nextPos.x, 0, 0);
+
+		dirHitbox.translate(yVector);
 		if (dirHitbox.intersectsBox(object.hitbox))
 		{
 			if (this.nextPos.y < 0)
@@ -81,14 +76,29 @@ class UpObject extends THREE.Mesh
 			{
 				this.jumpSpeed = 0;
 			}
-			this.nextPos.y = 0;
+
+			//this.nextPos.y = 0;
+
+			let curpos = new THREE.Box3().setFromObject(this);
+
+			if (this.nextPos.y > 0)
+				this.nextPos.y = object.hitbox.min.y - curpos.max.y - 0.01;
+			else
+				this.nextPos.y = object.hitbox.max.y - curpos.min.y + 0.01;
+			
+			return;
 		}
 		
-		dirHitbox.translate(this.nextPos.x, 0, 0);
+		//dirHitbox.translate(this.nextPos.x, 0, 0);
+		dirHitbox.translate(xVector);
 		if (dirHitbox.intersectsBox(object.hitbox))
 		{
-			this.nextPos.x = 0;
-			this.nextPos.y = 0;
+			let curpos = new THREE.Box3().setFromObject(this);
+
+			if (this.nextPos.x > 0)
+				this.nextPos.x = object.hitbox.min.x - curpos.max.x - 0.01;
+			else
+				this.nextPos.x = object.hitbox.max.x - curpos.min.x + 0.01;
 			return;
 		}
 	}
