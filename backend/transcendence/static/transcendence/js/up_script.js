@@ -333,7 +333,8 @@ function findWinner() // sends gameStats as well
 	else
 		gameStats.stats.up_offline_game_played++;
 
-	user.send_stats(gameStats);
+	if (user.loggedIn)
+		user.send_stats(gameStats);
 }
 
 function upStop(hard=false)
